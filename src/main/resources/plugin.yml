@@ -1,0 +1,9 @@
+name: EggwarsCore
+author: MineLC Developers
+version: 0.0.1
+
+main: lc.eggwars.EggwarsPlugin
+description: EggwarsCore for minelc
+
+commands:
+  map:

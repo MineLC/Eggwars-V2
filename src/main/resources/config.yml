@@ -1,0 +1,5 @@
+sign-lines:
+  - ""
+  - "%name% &8(%level%)"
+  - "&8%amount% &0/ &8%speed%s"
+  - ""

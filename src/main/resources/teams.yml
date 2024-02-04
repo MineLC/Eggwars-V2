@@ -1,0 +1,12 @@
+red:
+  name: "&c&lRed"
+  prefix: "&c&lR &c"
+blue:
+  name: "&9&lBlue"
+  prefix: "&9&lB &9"
+yellow:
+  name: "&e&lYellow"
+  prefix: "&e&lY &e"
+machine:
+  name: "&7&lMáquina"
+  prefix: "&7&lM &7"

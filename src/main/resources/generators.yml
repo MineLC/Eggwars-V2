@@ -1,0 +1,22 @@
+iron:
+  sign-name: "&0&lHierro"
+  drop: "IRON_INGOT"
+  max-level: 3
+  default-seconds-to-generate: 1
+  default-amount-generate: 1
+  level:
+    0:
+      seconds-to-generate: 1
+      amount-generate: 1
+    1:
+      upgrade-item-need: 16
+      seconds-to-generate: 1
+      amount-generate: 2
+    2:
+      upgrade-item-need: 32
+      seconds-to-generate: 2
+      amount-generate: 4
+    3:
+      upgrade-item-need: 64
+      seconds-to-generate: 2
+      amount-generate: 5

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -14,6 +13,7 @@ import lc.eggwars.commands.SubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.utils.BlockLocation;
 
 final class RemoveSpawnSubCommand implements SubCommand {
     private final MapCreatorData data;
@@ -39,16 +39,19 @@ final class RemoveSpawnSubCommand implements SubCommand {
             send(player, "&cTo remove a spawn, you need view a diamond block");
             return;
         };
-        final Location location = targetBlock.getLocation();
-        final Set<Entry<BaseTeam, Set<Location>>> entries = creatorData.getSpawnsMap().entrySet();
 
-        for (Entry<BaseTeam, Set<Location>> entry : entries) {
-            if (entry.getValue().remove(location)) {
+        final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
+        final Set<Entry<BaseTeam, BlockLocation>> entries = creatorData.getSpawnsMap().entrySet();
+
+        for (Entry<BaseTeam, BlockLocation> entry : entries) {
+            if (entry.getValue().equals(location)) {
                 targetBlock.setType(Material.AIR);
                 send(sender, "&aSpawn removed for the team " + entry.getKey().getKey());
+                creatorData.getSpawnsMap().remove(entry.getKey());
                 return;
             }
         }
+
         send(sender, "&cThis isn't a spawn for any team");
     }
 

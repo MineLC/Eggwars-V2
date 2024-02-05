@@ -1,0 +1,10 @@
+# Pregame countdown
+
+minimum-players-to-start: 2
+waiting-to-start: 50 # Cuantos segundos debes esperar para que inicie el juego
+
+# Messages every x seconds
+waiting-player: 20 # "Esperando por más jugadores"
+game-starting-in: 10 # "El juego comienza en "
+sound-starting: 5 # Empezar a hacer un sonido cuando se llege a este segundo
+spam-message: 10 # Cuenta regresiva, 10, 9, 8, 7, 6, ...

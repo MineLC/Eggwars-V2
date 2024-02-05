@@ -13,12 +13,13 @@ import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
+import lc.eggwars.utils.BlockLocation;
 
-final class AddSpawnSubCommand implements SubCommand {
+final class SetSpawnSubCommand implements SubCommand {
 
     private MapCreatorData data;
 
-    AddSpawnSubCommand(MapCreatorData data) {
+    SetSpawnSubCommand(MapCreatorData data) {
         this.data = data;
     }
 
@@ -50,7 +51,7 @@ final class AddSpawnSubCommand implements SubCommand {
             send(player, "&cTo set a new spawn, you need view a diamond block");
             return;
         };
-        creatorData.addSpawn(team, targetBlock.getLocation());
+        creatorData.setSpawn(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
         send(sender, "&aSpawn added for the team " + args[1]);
     }
 

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import lc.eggwars.commands.SubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
+import lc.eggwars.utils.BlockLocation;
 
 final class RemoveGeneratorSubCommand implements SubCommand {
 
@@ -39,7 +40,9 @@ final class RemoveGeneratorSubCommand implements SubCommand {
             send(player, "&cTo remove a generator, you need view a sign");
             return;
         }
-        if (!creatorData.removeGenerator(targetBlock.getLocation())) {
+
+        final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
+        if (!creatorData.removeGenerator(location)) {
             send(player, "&cThis sign isn't a generator");
             return;
         }

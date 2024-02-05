@@ -1,9 +1,10 @@
 {
     "world":"eggwars1",
+    "border-size": 250,
     "generators": {
         "iron": ["1:-7,63,6"]
     },
     "spawns": {
-        "red": ["0,0,0", "0,54,0"]
+        "red": "0,0,0"
     }
 }

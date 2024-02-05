@@ -3,25 +3,31 @@ package lc.eggwars.mapsystem;
 import java.util.Map;
 
 public class JsonMapData {
-    private final String worldName;
-    private final Map<String, String[]> spawns;
+    private String world;
+    private final int borderSize;
+    private final Map<String, String> spawns;
     private final Map<String, String[]> generators;
 
-    public JsonMapData(String worldName, Map<String, String[]> generators, Map<String, String[]> spawns){
-        this.worldName = worldName;
+    public JsonMapData(String world, int borderSize, Map<String, String> spawns, Map<String, String[]> generators) {
+        this.world = world;
+        this.borderSize = borderSize;
         this.spawns = spawns;
         this.generators = generators;
     }
 
-    public String getWorldName() {
-        return worldName;
+    public String world() {
+        return world;
     }
 
-    public Map<String, String[]> getGenerators() {
-        return generators;
+    public int borderSize() {
+        return borderSize;
     }
 
-    public Map<String, String[]> getSpawns() {
+    public Map<String, String> spawns() {
         return spawns;
+    }
+
+    public Map<String, String[]> generators() {
+        return generators;
     }
 }

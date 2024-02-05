@@ -16,7 +16,7 @@ public final class MapCreatorCommand implements TabExecutor {
     private final EditorSubCommand editor;
     private final AddGeneratorSubCommand addGenerator;
     private final RemoveGeneratorSubCommand removeGenerator;
-    private final AddSpawnSubCommand addSpawn;
+    private final SetSpawnSubCommand addSpawn;
     private final RemoveSpawnSubCommand removeSpawn;
     private final SaveSubCommand save;
 
@@ -24,7 +24,7 @@ public final class MapCreatorCommand implements TabExecutor {
         this.editor = new EditorSubCommand(data);
         this.addGenerator = new AddGeneratorSubCommand(data);
         this.removeGenerator = new RemoveGeneratorSubCommand(data);
-        this.addSpawn = new AddSpawnSubCommand(data);
+        this.addSpawn = new SetSpawnSubCommand(data);
         this.removeSpawn = new RemoveSpawnSubCommand(data);
         this.save = new SaveSubCommand(plugin, data);
     }

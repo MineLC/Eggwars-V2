@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +23,9 @@ import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
 import lc.eggwars.mapsystem.MapCreatorData;
+import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.utils.BlockLocation;
 
 final class SaveSubCommand implements SubCommand {
 
@@ -67,9 +68,9 @@ final class SaveSubCommand implements SubCommand {
 
             final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
-            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
-            Bukkit.unloadWorld(player.getWorld(), true);
 
+            player.teleport(SpawnStorage.getStorage().getLocation());
+            plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(player.getWorld(), true));
         } catch (IOException e) {
             send(sender, "&cError on create the map");
             e.printStackTrace();
@@ -78,22 +79,15 @@ final class SaveSubCommand implements SubCommand {
     }
 
     private JsonMapData saveMapInfo(final CreatorData data, final World world) {
-        return new JsonMapData(world.getName(), saveGenerators(data), saveSpawns(data));
+        return new JsonMapData(world.getName(), (int)world.getWorldBorder().getSize(), saveSpawns(data), saveGenerators(data));
     }
 
-    private Map<String, String[]> saveSpawns(final CreatorData data) {
-        final Set<Entry<BaseTeam, Set<Location>>> spawnData = data.getSpawnsMap().entrySet();
-        final Map<String, String[]> spawns = new HashMap<>();
+    private Map<String, String> saveSpawns(final CreatorData data) {
+        final Set<Entry<BaseTeam, BlockLocation>> spawnData = data.getSpawnsMap().entrySet();
+        final Map<String, String> spawns = new HashMap<>();
 
-        for (final Entry<BaseTeam, Set<Location>> entry : spawnData) {
-            final String[] parsedLocations = new String[entry.getValue().size()];
-            final Set<Location> locations = entry.getValue();
-            int locationIndex = -1;
-        
-            for (final Location location : locations) {
-                parsedLocations[++locationIndex] = parseLocation(location);
-            }
-            spawns.put(entry.getKey().getKey(), parsedLocations);
+        for (final Entry<BaseTeam, BlockLocation> entry : spawnData) {
+            spawns.put(entry.getKey().getKey(), entry.getValue().toString());
         }
         return spawns;
     }
@@ -108,16 +102,12 @@ final class SaveSubCommand implements SubCommand {
 
             for (int i = 0; i < list.size(); i++) {
                 final SignGenerator generator = list.get(i);
-                generatorsString[i] = generator.getLevel() + ":" + parseLocation(generator.getLocation());
+                generatorsString[i] = generator.getLevel() + ":" + generator.getLocation().toString();
             }
 
             generatorsParsed.put(entry.getKey(), generatorsString);
         }
         return generatorsParsed;
-    }
-
-    private String parseLocation(final Location location) {
-        return location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ();
     }
 
     @Override

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -16,6 +15,7 @@ import lc.eggwars.generators.GeneratorStorage;
 import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
+import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.IntegerUtils;
 
 final class AddGeneratorSubCommand implements SubCommand {
@@ -66,7 +66,7 @@ final class AddGeneratorSubCommand implements SubCommand {
             send(player, "&cTo set a generator, you need view a sign");
             return;
         }
-        final Location location = targetBlock.getLocation();
+        final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
         if (creatorData.alreadyExistGenerator(location)) {
             send(sender, "&cIn this site already exist a generator. &7Use /map removegenerator");
             return;

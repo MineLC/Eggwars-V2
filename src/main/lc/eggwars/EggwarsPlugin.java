@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,12 +14,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.grinderwolf.swm.api.SlimePlugin;
 
+import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
+import lc.eggwars.game.StartGameData;
 import lc.eggwars.generators.StartGenerators;
 import lc.eggwars.listeners.PlayerInteractListener;
+import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.internal.ListenerRegister;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
+import lc.eggwars.messages.Messages;
+import lc.eggwars.messages.StartMessages;
+import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
 public class EggwarsPlugin extends JavaPlugin {
@@ -31,23 +38,29 @@ public class EggwarsPlugin extends JavaPlugin {
             getLogger().log(Level.SEVERE, "EggwarsCore need slimeworld manager to work");
             return;
         }
-        new ListenerRegister(this).register(new PlayerInteractListener());
-        final PluginCommand command = getCommand("map");
-        if (command == null) {
-            getLogger().log(Level.SEVERE, "Error on load map command. ¿Invalid plugin.yml?");
+
+        if (!loadCommands()) {
+            getLogger().log(Level.SEVERE, "Error on load commands. ¿Invalid plugin.yml?");
             return;
         }
-
-        final MapCreatorCommand mapCommand = new MapCreatorCommand(this, new MapCreatorData());
-        command.setExecutor(mapCommand);       
-        command.setTabCompleter(mapCommand);    
+        final Messages messages = new StartMessages().load(this);
 
         new StartGenerators(this).load();
         new StartTeams(this).load();
-        
+        new StartGameData().load(this, messages);
+
         // Remember start maps on final
         // This is executed 20 ticks later for wait to load all worlds
-        getServer().getScheduler().runTaskLaterAsynchronously(this, () -> new StartMaps(this).load(), 20);
+        getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
+            new StartMaps(this).load(slimePlugin);
+            final Location spawnLocation = new StartSpawn(this).load();
+
+            final ListenerRegister listeners = new ListenerRegister(this);
+            listeners.register(new PlayerInteractListener());
+            if (spawnLocation != null) {
+                listeners.register(new PlayerJoinListener());  
+            }
+        }, 20);
     }
 
     @Override
@@ -66,5 +79,23 @@ public class EggwarsPlugin extends JavaPlugin {
             saveResource(fileFormat, false);
         }
         return YamlConfiguration.loadConfiguration(file);
+    }
+
+    private boolean loadCommands() {
+        final PluginCommand pluginMapCommand = getCommand("map");
+        final PluginCommand pluginGameCommand = getCommand("game");
+
+        if (pluginMapCommand == null || pluginGameCommand == null) {
+            return false;
+        }
+
+        final MapCreatorCommand mapCommand = new MapCreatorCommand(this, new MapCreatorData());
+        pluginMapCommand.setExecutor(mapCommand);       
+        pluginMapCommand.setTabCompleter(mapCommand);    
+
+        final GameCommand gameCommand = new GameCommand(this);
+        pluginGameCommand.setExecutor(gameCommand);
+        pluginGameCommand.setTabCompleter(gameCommand);
+        return true;
     }
 }

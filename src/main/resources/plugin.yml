@@ -7,3 +7,4 @@ description: EggwarsCore for minelc
 
 commands:
   map:
+  game:

@@ -3,3 +3,7 @@ sign-lines:
   - "%name% &8(%level%)"
   - "&8%amount% &0/ &8%speed%s"
   - ""
+
+spawn-world: "spawnegg"
+spawn: "-1,65,8"
+spawn-border: 60

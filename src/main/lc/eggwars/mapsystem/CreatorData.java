@@ -2,21 +2,19 @@ package lc.eggwars.mapsystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.Location;
 
 import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.utils.BlockLocation;
 
 public final class CreatorData {
-    private final Map<String, List<SignGenerator>> generatorsPerIdentifier = new HashMap<>();
-    private final Map<Location, SignGenerator> generators = new HashMap<>();
 
-    private final Map<BaseTeam, Set<Location>> spawns = new HashMap<>();
+    private final Map<String, List<SignGenerator>> generatorsPerIdentifier = new HashMap<>();
+    private final Map<BlockLocation, SignGenerator> generators = new HashMap<>();
+
+    private final Map<BaseTeam, BlockLocation> spawns = new HashMap<>();
 
     public boolean addGenerator(final SignGenerator generator) {
         if (generators.get(generator.getLocation()) != null) {
@@ -32,7 +30,7 @@ public final class CreatorData {
         return true;
     }
 
-    public boolean removeGenerator(final Location location) {
+    public boolean removeGenerator(final BlockLocation location) {
         final SignGenerator generator = generators.remove(location);
         if (generator != null) {
             generatorsPerIdentifier.remove(generator.getBase().key());
@@ -41,28 +39,24 @@ public final class CreatorData {
         return false;
     }
 
-    public boolean alreadyExistGenerator(final Location location) {
+    public boolean alreadyExistGenerator(final BlockLocation location) {
         return generators.containsKey(location);
     }
 
-    public boolean addSpawn(final BaseTeam team, final Location location) {
-        Set<Location> listOfSpawns = spawns.get(team);
-        if (listOfSpawns == null) {
-            listOfSpawns = new HashSet<>();
-            spawns.put(team, listOfSpawns);
+    public boolean setSpawn(final BaseTeam team, final BlockLocation location) {
+        if (spawns.containsKey(team)) {
+            spawns.replace(team, location);
+            return true;
         }
-        if (listOfSpawns.contains(location)) {
-            return false;
-        }
-        listOfSpawns.add(location);
+        spawns.put(team, location);
         return true;
     }
 
-    public Map<BaseTeam, Set<Location>> getSpawnsMap() {
+    public Map<BaseTeam, BlockLocation> getSpawnsMap() {
         return spawns;
     }
 
-    public Map<Location, SignGenerator> getGeneratorsMap() {
+    public Map<BlockLocation, SignGenerator> getGeneratorsMap() {
         return generators;
     }
 

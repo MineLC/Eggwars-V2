@@ -1,0 +1,4 @@
+# PreGameCountdown
+waiting-players: "&cEsperando por más jugadores..."
+start-game: "&aEl juego ha iniciado!"
+start-in: "&aEl juego inicia en %time%"

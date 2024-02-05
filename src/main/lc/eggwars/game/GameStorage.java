@@ -37,14 +37,17 @@ public final class GameStorage {
             return;
         }
 
+        // add items to vote and selec team (Comming soon)
+
         if (map.getState() == GameState.PREGAME) {
             map.getPlayers().add(player);
             playersInGame.put(player.getUniqueId(), map);
             return;
         }
 
-        // add items
         map.resetPlayersData();
+        map.getPlayers().add(player);
+        playersInGame.put(player.getUniqueId(), map);
 
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 

@@ -31,10 +31,11 @@ public final class GameStorage {
 
     public void join(final World world, final GameMap map, final Player player) {
         if (map.getState() == GameState.IN_GAME) {
+            map.getPlayers().add(player);
             return;
         }
 
-        // add items to vote and selec team (Comming soon)
+        // Replace this comentary with a system to add items to vote, select team, and kits (Comming soon)
 
         if (map.getState() == GameState.PREGAME) {
             map.getPlayers().add(player);
@@ -42,7 +43,7 @@ public final class GameStorage {
             return;
         }
 
-        map.resetPlayersData();
+        map.resetData();
         map.getPlayers().add(player);
         playersInGame.put(player.getUniqueId(), map);
 
@@ -54,19 +55,29 @@ public final class GameStorage {
                 map.setState(GameState.IN_GAME);
                 new GameStarter().start(world, map);
             },
-            () -> { // Game canceled
-                gamesStarted.remove(map);
+            () -> {
+                unloadGame(map);
                 Bukkit.unloadWorld(world, false);
-                map.setState(GameState.NONE);
-                map.resetPlayersData();
             }
         );
 
-        countdown.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, countdown, 0, 20).getTaskId());
+        final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, countdown, 0, 20).getTaskId();
+        countdown.setId(id);
+        map.setTaskId(id);
+    }
+
+    public void unloadGame(final GameMap map) {
+        gamesStarted.remove(map);
+        map.setState(GameState.NONE);
+        map.resetData();
     }
 
     public GameMap getGame(UUID uuid) {
         return playersInGame.get(uuid);
+    }
+
+    public void remove(UUID uuid) {
+        playersInGame.remove(uuid);
     }
 
     public static GameStorage getStorage() {

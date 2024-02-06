@@ -23,9 +23,11 @@ public final class GameMap {
     private final int borderSize;
     private final int id;
 
+    private Set<BaseTeam> teamsWithEgg;
     private Map<Player, BaseTeam> playersPerTeam;
     private Set<Player> players;
     private GameState state = GameState.NONE;
+    private int currentTaskId = -1;
 
     GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, SignGenerator[] generators, Map<BaseTeam, BlockLocation> spawns, int borderSize, int id) {
         this.clickableBlocks = clickableBlocks;
@@ -35,13 +37,18 @@ public final class GameMap {
         this.id = id;
     }
 
-    public void resetPlayersData() {
+    public void resetData() {
         this.players = new HashSet<>();
         this.playersPerTeam = new HashMap<>();
+        this.teamsWithEgg = new HashSet<>();
     }
 
     public void setState(final GameState state) {
         this.state = state;
+    }
+
+    public void setTaskId(int id) {
+        this.currentTaskId = id;
     }
 
     public Set<Player> getPlayers() {
@@ -52,8 +59,16 @@ public final class GameMap {
         return playersPerTeam;
     }
 
+    public Set<BaseTeam> getTeamsWithEggs() {
+        return teamsWithEgg;
+    }
+
     public GameState getState() {
         return state;
+    }
+
+    public int getTaskId() {
+        return currentTaskId;
     }
 
     public BlockLocation getSpawn(final BaseTeam team) {

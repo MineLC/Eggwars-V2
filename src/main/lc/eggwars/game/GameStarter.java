@@ -17,6 +17,8 @@ import lc.eggwars.utils.BlockLocation;
 final class GameStarter {
 
     void start(final World world, final GameMap map) {
+        setEggsToTeams(map);
+
         final int teamsAmount = map.getSpawns().keySet().size();
         int maxPersonsPerTeam = map.getPlayers().size() / teamsAmount;
 
@@ -52,6 +54,13 @@ final class GameStarter {
                     continue;
                 }
             }
+        }
+    }
+
+    private void setEggsToTeams(final GameMap map) {
+        final Set<BaseTeam> teams = map.getSpawns().keySet();
+        for (final BaseTeam team : teams) {
+            map.getTeamsWithEggs().add(team);
         }
     }
 }

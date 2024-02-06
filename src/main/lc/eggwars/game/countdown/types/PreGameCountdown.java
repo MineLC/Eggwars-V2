@@ -13,6 +13,7 @@ import java.util.Set;
 public class PreGameCountdown implements GameCountdown {
 
     private int countdown = 0;
+    private int waitingCountdown = 0;
     private final Set<Player> players;
     private final Data data;
     private final CountdownCallback complete, cancel;
@@ -21,6 +22,8 @@ public class PreGameCountdown implements GameCountdown {
 
     public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown, CountdownCallback cancelGame) {
         this.data = data;
+        this.waitingCountdown = data.waitingTime;
+        this.countdown = data.waitingTime;
         this.players = players;
         this.complete = completeCountdown;
         this.cancel = cancelGame;
@@ -39,6 +42,10 @@ public class PreGameCountdown implements GameCountdown {
                 Chat.send(data.messageWaitingPlayers, players);
             }
             countdown = data.waitingTime;
+            --waitingCountdown;
+            if (waitingCountdown <= 0) {
+                waitingCountdown = data.waitingTime;
+            }
             return;
         }
 

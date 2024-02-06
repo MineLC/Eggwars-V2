@@ -1,6 +1,8 @@
 package lc.eggwars.game;
 
 import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.GameMode;
@@ -15,14 +17,41 @@ import lc.eggwars.utils.BlockLocation;
 final class GameStarter {
 
     void start(final World world, final GameMap map) {
-        final Set<Entry<Player, BaseTeam>> entries = map.getPlayersPerTeam().entrySet();
+        final int teamsAmount = map.getSpawns().keySet().size();
+        int maxPersonsPerTeam = map.getPlayers().size() / teamsAmount;
 
-        for (Entry<Player, BaseTeam> entry : entries) {
-            final Player player = entry.getKey();
-            final BlockLocation spawnTeam = map.getSpawn(entry.getValue());
+        if (maxPersonsPerTeam == 0) {
+            maxPersonsPerTeam = 1;
+        }
 
-            player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
-            player.setGameMode(GameMode.SURVIVAL);
+        final Set<Entry<BaseTeam, BlockLocation>> teams = map.getSpawns().entrySet();
+        final Map<BaseTeam, Integer> personsPerTeam = new HashMap<>();
+
+        for (final Player player : map.getPlayers()) {
+            final BaseTeam playerTeam = map.getPlayersPerTeam().get(player);
+
+            for (final Entry<BaseTeam, BlockLocation> team : teams) {
+                final Integer amountPersons = personsPerTeam.get(team.getKey());
+
+                if (amountPersons != null && amountPersons == maxPersonsPerTeam) {
+                    continue;
+                }
+
+                if (amountPersons == null) {
+                    personsPerTeam.put(playerTeam, 1);
+                } else {
+                    personsPerTeam.replace(playerTeam, amountPersons + 1);
+                }
+
+                if (playerTeam == null || playerTeam.equals(team.getKey())) {
+                    map.getPlayersPerTeam().put(player, playerTeam);
+
+                    final BlockLocation spawnTeam = team.getValue();
+                    player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
+                    player.setGameMode(GameMode.SURVIVAL);
+                    continue;
+                }
+            }
         }
     }
 }

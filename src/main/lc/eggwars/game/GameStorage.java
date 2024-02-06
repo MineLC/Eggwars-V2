@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -31,8 +30,6 @@ public final class GameStorage {
     }
 
     public void join(final World world, final GameMap map, final Player player) {
-        player.setGameMode(GameMode.SPECTATOR);
-
         if (map.getState() == GameState.IN_GAME) {
             return;
         }

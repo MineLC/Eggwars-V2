@@ -14,6 +14,8 @@ public final class CreatorData {
     private final Map<String, List<SignGenerator>> generatorsPerIdentifier = new HashMap<>();
     private final Map<BlockLocation, SignGenerator> generators = new HashMap<>();
 
+    private final Map<BaseTeam, BlockLocation> teamEggs = new HashMap<>();
+
     private final Map<BaseTeam, BlockLocation> spawns = new HashMap<>();
 
     public boolean addGenerator(final SignGenerator generator) {
@@ -43,16 +45,27 @@ public final class CreatorData {
         return generators.containsKey(location);
     }
 
-    public boolean setSpawn(final BaseTeam team, final BlockLocation location) {
+    public void setSpawn(final BaseTeam team, final BlockLocation location) {
         if (spawns.containsKey(team)) {
             spawns.replace(team, location);
-            return true;
+            return;
         }
         spawns.put(team, location);
-        return true;
     }
 
+    public void setEgg(final BaseTeam team, final BlockLocation location) {
+        if (teamEggs.containsKey(team)) {
+            teamEggs.replace(team, location);
+            return;
+        }
+        teamEggs.put(team, location);
+    } 
+
     public Map<BaseTeam, BlockLocation> getSpawnsMap() {
+        return spawns;
+    }
+
+    public Map<BaseTeam, BlockLocation> getEggsMap() {
         return spawns;
     }
 

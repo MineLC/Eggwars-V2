@@ -7,12 +7,14 @@ public class JsonMapData {
     private final int borderSize;
     private final Map<String, String> spawns;
     private final Map<String, String[]> generators;
+    private final Map<String, String> teamEggs;
 
-    public JsonMapData(String world, int borderSize, Map<String, String> spawns, Map<String, String[]> generators) {
+    public JsonMapData(String world, int borderSize, Map<String, String> spawns, Map<String, String[]> generators, Map<String, String> teamEggs) {
         this.world = world;
         this.borderSize = borderSize;
         this.spawns = spawns;
         this.generators = generators;
+        this.teamEggs = teamEggs;
     }
 
     public String world() {
@@ -29,5 +31,9 @@ public class JsonMapData {
 
     public Map<String, String[]> generators() {
         return generators;
+    }
+
+    public Map<String, String> teamEggs() {
+        return teamEggs;
     }
 }

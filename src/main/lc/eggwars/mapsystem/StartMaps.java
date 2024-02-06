@@ -71,6 +71,9 @@ public final class StartMaps {
                     plugin.getLogger().warning("The world " + data.world() + " don't exist or is unloaded");
                     continue;
                 }
+
+                setTeamEggs(data, worldClickableBlocks);
+
                 final GameMap map = new GameMap(
                     worldClickableBlocks,
                     getGenerators(data, worldClickableBlocks),
@@ -79,7 +82,7 @@ public final class StartMaps {
                     ++id);
 
                 mapsPerName.put(world.getName(), map);
-                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, false));
+                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, true));
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 plugin.getLogger().warning("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 e.printStackTrace();
@@ -88,6 +91,20 @@ public final class StartMaps {
         MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
     }
 
+    private void setTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+        final Set<Entry<String, String>> eggsEntryEntries = data.teamEggs().entrySet();
+        for (final Entry<String, String> entry : eggsEntryEntries) {
+            final BaseTeam team = TeamStorage.getStorage().getTeam(entry.getKey());
+
+            if (team == null) {
+                plugin.getLogger().warning("The map " + data.world() + " uses a inexistent team: " + entry.getKey());
+                continue;
+            }
+
+            final BlockLocation location = BlockLocation.create(entry.getValue());
+            clickableBlocks.put(location.hashCode(), new EnderDragonEgg(team, location));
+        }
+    }
 
     private Map<BaseTeam, BlockLocation> getSpawns(final JsonMapData data) {
         final Map<BaseTeam, BlockLocation> spawnsParsed = new HashMap<>();
@@ -133,9 +150,7 @@ public final class StartMaps {
                 final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
 
                 maps[mapIndex++] = mapGenerator;
-                clickableBlocks.put(
-                    IntegerUtils.combineCords(location.x(), location.y(), location.z()),
-                    mapGenerator);
+                clickableBlocks.put(location.hashCode(), mapGenerator);
             }
         }
 

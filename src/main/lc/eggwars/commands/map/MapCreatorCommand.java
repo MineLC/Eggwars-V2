@@ -16,16 +16,20 @@ public final class MapCreatorCommand implements TabExecutor {
     private final EditorSubCommand editor;
     private final AddGeneratorSubCommand addGenerator;
     private final RemoveGeneratorSubCommand removeGenerator;
-    private final SetSpawnSubCommand addSpawn;
+    private final SetSpawnSubCommand setspawn;
     private final RemoveSpawnSubCommand removeSpawn;
+    private final SetEggSubCommand setEgg;
+    private final RemoveEggSubCommand remvoeEgg;
     private final SaveSubCommand save;
 
     public MapCreatorCommand(EggwarsPlugin plugin, MapCreatorData data) {
         this.editor = new EditorSubCommand(data);
         this.addGenerator = new AddGeneratorSubCommand(data);
         this.removeGenerator = new RemoveGeneratorSubCommand(data);
-        this.addSpawn = new SetSpawnSubCommand(data);
+        this.setspawn = new SetSpawnSubCommand(data);
         this.removeSpawn = new RemoveSpawnSubCommand(data);
+        this.setEgg = new SetEggSubCommand(data);
+        this.remvoeEgg = new RemoveEggSubCommand(data);
         this.save = new SaveSubCommand(plugin, data);
     }
 
@@ -51,11 +55,17 @@ public final class MapCreatorCommand implements TabExecutor {
             case "removegenerator":
                 removeGenerator.execute(sender, args);
                 break;
-            case "addspawn":
-                addSpawn.execute(sender, args);
+            case "setspawn":
+                setspawn.execute(sender, args);
                 break;
             case "removespawn":
                 removeSpawn.execute(sender, args);
+                break;
+            case "setegg":
+                setEgg.execute(sender, args);
+                break;
+            case "removeegg":
+                remvoeEgg.execute(sender, args);
                 break;
             case "save":
                 save.execute(sender, args);
@@ -69,13 +79,14 @@ public final class MapCreatorCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            return List.of("editor", "addgenerator", "removegenerator", "addspawn", "removespawn", "save");
+            return List.of("editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "save");
         }
         switch (args[0].toLowerCase()) {
             case "editor": return editor.onTab(sender, args);
             case "addgenerator": return addGenerator.onTab(sender, args);
             case "removegenerator": return removeGenerator.onTab(sender, args);
-            case "addspawn": return addSpawn.onTab(sender, args);
+            case "setspawn": return setspawn.onTab(sender, args);
+            case "setegg": return setEgg.onTab(sender, args);
         }
         return List.of();
     }
@@ -90,8 +101,11 @@ public final class MapCreatorCommand implements TabExecutor {
                 &6addgenerator &7(generatorName) (level) - &fSet a generator
                 &6removegenerator &7- &fRemove last generator
                 &r
-                &6addspawn &7(team) - &fAdd spawn for a team
-                &6removespawn &7(team) - &fRemove last spawn of a team
+                &6setspawn &7(team) - &fSet spawn for a team
+                &6removespawn &7(team) - &fRemove spawn of the team
+                &r
+                &6setegg &7(team) - &fSet egg for a team
+                &6removeegg &7(team) - &fRemove egg of the team
                 &r
                 &6save &7- &fSave all settings in the world
             """.replace('&', ChatColor.COLOR_CHAR);

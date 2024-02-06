@@ -79,7 +79,13 @@ final class SaveSubCommand implements SubCommand {
     }
 
     private JsonMapData saveMapInfo(final CreatorData data, final World world) {
-        return new JsonMapData(world.getName(), (int)world.getWorldBorder().getSize(), saveSpawns(data), saveGenerators(data));
+        return new JsonMapData(
+            world.getName(),
+            (int)world.getWorldBorder().getSize(),
+            saveSpawns(data),
+            saveGenerators(data),
+            saveEggs(data)
+        );
     }
 
     private Map<String, String> saveSpawns(final CreatorData data) {
@@ -108,6 +114,16 @@ final class SaveSubCommand implements SubCommand {
             generatorsParsed.put(entry.getKey(), generatorsString);
         }
         return generatorsParsed;
+    }
+
+    private Map<String, String> saveEggs(final CreatorData data) {
+        final Set<Entry<BaseTeam, BlockLocation>> spawnData = data.getEggsMap().entrySet();
+        final Map<String, String> eggs = new HashMap<>();
+
+        for (final Entry<BaseTeam, BlockLocation> entry : spawnData) {
+            eggs.put(entry.getKey().getKey(), entry.getValue().toString());
+        }
+        return eggs;
     }
 
     @Override

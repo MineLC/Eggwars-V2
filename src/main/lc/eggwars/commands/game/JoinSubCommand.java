@@ -2,6 +2,7 @@ package lc.eggwars.commands.game;
 
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,7 +43,10 @@ final class JoinSubCommand implements SubCommand {
             final Player player = (Player)sender;
             GameStorage.getStorage().join(world, map, player);
             player.sendMessage("Teleporting to " + world.getName());
-            plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(world.getSpawnLocation()));
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(world.getSpawnLocation());
+            });
         });
     }
 

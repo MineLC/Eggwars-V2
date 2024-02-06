@@ -34,7 +34,7 @@ public final class GameCommand implements TabExecutor {
             case "join":
                 join.execute(sender, args);
                 break;
-            case "team":
+            case "teamjoin":
                 team.execute(sender, args);
                 break;
             default:

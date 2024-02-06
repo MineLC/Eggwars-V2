@@ -1,6 +1,7 @@
 package lc.eggwars.commands.map;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -12,14 +13,12 @@ import lc.eggwars.commands.SubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
-import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 
-final class SetSpawnSubCommand implements SubCommand {
+final class RemoveEggSubCommand implements SubCommand {
+    private final MapCreatorData data;
 
-    private MapCreatorData data;
-
-    SetSpawnSubCommand(MapCreatorData data) {
+    RemoveEggSubCommand(MapCreatorData data) {
         this.data = data;
     }
 
@@ -33,30 +32,31 @@ final class SetSpawnSubCommand implements SubCommand {
             return;
         }
 
-        if (args.length != 2) {
-            send(sender, "&cFormat: /map setspawn &7(team)");
-            return;
-        }
-
-        final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
-
-        if (team == null) {
-            send(sender, "The team " + args[1] + " dont exist. List: " + TeamStorage.getStorage().getTeamsName());
-            return;
-        }
         final Set<Material> airBlocksStorage = null;
         final Block targetBlock = player.getTargetBlock(airBlocksStorage, 3);
 
-        if (targetBlock.getType() != Material.DIAMOND_BLOCK) {
-            send(player, "&cTo set a new spawn, you need view a diamond block");
+        if (targetBlock.getType() != Material.DRAGON_EGG) {
+            send(player, "&cTo remove a team egg, you need view a dragon egg");
             return;
         };
-        creatorData.setSpawn(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
-        send(sender, "&aSpawn added for the team " + args[1]);
+
+        final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
+        final Set<Entry<BaseTeam, BlockLocation>> entries = creatorData.getEggsMap().entrySet();
+
+        for (Entry<BaseTeam, BlockLocation> entry : entries) {
+            if (entry.getValue().equals(location)) {
+                targetBlock.setType(Material.AIR);
+                send(sender, "&aEgg removed for the team " + entry.getKey().getKey());
+                creatorData.getSpawnsMap().remove(entry.getKey());
+                return;
+            }
+        }
+
+        send(sender, "&cThis isn't a egg for any team");
     }
 
     @Override
     public List<String> onTab(CommandSender sender, String[] args) {
-        return (args.length == 2) ? List.copyOf(TeamStorage.getStorage().getTeamsName()) : List.of();
+        return List.of();
     }
 }

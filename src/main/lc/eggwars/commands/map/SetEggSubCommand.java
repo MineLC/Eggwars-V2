@@ -15,11 +15,11 @@ import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 
-final class SetSpawnSubCommand implements SubCommand {
+final class SetEggSubCommand implements SubCommand {
 
     private MapCreatorData data;
 
-    SetSpawnSubCommand(MapCreatorData data) {
+    SetEggSubCommand(MapCreatorData data) {
         this.data = data;
     }
 
@@ -34,7 +34,7 @@ final class SetSpawnSubCommand implements SubCommand {
         }
 
         if (args.length != 2) {
-            send(sender, "&cFormat: /map setspawn &7(team)");
+            send(sender, "&cFormat: /map setegg &7(team)");
             return;
         }
 
@@ -47,12 +47,12 @@ final class SetSpawnSubCommand implements SubCommand {
         final Set<Material> airBlocksStorage = null;
         final Block targetBlock = player.getTargetBlock(airBlocksStorage, 3);
 
-        if (targetBlock.getType() != Material.DIAMOND_BLOCK) {
-            send(player, "&cTo set a new spawn, you need view a diamond block");
+        if (targetBlock.getType() != Material.DRAGON_EGG) {
+            send(player, "&cTo set a team egg, you need view a dragon egg");
             return;
         };
         creatorData.setSpawn(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
-        send(sender, "&aSpawn added for the team " + args[1]);
+        send(sender, "&aEgg added for the team " + args[1]);
     }
 
     @Override

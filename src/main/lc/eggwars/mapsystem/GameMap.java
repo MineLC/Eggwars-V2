@@ -59,6 +59,10 @@ public final class GameMap {
     public BlockLocation getSpawn(final BaseTeam team) {
         return spawns.get(team);
     }
+
+    public Map<BaseTeam, BlockLocation> getSpawns() {
+        return spawns;
+    }
     
     public SignGenerator[] getGenerators() {
         return generators;

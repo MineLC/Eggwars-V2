@@ -14,7 +14,7 @@ import java.util.List;
 public class StartMessages {
 
     public Messages load(EggwarsPlugin plugin) {
-        final FileConfiguration config = plugin.loadConfig("messages.yml");
+        final FileConfiguration config = plugin.loadConfig("messages");
 
         final Set<String> messages = config.getKeys(false);
         final Map<String, String> parsedMessages = new HashMap<>(messages.size());

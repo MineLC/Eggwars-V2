@@ -17,7 +17,7 @@ final class TeamJoinSubCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         final Player player = (Player)sender;
-        if (args.length != 2) {
+        if (args.length < 2) {
             send(sender, "Format: /game teamjoin (teamname)");
             return;
         }
@@ -40,7 +40,7 @@ final class TeamJoinSubCommand implements SubCommand {
 
         game.getPlayersPerTeam().remove(player);
         game.getPlayersPerTeam().put(player, team);
-        send(sender, "You are in the team");
+        send(sender, "You are in the team " + args[1]);
     }
 
     @Override

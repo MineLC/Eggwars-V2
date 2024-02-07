@@ -65,9 +65,6 @@ public final class GameStorage {
     }
 
     public boolean leave(final GameMap map, final Player player) {
-        if (map == null) {
-            return false;
-        }
         GameStorage.getStorage().remove(player.getUniqueId());
         map.getPlayers().remove(player);
         map.getPlayersPerTeam().remove(player);

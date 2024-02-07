@@ -39,6 +39,7 @@ final class TeamJoinSubCommand implements SubCommand {
 
         game.getPlayersPerTeam().remove(player);
         game.getPlayersPerTeam().put(player, team);
+        team.getTeam().addPlayer(player);
         send(player, "You are in the team " + args[1]);
     }
 

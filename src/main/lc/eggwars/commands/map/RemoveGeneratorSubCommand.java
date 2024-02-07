@@ -1,20 +1,18 @@
 package lc.eggwars.commands.map;
 
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.BlockLocation;
 
-final class RemoveGeneratorSubCommand implements SubCommand {
+final class RemoveGeneratorSubCommand implements BasicSubCommand {
 
     private final MapCreatorData data;
 
@@ -23,8 +21,7 @@ final class RemoveGeneratorSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -54,10 +51,5 @@ final class RemoveGeneratorSubCommand implements SubCommand {
         sign.update();
 
         send(player, "&aGenerator removed!");
-    }
-
-    @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return List.of();
     }
 }

@@ -15,32 +15,31 @@ import lc.eggwars.teams.TeamStorage;
 final class TeamJoinSubCommand implements SubCommand {
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         if (args.length < 2) {
-            send(sender, "Format: /game teamjoin (teamname)");
+            send(player, "Format: /game teamjoin (teamname)");
             return;
         }
         final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
         if (team == null) {
-            send(sender, "The team " + args[1] + " don't exist");
+            send(player, "The team " + args[1] + " don't exist");
             return;
         }
         final GameMap game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game == null) {
-            send(sender, "You aren't in a game");
+            send(player, "You aren't in a game");
             return;
         }
 
         if (game.getState() == GameState.IN_GAME) {
-            send(sender, "This game already started");
+            send(player, "This game already started");
             return;
         }
 
         game.getPlayersPerTeam().remove(player);
         game.getPlayersPerTeam().put(player, team);
-        send(sender, "You are in the team " + args[1]);
+        send(player, "You are in the team " + args[1]);
     }
 
     @Override

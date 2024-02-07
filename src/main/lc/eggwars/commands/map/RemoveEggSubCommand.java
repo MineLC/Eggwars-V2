@@ -1,21 +1,19 @@
 package lc.eggwars.commands.map;
 
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-final class RemoveEggSubCommand implements SubCommand {
+final class RemoveEggSubCommand implements BasicSubCommand {
     private final MapCreatorData data;
 
     RemoveEggSubCommand(MapCreatorData data) {
@@ -23,8 +21,7 @@ final class RemoveEggSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -46,17 +43,12 @@ final class RemoveEggSubCommand implements SubCommand {
         for (Entry<BaseTeam, BlockLocation> entry : entries) {
             if (entry.getValue().equals(location)) {
                 targetBlock.setType(Material.AIR);
-                send(sender, "&aEgg removed for the team " + entry.getKey().getKey());
+                send(player, "&aEgg removed for the team " + entry.getKey().getKey());
                 creatorData.getSpawnsMap().remove(entry.getKey());
                 return;
             }
         }
 
-        send(sender, "&cThis isn't a egg for any team");
-    }
-
-    @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return List.of();
+        send(player, "&cThis isn't a egg for any team");
     }
 }

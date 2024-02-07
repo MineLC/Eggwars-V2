@@ -24,23 +24,22 @@ final class JoinSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(Player player, String[] args) {
         if (args.length != 2) {
-            send(sender, "&cFormat: /join &7(worldname)");
+            send(player, "&cFormat: /join &7(worldname)");
             return;
         }
 
         final GameMap map = MapStorage.getStorage().getMap(args[1]);
         if (map == null) {
-            sender.sendMessage("Este mapa no existe");
+            player.sendMessage("Este mapa no existe");
             return;
         }
-        final Player player = (Player)sender;
             
         if (map.getState() != GameState.NONE) {
             final World world = Bukkit.getWorld(args[1]);
             if (world == null) {
-                send(sender, "&cError on load the world");
+                send(player, "&cError on load the world - world instance cache");
                 return;
             }
             GameStorage.getStorage().join(world, map, player);
@@ -52,11 +51,10 @@ final class JoinSubCommand implements SubCommand {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             final World world = MapStorage.getStorage().load(args[1]);
             if (world == null) {
-                send(sender, "&cError on load the world");
+                send(player, "&cError on load the world");
                 return;
             }
             GameStorage.getStorage().join(world, map, player);
-            player.sendMessage("Teleporting to " + world.getName());
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(world.getSpawnLocation());
@@ -66,6 +64,6 @@ final class JoinSubCommand implements SubCommand {
 
     @Override
     public List<String> onTab(CommandSender sender, String[] args) {
-        return List.of();
+        return List.copyOf(MapStorage.getStorage().getMaps().keySet());
     }
 }

@@ -18,12 +18,11 @@ final class EditorSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(Player player, String[] args) {
         if (args.length != 2) {
-            send(sender, format());
+            send(player, format());
             return;
         }
-        final Player player = (Player)sender;
 
         switch (args[1]) {
             case "on":

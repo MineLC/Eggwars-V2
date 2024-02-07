@@ -14,15 +14,17 @@ public final class GameCommand implements TabExecutor {
 
     private final JoinSubCommand join;
     private final TeamJoinSubCommand team;
+    private final LeaveSubCommand leave;
 
     public GameCommand(EggwarsPlugin plugin) {
         this.join = new JoinSubCommand(plugin);
         this.team = new TeamJoinSubCommand();
+        this.leave = new LeaveSubCommand();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("You need be a player to use map creator");
             return true;
         } 
@@ -30,12 +32,16 @@ public final class GameCommand implements TabExecutor {
             sender.sendMessage(format());
             return true;
         }
+
         switch (args[0].toLowerCase()) {
             case "join":
-                join.execute(sender, args);
+                join.execute(player, args);
                 break;
             case "teamjoin":
-                team.execute(sender, args);
+                team.execute(player, args);
+                break;
+            case "leave":
+                leave.execute(player, args);
                 break;
             default:
                 sender.sendMessage(format());

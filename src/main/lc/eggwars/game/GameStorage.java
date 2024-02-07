@@ -1,9 +1,11 @@
 package lc.eggwars.game;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -15,6 +17,7 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.teams.BaseTeam;
 
 public final class GameStorage {
     private static GameStorage storage;
@@ -54,6 +57,10 @@ public final class GameStorage {
                 new GameStarter().start(world, map);
             },
             () -> {
+                final Set<Entry<Player, BaseTeam>> playersWithTeams = map.getPlayersPerTeam().entrySet();
+                for (final Entry<Player, BaseTeam> playerWithTeam : playersWithTeams) {
+                    playerWithTeam.getValue().getTeam().removePlayer(playerWithTeam.getKey());
+                }
                 unloadGame(map);
                 Bukkit.unloadWorld(world, false);
             }

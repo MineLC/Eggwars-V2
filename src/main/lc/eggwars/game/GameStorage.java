@@ -50,6 +50,10 @@ public final class GameStorage {
             map.setState(GameState.PREGAME);
         }
 
+        if (map.getState() == GameState.NONE){
+            map.setState(GameState.PREGAME);
+        }
+
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 
             map.getPlayers(),

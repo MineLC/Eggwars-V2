@@ -46,6 +46,9 @@ public final class GameStorage {
         map.resetData();
         map.getPlayers().add(player);
         playersInGame.put(player.getUniqueId(), map);
+        if (map.getState() == GameState.NONE){
+            map.setState(GameState.PREGAME);
+        }
 
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 

@@ -64,7 +64,7 @@ public final class GameStorage {
         map.setTaskId(id);
     }
 
-    public boolean leave(final GameMap map, final Player player) {
+    public void leave(final GameMap map, final Player player) {
         GameStorage.getStorage().remove(player.getUniqueId());
         map.getPlayers().remove(player);
         map.getPlayersPerTeam().remove(player);
@@ -77,7 +77,6 @@ public final class GameStorage {
             unloadGame(map);
             MapStorage.getStorage().unload(player.getWorld());
         }
-        return true;
     }
 
     public void unloadGame(final GameMap map) {

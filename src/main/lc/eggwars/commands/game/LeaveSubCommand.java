@@ -14,6 +14,7 @@ final class LeaveSubCommand implements BasicSubCommand {
     public void execute(Player player, String[] args) {
         final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
         if (map == null) {
+            send(player, "Actualmente no estás en ningun juego");
             return;
         }
         final BaseTeam team = map.getPlayersPerTeam().get(player);
@@ -22,10 +23,7 @@ final class LeaveSubCommand implements BasicSubCommand {
             team.getTeam().removePlayer(player);
         }
 
-        if (GameStorage.getStorage().leave(map, player)) {
-            send(player, "Has salido del juego");
-            return;
-        }
-        send(player, "Actualmente no estás en ningun juego");
+        GameStorage.getStorage().leave(map, player);
+        send(player, "Has salido del juego");
     }
 }

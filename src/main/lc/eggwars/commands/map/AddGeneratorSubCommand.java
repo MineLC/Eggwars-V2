@@ -27,8 +27,7 @@ final class AddGeneratorSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -37,23 +36,23 @@ final class AddGeneratorSubCommand implements SubCommand {
         }
 
         if (args.length != 3) {
-            send(sender, "&cFormat: /map addgenerator &7(name) (level)");
+            send(player, "&cFormat: /map addgenerator &7(name) (level)");
             return;
         }
 
         final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(args[1]);
         if (baseGenerator == null) {
-            send(sender, "&cThis generator don't exist. List of generators: &e" + GeneratorStorage.getStorage().getGeneratorsName().toString());
+            send(player, "&cThis generator don't exist. List of generators: &e" + GeneratorStorage.getStorage().getGeneratorsName().toString());
             return;
         }
 
         final int level = IntegerUtils.parsePositive(args[2]);
         if (level == -1) {
-            send(sender, "&cThe level need be positive");
+            send(player, "&cThe level need be positive");
             return;
         }
         if (level > baseGenerator.maxLevel()) {
-            send(sender, "&cThe maximun level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxLevel());
+            send(player, "&cThe maximun level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxLevel());
             return;
         }
 
@@ -68,7 +67,7 @@ final class AddGeneratorSubCommand implements SubCommand {
         }
         final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
         if (creatorData.alreadyExistGenerator(location)) {
-            send(sender, "&cIn this site already exist a generator. &7Use /map removegenerator");
+            send(player, "&cIn this site already exist a generator. &7Use /map removegenerator");
             return;
         }
         final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);

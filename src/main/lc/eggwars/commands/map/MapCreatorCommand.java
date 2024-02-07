@@ -35,7 +35,7 @@ public final class MapCreatorCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("You need be a player to use map creator");
             return true;
         } 
@@ -44,31 +44,31 @@ public final class MapCreatorCommand implements TabExecutor {
             sender.sendMessage(format());
             return true;
         }
-
+    
         switch (args[0].toLowerCase()) {
             case "editor":
-                editor.execute(sender, args);
+                editor.execute(player, args);
                 break;
             case "addgenerator":
-                addGenerator.execute(sender, args);
+                addGenerator.execute(player, args);
                 break;
             case "removegenerator":
-                removeGenerator.execute(sender, args);
+                removeGenerator.execute(player, args);
                 break;
             case "setspawn":
-                setspawn.execute(sender, args);
+                setspawn.execute(player, args);
                 break;
             case "removespawn":
-                removeSpawn.execute(sender, args);
+                removeSpawn.execute(player, args);
                 break;
             case "setegg":
-                setEgg.execute(sender, args);
+                setEgg.execute(player, args);
                 break;
             case "removeegg":
-                remvoeEgg.execute(sender, args);
+                remvoeEgg.execute(player, args);
                 break;
             case "save":
-                save.execute(sender, args);
+                save.execute(player, args);
                 break;
             default:
                 break;

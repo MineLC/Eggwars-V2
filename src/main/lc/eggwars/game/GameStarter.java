@@ -47,6 +47,7 @@ final class GameStarter {
 
                 if (playerTeam == null || playerTeam.equals(team.getKey())) {
                     map.getPlayersPerTeam().put(player, playerTeam);
+                    team.getKey().getTeam().addPlayer(player);
 
                     final BlockLocation spawnTeam = team.getValue();
                     player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));

@@ -24,8 +24,7 @@ final class SetSpawnSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -34,14 +33,14 @@ final class SetSpawnSubCommand implements SubCommand {
         }
 
         if (args.length != 2) {
-            send(sender, "&cFormat: /map setspawn &7(team)");
+            send(player, "&cFormat: /map setspawn &7(team)");
             return;
         }
 
         final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
 
         if (team == null) {
-            send(sender, "The team " + args[1] + " dont exist. List: " + TeamStorage.getStorage().getTeamsName());
+            send(player, "The team " + args[1] + " dont exist. List: " + TeamStorage.getStorage().getTeamsName());
             return;
         }
         final Set<Material> airBlocksStorage = null;
@@ -52,7 +51,7 @@ final class SetSpawnSubCommand implements SubCommand {
             return;
         };
         creatorData.setSpawn(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
-        send(sender, "&aSpawn added for the team " + args[1]);
+        send(player, "&aSpawn added for the team " + args[1]);
     }
 
     @Override

@@ -87,6 +87,10 @@ public final class MapStorage {
         return mapsPerName.get(worldName);
     }
 
+    public Map<String, GameMap> getMaps() {
+        return mapsPerName;
+    }
+
     public SlimeLoader getFileLoader() {
         return loader;
     }

@@ -11,14 +11,13 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.commands.SubCommand;
+import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
@@ -27,7 +26,7 @@ import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-final class SaveSubCommand implements SubCommand {
+final class SaveSubCommand implements BasicSubCommand {
 
     private final EggwarsPlugin plugin;
     private final MapCreatorData data;
@@ -38,8 +37,7 @@ final class SaveSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
+    public void execute(Player player, String[] args) {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -47,7 +45,7 @@ final class SaveSubCommand implements SubCommand {
             return;
         }
         if (args.length != 2) {
-            send(sender, "&cFormat: /map save &7(mapname)");
+            send(player, "&cFormat: /map save &7(mapname)");
             return;
         }
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
@@ -56,7 +54,7 @@ final class SaveSubCommand implements SubCommand {
         }
         final File mapFile = new File(mapFolder, args[1] + ".json");
         if (mapFile.exists()) {
-            send(sender, "&cAlready exist a map with this name. Try other");
+            send(player, "&cAlready exist a map with this name. Try other");
             return;
         }
 
@@ -64,7 +62,7 @@ final class SaveSubCommand implements SubCommand {
             mapFile.createNewFile();
 
             data.remove(player.getUniqueId());
-            send(sender, "&aMap saved in: " + mapFile.getPath());
+            send(player, "&aMap saved in: " + mapFile.getPath());
 
             final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
@@ -72,7 +70,7 @@ final class SaveSubCommand implements SubCommand {
             player.teleport(SpawnStorage.getStorage().getLocation());
             plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(player.getWorld(), true));
         } catch (IOException e) {
-            send(sender, "&cError on create the map");
+            send(player, "&cError on create the map");
             e.printStackTrace();
             return;
         }
@@ -124,10 +122,5 @@ final class SaveSubCommand implements SubCommand {
             eggs.put(entry.getKey().getKey(), entry.getValue().toString());
         }
         return eggs;
-    }
-
-    @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return List.of();
     }
 }

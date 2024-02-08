@@ -37,6 +37,11 @@ final class TeamJoinSubCommand implements SubCommand {
             return;
         }
 
+        if (game.getSpawn(team) == null) {
+            send(player, "Este team no existe, almenos para este mapa");
+            return;
+        }
+
         game.getPlayersPerTeam().remove(player);
         game.getPlayersPerTeam().put(player, team);
         team.getTeam().addPlayer(player);
@@ -45,6 +50,13 @@ final class TeamJoinSubCommand implements SubCommand {
 
     @Override
     public List<String> onTab(CommandSender sender, String[] args) {
-        return List.of();
+        if (args.length != 2) {
+            return List.of();
+        }
+        if (!(sender instanceof Player player)) {
+            return List.of();
+        }
+        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
+        return (map == null) ? List.of() : map.getSpawns().keySet().stream().map(BaseTeam::getKey).toList();
     }
 }

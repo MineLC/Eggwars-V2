@@ -17,10 +17,11 @@ final class LeaveSubCommand implements BasicSubCommand {
             send(player, "Actualmente no estás en ningun juego");
             return;
         }
+
         player.teleport(SpawnStorage.getStorage().getLocation());
         player.setGameMode(GameMode.ADVENTURE);
 
-        GameStorage.getStorage().leave(map, player);
+        GameStorage.getStorage().leave(map, player, map.getWorld());
         send(player, "Has salido del juego");
     }
 }

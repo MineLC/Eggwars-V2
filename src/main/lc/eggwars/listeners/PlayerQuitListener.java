@@ -21,6 +21,6 @@ public final class PlayerQuitListener implements EventListener {
         final Player player = event.getPlayer();
         final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        GameStorage.getStorage().leave(map, player);
+        GameStorage.getStorage().leave(map, player, map.getWorld());
     }
 }

@@ -56,7 +56,7 @@ public final class PlayerRespawnListener implements EventListener {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendMessage("Esta es tu muerte definitiva");
             player.teleport(map.getWorld().getSpawnLocation());
-            GameStorage.getStorage().leave(map, player);
+            GameStorage.getStorage().leave(map, player, map.getWorld());
             return;
         }
 

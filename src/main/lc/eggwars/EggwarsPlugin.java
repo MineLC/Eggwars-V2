@@ -17,6 +17,7 @@ import com.grinderwolf.swm.api.SlimePlugin;
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
+import lc.eggwars.generators.GeneratorThread;
 import lc.eggwars.generators.StartGenerators;
 import lc.eggwars.listeners.PlayerDeathListener;
 import lc.eggwars.listeners.PlayerInteractListener;
@@ -75,6 +76,9 @@ public class EggwarsPlugin extends JavaPlugin {
         for (final World world : worlds) {
             Bukkit.unloadWorld(world, false);
         }
+
+        GeneratorThread.setThread(null);
+        getServer().getScheduler().cancelTasks(this);
     }
 
     public FileConfiguration loadConfig(final String name) {

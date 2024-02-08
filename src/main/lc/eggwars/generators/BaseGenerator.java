@@ -1,12 +1,12 @@
 package lc.eggwars.generators;
 
-import org.bukkit.Material;
+import net.minecraft.server.v1_8_R3.ItemStack;
 
-public final record BaseGenerator (
+public final record BaseGenerator(
     String key,
     String name,
     Level[] levels,
-    Material drop,
+    ItemStack item,
     int maxLevel
 ) {
 

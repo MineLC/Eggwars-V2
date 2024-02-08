@@ -70,7 +70,8 @@ final class AddGeneratorSubCommand implements SubCommand {
             send(player, "&cIn this site already exist a generator. &7Use /map removegenerator");
             return;
         }
-        final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
+
+        final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, null, level);
         creatorData.addGenerator(mapGenerator);
         GeneratorStorage.getStorage().setGeneratorLines(targetBlock, mapGenerator);
 

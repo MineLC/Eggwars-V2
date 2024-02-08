@@ -15,6 +15,8 @@ import java.util.List;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
+import lc.eggwars.generators.managers.GeneratorsLoader;
+import lc.eggwars.generators.managers.GeneratorsUnloader;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.teams.BaseTeam;
@@ -47,6 +49,8 @@ public final class GameStorage {
         playersInGame.put(player.getUniqueId(), map);
 
         map.setState(GameState.PREGAME);
+
+        new GeneratorsLoader().load(map);
 
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 
@@ -93,6 +97,7 @@ public final class GameStorage {
     }
 
     public void unloadGame(final GameMap map) {
+        new GeneratorsUnloader().unload(map);
         gamesStarted.remove(map);
         map.setState(GameState.NONE);
         map.resetData();

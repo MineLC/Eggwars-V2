@@ -23,12 +23,14 @@ import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.generators.BaseGenerator;
 import lc.eggwars.generators.GeneratorStorage;
+import lc.eggwars.generators.GeneratorThread;
 import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.IntegerUtils;
+import net.minecraft.server.v1_8_R3.EntityItem;
 
 public final class StartMaps {
 
@@ -56,6 +58,8 @@ public final class StartMaps {
 
         final Gson gson = new Gson();
         final Map<String, GameMap> mapsPerName = new HashMap<>();
+        final GameMap[] maps = new GameMap[mapFiles.length];
+        int index = 0;
         int id = -1;
 
         for (final File mapFile : mapFiles) {
@@ -81,6 +85,8 @@ public final class StartMaps {
                     data.borderSize(),
                     ++id);
 
+                maps[index++] = map;
+
                 mapsPerName.put(world.getName(), map);
                 plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, true));
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
@@ -89,6 +95,10 @@ public final class StartMaps {
             }
         }
         MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
+
+        final GeneratorThread thread = new GeneratorThread(maps);
+        GeneratorThread.setThread(thread);
+        thread.start();
     }
 
     private void setTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
@@ -147,7 +157,17 @@ public final class StartMaps {
                 final String[] split = generatorString.split(":");
                 final int level = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
-                final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
+
+                final EntityItem entityItem = new EntityItem(null);
+
+                entityItem.setCustomNameVisible(true);
+                entityItem.setItemStack(baseGenerator.item());
+
+                entityItem.locX = location.x();
+                entityItem.locY = location.y();
+                entityItem.locZ = location.z();
+
+                final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, entityItem, level);
 
                 maps[mapIndex++] = mapGenerator;
                 clickableBlocks.put(location.hashCode(), mapGenerator);

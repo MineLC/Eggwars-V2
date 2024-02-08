@@ -33,11 +33,12 @@ public final class GeneratorStorage {
             if (signLines[i].isEmpty()) {
                 continue;
             }
+            final BaseGenerator.Level level = generator.getBase().levels()[generator.getLevel()];
             sign.setLine(i, signLines[i]
                 .replace("%name%", generator.getBase().name())
                 .replace("%level%", String.valueOf(generator.getLevel()))
-                .replace("%speed%", String.valueOf(generator.getBase().levels()[generator.getLevel()].secondsToGenerate()))
-                .replace("%amount%", String.valueOf(generator.getBase().levels()[generator.getLevel()].amountGenerated())));
+                .replace("%speed%", String.valueOf(level.secondsToGenerate()))
+                .replace("%amount%", String.valueOf(level.amountGenerated())));
         }
         sign.update();
     }

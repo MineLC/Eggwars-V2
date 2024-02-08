@@ -2,6 +2,8 @@ package lc.eggwars.generators;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 
 import lc.eggwars.EggwarsPlugin;
 import net.md_5.bungee.api.ChatColor;
@@ -38,11 +40,12 @@ public final class StartGenerators {
 
             final int maxLevel = config.getInt(path + "max-level");
             final String name = config.getString(path + ".sign-name");
+
             final BaseGenerator baseGenerator = new BaseGenerator(
                 generator,
                 (name == null) ? generator : name.replace('&', ChatColor.COLOR_CHAR),
                 getLevels(config, path + "level.", maxLevel),
-                material,
+                CraftItemStack.asNMSCopy(new ItemStack(material)),
                 maxLevel
             );
 

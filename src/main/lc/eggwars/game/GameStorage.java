@@ -2,7 +2,6 @@ package lc.eggwars.game;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Map.Entry;
@@ -10,8 +9,6 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
@@ -28,7 +25,6 @@ public final class GameStorage {
     private final EggwarsPlugin plugin;
 
     private final Map<UUID, GameMap> playersInGame = new HashMap<>();
-    private final List<GameMap> gamesStarted = new ArrayList<>();
 
     GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preGameData) {
         this.plugin = plugin;
@@ -49,6 +45,7 @@ public final class GameStorage {
         playersInGame.put(player.getUniqueId(), map);
 
         map.setState(GameState.PREGAME);
+        map.setWorld(world);
 
         new GeneratorsLoader().load(map);
 
@@ -56,8 +53,6 @@ public final class GameStorage {
             preGameData, 
             map.getPlayers(),
             () -> { // Countdown complete
-                gamesStarted.add(map);
-                map.setWorld(world);
                 map.setState(GameState.IN_GAME);
                 new GameStarter().start(world, map);
             },
@@ -98,7 +93,6 @@ public final class GameStorage {
 
     public void unloadGame(final GameMap map) {
         new GeneratorsUnloader().unload(map);
-        gamesStarted.remove(map);
         map.setState(GameState.NONE);
         map.resetData();
         map.setWorld(null);

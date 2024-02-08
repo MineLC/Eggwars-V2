@@ -31,7 +31,7 @@ public class StartTeams {
 
         for (final String teamName : teams) {
             final String path = teamName + '.';
-            Team team = scoreboard.getTeam(teamName);
+            Team team = scoreboard.getTeam((teamIndex + 1) + teamName);
 
             if (team == null) {
                 // Example: "red" = "1red". This is used for order tablist on teams

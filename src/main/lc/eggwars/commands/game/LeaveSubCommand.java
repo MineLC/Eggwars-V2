@@ -1,6 +1,6 @@
 package lc.eggwars.commands.game;
 
-
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.commands.BasicSubCommand;
@@ -19,6 +19,7 @@ final class LeaveSubCommand implements BasicSubCommand {
         }
         GameStorage.getStorage().leave(map, player);
         player.teleport(SpawnStorage.getStorage().getLocation());
+        player.setGameMode(GameMode.ADVENTURE);
         send(player, "Has salido del juego");
     }
 }

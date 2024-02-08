@@ -19,6 +19,7 @@ import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.generators.GeneratorThread;
 import lc.eggwars.generators.StartGenerators;
+import lc.eggwars.listeners.BlockPhysicsListener;
 import lc.eggwars.listeners.PlayerDeathListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
@@ -67,6 +68,7 @@ public class EggwarsPlugin extends JavaPlugin {
         }, 20);
         listeners.register(new PlayerDeathListener());
         listeners.register(new PlayerRespawnListener(this, getConfig()));
+        listeners.register(new BlockPhysicsListener());
     }
 
     @Override

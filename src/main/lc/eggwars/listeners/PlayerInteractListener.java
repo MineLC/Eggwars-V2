@@ -1,5 +1,6 @@
 package lc.eggwars.listeners;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -24,6 +25,11 @@ public final class PlayerInteractListener implements EventListener {
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             return;
         }
+
+        if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
+
         final Block block = event.getClickedBlock();
 
         if (block == null) {

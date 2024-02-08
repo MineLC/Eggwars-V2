@@ -38,7 +38,7 @@ public class PreGameCountdown implements GameCountdown {
         }
 
         if (players.size() < data.minPlayers) {
-            if (countdown % data.waitingTime == 0) {
+            if (waitingCountdown % data.waitingTime == 0) {
                 Chat.send(data.messageWaitingPlayers, players);
             }
             countdown = data.waitingTime;

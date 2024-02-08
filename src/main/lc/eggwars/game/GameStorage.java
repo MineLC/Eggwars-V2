@@ -81,7 +81,7 @@ public final class GameStorage {
             map.getPlayersPerTeam().remove(player);
         }
 
-        if (map.getPlayers().size() == 0) {
+        if (map.getPlayers().size() - 1 <= 0) {
             if (map.getTaskId() != -1) {
                 Bukkit.getScheduler().cancelTask(map.getTaskId());
             }

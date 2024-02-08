@@ -24,12 +24,17 @@ public final class EnderDragonEgg implements ClickableBlock  {
         if (map == null) {
             return;
         }
-        final BaseTeam playerTeam = map.getPlayersPerTeam().get(player);
-        if (team.equals(playerTeam)) {
+        final BaseTeam teamToBreakEgg = map.getPlayersPerTeam().get(player);
+        if (team.equals(teamToBreakEgg)) {
             player.sendMessage("No puedes romper tu propio huevo...");
             return;
         }
-        map.getTeamsWithEggs().remove(playerTeam);
+
+        if (!(map.getTeamsWithEggs().contains(teamToBreakEgg))) {
+            return;
+        }
+
+        map.getTeamsWithEggs().remove(teamToBreakEgg);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
         Chat.send("Se ha roto el juego del equipo " + team.getName(), map.getPlayers());
     }

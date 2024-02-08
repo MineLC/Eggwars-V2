@@ -11,6 +11,7 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.commands.SubCommand;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.generators.managers.GeneratorsLoader;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
 
@@ -37,7 +38,7 @@ final class JoinSubCommand implements SubCommand {
 
         if (map.getState() != GameState.NONE) {
             GameStorage.getStorage().join(map.getWorld(), map, player);
-            player.setGameMode(GameMode.SPECTATOR);
+            player.setGameMode(GameMode.SURVIVAL);
             player.teleport(map.getWorld().getSpawnLocation());
         }
 
@@ -50,8 +51,9 @@ final class JoinSubCommand implements SubCommand {
                 }
                 GameStorage.getStorage().join(world, map, player);
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    player.setGameMode(GameMode.SPECTATOR);
+                    player.setGameMode(GameMode.SURVIVAL);
                     player.teleport(world.getSpawnLocation());
+                    new GeneratorsLoader().setGeneratorSigns(map);
                 });
             });
         }

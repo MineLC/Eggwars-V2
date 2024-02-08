@@ -2,8 +2,10 @@ package lc.eggwars.generators.managers;
 
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
+import lc.eggwars.generators.GeneratorStorage;
 import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.utils.BlockLocation;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.World;
 
@@ -14,11 +16,23 @@ public final class GeneratorsLoader {
         final World world = ((CraftWorld)map.getWorld()).getHandle();
 
         for (final SignGenerator generator : generators) {
-            final Chunk mainChunk = world.getChunkAt(generator.getLocation().x() >> 4, generator.getLocation().z() >> 4);
+            final BlockLocation location = generator.getLocation();
+            final Chunk mainChunk = world.getChunkAt(location.x() >> 4, location.z() >> 4);
 
             generator.getBase().dropItem().world = world;
             generator.updateChunks(getRadiusChunk(world, mainChunk));
         }
+    }
+
+    @Deprecated(forRemoval = true, since = "0.0.1 - Es lento y luego se va a usar nms")
+    public void setGeneratorSigns(final GameMap map) {
+        final SignGenerator[] generators = map.getGenerators();
+        for (final SignGenerator generator : generators) {
+            final BlockLocation location = generator.getLocation();
+            GeneratorStorage.getStorage().setGeneratorLines(
+                map.getWorld().getBlockAt(location.x(), location.y(), location.z()),
+                generator);
+        } 
     }
 
     private Chunk[] getRadiusChunk(final World world, Chunk mainChunk) {

@@ -87,7 +87,7 @@ public final class GameStorage {
             }
 
             unloadGame(map);
-            MapStorage.getStorage().unload(player.getWorld());
+            MapStorage.getStorage().unload(map.getWorld());
         }
     }
 

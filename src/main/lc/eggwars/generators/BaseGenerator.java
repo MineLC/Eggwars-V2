@@ -7,6 +7,7 @@ public final record BaseGenerator(
     String name,
     Level[] levels,
     ItemStack item,
+    GeneratorDropitem dropItem,
     int maxLevel
 ) {
 

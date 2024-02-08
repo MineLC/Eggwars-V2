@@ -8,13 +8,11 @@ import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntityItem;
 
 public final class SignGenerator implements ClickableBlock {
 
     private final BlockLocation spawnLocation;
     private final BaseGenerator base;
-    private final EntityItem item;
     private final int defaultLevel;
     private final int height;
 
@@ -22,10 +20,9 @@ public final class SignGenerator implements ClickableBlock {
     private int currentLevel = 0;
     private int itemAmount = 0;
 
-    public SignGenerator(BlockLocation spawnLocation, BaseGenerator base, EntityItem item, int currentLevel) {
+    public SignGenerator(BlockLocation spawnLocation, BaseGenerator base, int currentLevel) {
         this.spawnLocation = spawnLocation;
         this.base = base;
-        this.item = item;
         this.height = spawnLocation.y() >> 4;
         this.defaultLevel = currentLevel;
         this.currentLevel = currentLevel;
@@ -49,10 +46,6 @@ public final class SignGenerator implements ClickableBlock {
 
     public Chunk[] getChunks() {
         return radiusChunk;
-    }
-
-    public EntityItem getItem() {
-        return item;
     }
 
     public int getLevel() {

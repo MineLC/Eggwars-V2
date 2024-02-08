@@ -16,7 +16,7 @@ public final class GeneratorsLoader {
         for (final SignGenerator generator : generators) {
             final Chunk mainChunk = world.getChunkAt(generator.getLocation().x() >> 4, generator.getLocation().z() >> 4);
 
-            generator.getItem().world = world;
+            generator.getBase().dropItem().world = world;
             generator.updateChunks(getRadiusChunk(world, mainChunk));
         }
     }

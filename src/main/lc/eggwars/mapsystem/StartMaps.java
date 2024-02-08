@@ -30,7 +30,6 @@ import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.IntegerUtils;
-import net.minecraft.server.v1_8_R3.EntityItem;
 
 public final class StartMaps {
 
@@ -158,16 +157,7 @@ public final class StartMaps {
                 final int level = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
 
-                final EntityItem entityItem = new EntityItem(null);
-
-                entityItem.setCustomNameVisible(true);
-                entityItem.setItemStack(baseGenerator.item());
-
-                entityItem.locX = location.x();
-                entityItem.locY = location.y();
-                entityItem.locZ = location.z();
-
-                final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, entityItem, level);
+                final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
 
                 maps[mapIndex++] = mapGenerator;
                 clickableBlocks.put(location.hashCode(), mapGenerator);

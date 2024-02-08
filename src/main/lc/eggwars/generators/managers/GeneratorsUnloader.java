@@ -10,7 +10,7 @@ public final class GeneratorsUnloader {
 
         for (final SignGenerator generator : generators) {
             generator.updateChunks(null);
-            generator.getItem().world = null;
+            generator.getBase().dropItem().world = null;
             generator.setAmount(0);
             generator.setDefaultLevel();
         }

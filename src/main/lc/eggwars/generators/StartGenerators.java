@@ -41,11 +41,18 @@ public final class StartGenerators {
             final int maxLevel = config.getInt(path + "max-level");
             final String name = config.getString(path + ".sign-name");
 
+            final GeneratorDropitem drop = new GeneratorDropitem();
+            final net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(new ItemStack(material));
+
+            drop.setCustomNameVisible(true);
+            drop.setItemStack(item);
+
             final BaseGenerator baseGenerator = new BaseGenerator(
                 generator,
                 (name == null) ? generator : name.replace('&', ChatColor.COLOR_CHAR),
                 getLevels(config, path + "level.", maxLevel),
-                CraftItemStack.asNMSCopy(new ItemStack(material)),
+                item,
+                drop,
                 maxLevel
             );
 

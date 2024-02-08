@@ -71,7 +71,7 @@ final class AddGeneratorSubCommand implements SubCommand {
             return;
         }
 
-        final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, null, level);
+        final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
         creatorData.addGenerator(mapGenerator);
         GeneratorStorage.getStorage().setGeneratorLines(targetBlock, mapGenerator);
 

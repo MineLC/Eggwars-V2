@@ -65,7 +65,7 @@ public final class GeneratorThread extends Thread {
                 amountToGenerate = 256;
             }
 
-            generateItem(generator, amountToGenerate);
+            generateItem(world, generator, amountToGenerate);
         }
         return true;
     }
@@ -86,8 +86,14 @@ public final class GeneratorThread extends Thread {
         return true;
     }
 
-    private void generateItem(final SignGenerator generator, final int amountToGenerate) {
-        final EntityItem item = generator.getItem();
+    private void generateItem(final World world, final SignGenerator generator, final int amountToGenerate) {
+        final EntityItem item = generator.getBase().dropItem();
+
+        item.world = world;
+        item.locX = generator.getLocation().x();
+        item.locY = generator.getLocation().y();
+        item.locZ = generator.getLocation().z();
+
         item.setCustomName(String.valueOf(generator.getAmount()));
 
         final PacketPlayOutSpawnEntity packetEntity = new PacketPlayOutSpawnEntity(item, 2, item.getId());

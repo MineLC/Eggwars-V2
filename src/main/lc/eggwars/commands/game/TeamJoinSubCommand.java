@@ -27,7 +27,7 @@ final class TeamJoinSubCommand implements SubCommand {
         }
         final GameMap game = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        if (game == null) {
+        if (game == null || game.getState() == GameState.NONE) {
             send(player, "You aren't in a game");
             return;
         }

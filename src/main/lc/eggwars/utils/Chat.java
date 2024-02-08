@@ -19,6 +19,6 @@ public final class Chat {
     }
 
     public static final String color(final String message) {
-        return message.replace('&', ChatColor.COLOR_CHAR);
+        return (message == null) ? "" : message.replace('&', ChatColor.COLOR_CHAR);
     }
 }

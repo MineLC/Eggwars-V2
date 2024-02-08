@@ -7,3 +7,8 @@ sign-lines:
 spawn-world: "spawnegg"
 spawn: "-1,65,8"
 spawn-border: 60
+
+respawn:
+  seconds: 10
+  title: "&e&c&lRespawn in %seconds% &e"
+  subtitle: "&7Remember learn pvp"

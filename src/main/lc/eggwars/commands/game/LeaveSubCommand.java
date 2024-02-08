@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.GameMap;
-import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.spawn.SpawnStorage;
 
 final class LeaveSubCommand implements BasicSubCommand {
 
@@ -17,13 +17,8 @@ final class LeaveSubCommand implements BasicSubCommand {
             send(player, "Actualmente no estás en ningun juego");
             return;
         }
-        final BaseTeam team = map.getPlayersPerTeam().get(player);
-
-        if (team != null) {
-            team.getTeam().removePlayer(player);
-        }
-
         GameStorage.getStorage().leave(map, player);
+        player.teleport(SpawnStorage.getStorage().getLocation());
         send(player, "Has salido del juego");
     }
 }

@@ -13,6 +13,7 @@ import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public final class GameMap {
@@ -23,6 +24,7 @@ public final class GameMap {
     private final int borderSize;
     private final int id;
 
+    private World world;
     private Set<BaseTeam> teamsWithEgg;
     private Map<Player, BaseTeam> playersPerTeam;
     private Set<Player> players;
@@ -43,12 +45,20 @@ public final class GameMap {
         this.teamsWithEgg = new HashSet<>();
     }
 
+    public void setWorld(final World world) {
+        this.world = world;
+    }
+
     public void setState(final GameState state) {
         this.state = state;
     }
 
     public void setTaskId(int id) {
         this.currentTaskId = id;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public Set<Player> getPlayers() {

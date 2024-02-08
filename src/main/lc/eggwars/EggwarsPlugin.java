@@ -18,8 +18,10 @@ import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.generators.StartGenerators;
+import lc.eggwars.listeners.PlayerDeathListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
+import lc.eggwars.listeners.PlayerRespawnListener;
 import lc.eggwars.listeners.internal.ListenerRegister;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
@@ -49,18 +51,21 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartTeams(this).load();
         new StartGameData().load(this, messages);
 
+        final ListenerRegister listeners = new ListenerRegister(this);
+   
         // Remember start maps on final
         // This is executed 20 ticks later for wait to load all worlds
         getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
             new StartMaps(this).load(slimePlugin);
             final Location spawnLocation = new StartSpawn(this).load();
 
-            final ListenerRegister listeners = new ListenerRegister(this);
             listeners.register(new PlayerInteractListener());
             if (spawnLocation != null) {
                 listeners.register(new PlayerJoinListener());  
             }
         }, 20);
+        listeners.register(new PlayerDeathListener());
+        listeners.register(new PlayerRespawnListener(this, getConfig()));
     }
 
     @Override

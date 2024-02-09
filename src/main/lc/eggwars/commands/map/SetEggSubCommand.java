@@ -50,7 +50,7 @@ final class SetEggSubCommand implements SubCommand {
             send(player, "&cTo set a team egg, you need view a dragon egg");
             return;
         };
-        creatorData.setSpawn(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
+        creatorData.setEgg(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
         send(player, "&aEgg added for the team " + args[1]);
     }
 

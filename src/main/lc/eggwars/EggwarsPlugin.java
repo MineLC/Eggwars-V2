@@ -72,7 +72,6 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerRespawnListener(this, getConfig()));
         listeners.register(new BlockPhysicsListener());
         listeners.register(new EntityDamageListener());
-        listeners.register(new PlayerInteractListener());
     }
 
     @Override

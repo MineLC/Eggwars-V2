@@ -30,11 +30,11 @@ public final class EnderDragonEgg implements ClickableBlock  {
             return;
         }
 
-        if (!(map.getTeamsWithEggs().contains(teamToBreakEgg))) {
+        if (map.getTeamsWithoutEgg().contains(team)) {
             return;
         }
 
-        map.getTeamsWithEggs().remove(teamToBreakEgg);
+        map.getTeamsWithoutEgg().add(team);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
         Chat.send("Se ha roto el juego del equipo " + team.getName(), map.getPlayers());
     }

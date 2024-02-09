@@ -75,12 +75,11 @@ public final class StartMaps {
                     continue;
                 }
 
-                setTeamEggs(data, worldClickableBlocks);
-
                 final GameMap map = new GameMap(
                     worldClickableBlocks,
                     getGenerators(data, worldClickableBlocks),
                     getSpawns(data),
+                    getTeamEggs(data, worldClickableBlocks),
                     data.borderSize(),
                     ++id);
 
@@ -100,8 +99,10 @@ public final class StartMaps {
         thread.start();
     }
 
-    private void setTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+    private Map<BaseTeam, BlockLocation> getTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+        final Map<BaseTeam, BlockLocation> eggsParsed = new HashMap<>();
         final Set<Entry<String, String>> eggsEntryEntries = data.teamEggs().entrySet();
+
         for (final Entry<String, String> entry : eggsEntryEntries) {
             final BaseTeam team = TeamStorage.getStorage().getTeam(entry.getKey());
 
@@ -111,8 +112,11 @@ public final class StartMaps {
             }
 
             final BlockLocation location = BlockLocation.create(entry.getValue());
+            eggsParsed.put(team, location);
             clickableBlocks.put(location.hashCode(), new EnderDragonEgg(team, location));
         }
+
+        return eggsParsed;
     }
 
     private Map<BaseTeam, BlockLocation> getSpawns(final JsonMapData data) {

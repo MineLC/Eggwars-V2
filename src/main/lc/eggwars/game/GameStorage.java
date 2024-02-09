@@ -16,6 +16,7 @@ import lc.eggwars.generators.managers.GeneratorsLoader;
 import lc.eggwars.generators.managers.GeneratorsUnloader;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.mapsystem.manager.EggsLoader;
 import lc.eggwars.teams.BaseTeam;
 
 public final class GameStorage {

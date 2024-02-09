@@ -52,7 +52,7 @@ public final class PlayerRespawnListener implements EventListener {
 
         // TODO - Add death messages
 
-        if (!map.getTeamsWithEggs().contains(team)) {
+        if (map.getTeamsWithoutEgg().contains(team)) {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendMessage("Esta es tu muerte definitiva");
             player.teleport(map.getWorld().getSpawnLocation());

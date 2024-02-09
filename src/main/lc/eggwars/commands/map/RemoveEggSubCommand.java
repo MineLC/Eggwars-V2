@@ -44,7 +44,7 @@ final class RemoveEggSubCommand implements BasicSubCommand {
             if (entry.getValue().equals(location)) {
                 targetBlock.setType(Material.AIR);
                 send(player, "&aEgg removed for the team " + entry.getKey().getKey());
-                creatorData.getSpawnsMap().remove(entry.getKey());
+                creatorData.getEggsMap().remove(entry.getKey());
                 return;
             }
         }

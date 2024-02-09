@@ -1,5 +1,6 @@
 package lc.eggwars.generators;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -27,19 +28,19 @@ public final class StartGenerators {
         final BaseGenerator[] baseGenerators = new BaseGenerator[generators.size()];
         final Map<String, BaseGenerator> generatorsByName = new HashMap<>();
 
-        int generatorsIndex = -1;
+        int generatorsIndex = 0;
 
         for (final String generator : generators) {
             final String path = generator + '.';
     
-            Material material = Material.getMaterial(config.getString(path + ".drop"));
+            Material material = Material.getMaterial(config.getString(path + "drop"));
             if (material == null) {
                 material = Material.STONE;
                 plugin.getLogger().warning("Error on get the drop material of the generator: " + generator);
             }
 
             final int maxLevel = config.getInt(path + "max-level");
-            final String name = config.getString(path + ".sign-name");
+            final String name = config.getString(path + "sign-name");
 
             final GeneratorDropitem drop = new GeneratorDropitem();
             final net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(new ItemStack(material));
@@ -56,15 +57,16 @@ public final class StartGenerators {
                 maxLevel
             );
 
-            baseGenerators[++generatorsIndex] = baseGenerator;
+            baseGenerators[generatorsIndex++] = baseGenerator;
             generatorsByName.put(generator, baseGenerator);
         }
 
         GeneratorStorage.update(new GeneratorStorage(generatorsByName, getSignLines()));
     }
 
-    private BaseGenerator.Level[] getLevels(final FileConfiguration config, final String levelPath, final int maxLevel) {
-        final BaseGenerator.Level[] levels = new BaseGenerator.Level[maxLevel + 1];
+    private BaseGenerator.Level[] getLevels(final FileConfiguration config, final String levelPath, int maxLevel) {
+        maxLevel += 1;
+        final BaseGenerator.Level[] levels = new BaseGenerator.Level[maxLevel];
 
         for (int i = 0; i < maxLevel; i++) {
             final String path = levelPath + i;

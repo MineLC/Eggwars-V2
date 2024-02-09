@@ -21,10 +21,10 @@ public final class PlayerInteractListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerInteractEvent event = (PlayerInteractEvent)defaultEvent;
 
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (event.getAction() == Action.LEFT_CLICK_AIR) {
             return;
         }
-  
+
         final Block block = event.getClickedBlock();
 
         if (block == null) {
@@ -36,6 +36,7 @@ public final class PlayerInteractListener implements EventListener {
 
         if (clickableBlock != null) {
             clickableBlock.onClick(event.getPlayer());
+            event.setCancelled(true);
         }
     }
 }

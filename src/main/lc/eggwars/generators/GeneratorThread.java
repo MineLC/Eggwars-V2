@@ -2,9 +2,11 @@ package lc.eggwars.generators;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
 import lc.eggwars.game.GameState;
+import lc.eggwars.generators.BaseGenerator.Level;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ItemUtils;
@@ -39,9 +41,7 @@ public final class GeneratorThread extends Thread {
                     if (map.getState() != GameState.IN_GAME) {
                         continue;
                     }
-                    if (!tryGenerate(map.getGenerators(), ((CraftWorld)map.getWorld()).getHandle())) {
-                        continue;
-                    }
+                    tryGenerate(map.getGenerators(), ((CraftWorld)map.getWorld()).getHandle());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -51,8 +51,8 @@ public final class GeneratorThread extends Thread {
 
     private boolean tryGenerate(final SignGenerator[] generators, final World world) {
         for (final SignGenerator generator : generators) {
-            if (canGenerateItem(generator)) {
-                return false;
+            if (!canGenerateItem(generator)) {
+                continue;
             }
 
             if (generator.getAmount() >= 256) {
@@ -79,11 +79,20 @@ public final class GeneratorThread extends Thread {
             }
         }
 
-        if (amountEntities == 0) {
+        if (amountEntities != 0) {
+            return true;
+        }
+        if (generator.getAmount() >= 256) {
             return false;
         }
 
-        return true;
+        final Level level = generator.getBase().levels()[generator.getLevel()];
+        if (generator.getAmount() + level.amountGenerated() >= 256) {
+            return false;
+        }
+        generator.setAmount(generator.getAmount() + level.amountGenerated());
+
+        return false;
     }
 
     private void generateItem(final World world, final SignGenerator generator, final int amountToGenerate) {

@@ -66,7 +66,7 @@ public final class CreatorData {
     }
 
     public Map<BaseTeam, BlockLocation> getEggsMap() {
-        return spawns;
+        return teamEggs;
     }
 
     public Map<BlockLocation, SignGenerator> getGeneratorsMap() {

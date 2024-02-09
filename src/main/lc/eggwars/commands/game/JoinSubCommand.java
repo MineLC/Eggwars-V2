@@ -14,6 +14,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.generators.managers.GeneratorsLoader;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.mapsystem.manager.EggsLoader;
 
 final class JoinSubCommand implements SubCommand {
 
@@ -54,6 +55,7 @@ final class JoinSubCommand implements SubCommand {
                     player.setGameMode(GameMode.SURVIVAL);
                     player.teleport(world.getSpawnLocation());
                     new GeneratorsLoader().setGeneratorSigns(map);
+                    new EggsLoader().load(map);
                 });
             });
         }

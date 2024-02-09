@@ -20,21 +20,23 @@ public final class GameMap {
 
     private final IntObjectHashMap<ClickableBlock> clickableBlocks;
     private final Map<BaseTeam, BlockLocation> spawns;
+    private final Map<BaseTeam, BlockLocation> eggs;
     private final SignGenerator[] generators;
     private final int borderSize;
     private final int id;
 
     private World world;
-    private Set<BaseTeam> teamsWithEgg;
+    private Set<BaseTeam> teamsWithoutEggs;
     private Map<Player, BaseTeam> playersPerTeam;
     private Set<Player> players;
     private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
-    GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, SignGenerator[] generators, Map<BaseTeam, BlockLocation> spawns, int borderSize, int id) {
+    GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, SignGenerator[] generators, Map<BaseTeam, BlockLocation> spawns, Map<BaseTeam, BlockLocation> eggs, int borderSize, int id) {
         this.clickableBlocks = clickableBlocks;
         this.generators = generators;
         this.spawns = spawns;
+        this.eggs = eggs;
         this.borderSize = borderSize;
         this.id = id;
     }
@@ -42,7 +44,7 @@ public final class GameMap {
     public void resetData() {
         this.players = new HashSet<>();
         this.playersPerTeam = new HashMap<>();
-        this.teamsWithEgg = new HashSet<>();
+        this.teamsWithoutEggs = new HashSet<>();
     }
 
     public void setWorld(final World world) {
@@ -69,8 +71,8 @@ public final class GameMap {
         return playersPerTeam;
     }
 
-    public Set<BaseTeam> getTeamsWithEggs() {
-        return teamsWithEgg;
+    public Set<BaseTeam> getTeamsWithoutEgg() {
+        return teamsWithoutEggs;
     }
 
     public GameState getState() {
@@ -83,6 +85,10 @@ public final class GameMap {
 
     public BlockLocation getSpawn(final BaseTeam team) {
         return spawns.get(team);
+    }
+
+    public Map<BaseTeam, BlockLocation> getEggs() {
+        return eggs;
     }
 
     public Map<BaseTeam, BlockLocation> getSpawns() {

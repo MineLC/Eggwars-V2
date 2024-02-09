@@ -17,8 +17,6 @@ import lc.eggwars.utils.BlockLocation;
 final class GameStarter {
 
     void start(final World world, final GameMap map) {
-        setEggsToTeams(map);
-
         final int teamsAmount = map.getSpawns().keySet().size();
         int maxPersonsPerTeam = map.getPlayers().size() / teamsAmount;
 
@@ -35,33 +33,27 @@ final class GameStarter {
             for (final Entry<BaseTeam, BlockLocation> team : teams) {
                 final Integer amountPersons = personsPerTeam.get(team.getKey());
 
-                if (amountPersons != null && amountPersons == maxPersonsPerTeam) {
+                if (playerTeam == null && amountPersons != null && amountPersons > maxPersonsPerTeam) {
+                    continue;
+                } else if (playerTeam != null && !playerTeam.equals(team.getKey())) {
                     continue;
                 }
 
+                if (!playerTeam.equals(team.getKey())) {
+                    map.getPlayersPerTeam().put(player, playerTeam);
+                    team.getKey().getTeam().addPlayer(player);   
+                }
+
+                final BlockLocation spawnTeam = team.getValue();
+                player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
+                player.setGameMode(GameMode.SURVIVAL);
+                
                 if (amountPersons == null) {
                     personsPerTeam.put(playerTeam, 1);
-                } else {
-                    personsPerTeam.replace(playerTeam, amountPersons + 1);
-                }
-
-                if (playerTeam == null || playerTeam.equals(team.getKey())) {
-                    map.getPlayersPerTeam().put(player, playerTeam);
-                    team.getKey().getTeam().addPlayer(player);
-
-                    final BlockLocation spawnTeam = team.getValue();
-                    player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
-                    player.setGameMode(GameMode.SURVIVAL);
                     continue;
                 }
+                personsPerTeam.replace(playerTeam, amountPersons + 1);
             }
-        }
-    }
-
-    private void setEggsToTeams(final GameMap map) {
-        final Set<BaseTeam> teams = map.getSpawns().keySet();
-        for (final BaseTeam team : teams) {
-            map.getTeamsWithEggs().add(team);
         }
     }
 }

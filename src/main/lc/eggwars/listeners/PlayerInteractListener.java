@@ -33,9 +33,9 @@ public final class PlayerInteractListener implements EventListener {
 
         final Location location = block.getLocation();
         final ClickableBlock clickableBlock = MapStorage.getStorage().getClickableBlock(location.getWorld(), location);
-
+        
         if (clickableBlock != null) {
-            clickableBlock.onClick(event.getPlayer());
+            clickableBlock.onClick(event.getPlayer(), event.getAction());
             event.setCancelled(true);
         }
     }

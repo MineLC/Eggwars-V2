@@ -22,9 +22,9 @@ import com.grinderwolf.swm.api.loaders.SlimeLoader;
 import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.generators.BaseGenerator;
+import lc.eggwars.generators.GeneratorData;
 import lc.eggwars.generators.GeneratorStorage;
 import lc.eggwars.generators.GeneratorThread;
-import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
@@ -136,7 +136,7 @@ public final class StartMaps {
         return spawnsParsed;
     }
     
-    private SignGenerator[] getGenerators(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+    private GeneratorData[] getGenerators(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
         final Set<Entry<String, String[]>> generatorsEntries = data.generators().entrySet();
 
         int size = 0;
@@ -145,8 +145,8 @@ public final class StartMaps {
             size += generator.getValue().length;
         }
 
-        final SignGenerator[] maps = new SignGenerator[size];
-        int mapIndex = 0;
+        final GeneratorData[] generatorsData = new GeneratorData[size];
+        int index = 0;
 
         for (final Entry<String, String[]> generator : generatorsEntries) {
             final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(generator.getKey());
@@ -158,16 +158,15 @@ public final class StartMaps {
 
             for (final String generatorString : cordsAndLevels) {
                 final String[] split = generatorString.split(":");
-                final int level = IntegerUtils.parsePositive(split[0]);
+                final int defaultLevel = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
+                final GeneratorData generatorData = new GeneratorData(location, defaultLevel, baseGenerator);
 
-                final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
-
-                maps[mapIndex++] = mapGenerator;
-                clickableBlocks.put(location.hashCode(), mapGenerator);
+                generatorsData[index++] = generatorData;
+                clickableBlocks.put(location.hashCode(), generatorData);
             }
         }
 
-        return maps;
+        return generatorsData;
     }
 }

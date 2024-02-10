@@ -1,41 +1,49 @@
-package lc.eggwars.generators.managers;
+package lc.eggwars.generators;
 
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
-import lc.eggwars.generators.GeneratorStorage;
-import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.utils.BlockLocation;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.World;
 
-public final class GeneratorsLoader {
+public final class GeneratorManager {
 
-    public void load(final GameMap map) {
-        final SignGenerator[] generators = map.getGenerators();
-        final World world = ((CraftWorld)map.getWorld()).getHandle();
+    public void setGeneratorSigns(final GameMap map) {
+        final GeneratorData[] generators = map.getGenerators();
 
-        for (final SignGenerator generator : generators) {
-            final BlockLocation location = generator.getLocation();
-            final Chunk mainChunk = world.getChunkAt(location.x() >> 4, location.z() >> 4);
-
-            generator.getBase().dropItem().world = world;
-            generator.updateChunks(getRadiusChunk(world, mainChunk));
+        for(final GeneratorData generator : generators) {
+            final BlockLocation loc = generator.getLocation();
+            GeneratorStorage.getStorage().setLines(
+                map.getWorld().getBlockAt(loc.x(), loc.y(), loc.z()),
+                generator.getBase(),
+                generator.getDefaultLevel());
         }
     }
 
-    @Deprecated(forRemoval = true, since = "0.0.1 - Es lento y luego se va a usar nms")
-    public void setGeneratorSigns(final GameMap map) {
-        final SignGenerator[] generators = map.getGenerators();
-        for (final SignGenerator generator : generators) {
-            final BlockLocation location = generator.getLocation();
-            GeneratorStorage.getStorage().setGeneratorLines(
-                map.getWorld().getBlockAt(location.x(), location.y(), location.z()),
-                generator);
-        } 
+    public void load(final GameMap map) {
+        final GeneratorData[] generators = map.getGenerators();
+    
+        for(final GeneratorData generator : generators) {
+            generator.setGenerator(map.getWorld());
+            final World world = ((CraftWorld)map.getWorld()).getHandle();
+
+            generator.getGenerator().update(world, getNearbyChunk(
+                world,
+                world.getChunkAt(generator.getLocation().x() >> 4, generator.getLocation().z() >> 4)
+            ));
+        }
     }
 
-    private Chunk[] getRadiusChunk(final World world, Chunk mainChunk) {
+    public void unload(final GameMap map) {
+        final GeneratorData[] generators = map.getGenerators();
+    
+        for(final GeneratorData generator : generators) {
+            generator.cleanData();
+        }
+    }
+
+    private static final Chunk[] getNearbyChunk(final World world, Chunk mainChunk) {
         final Chunk[] nearbyChunks = new Chunk[9];
         nearbyChunks[0] = mainChunk;
 
@@ -58,5 +66,4 @@ public final class GeneratorsLoader {
         nearbyChunks[8] = world.getChunkAt(mainChunk.locX +1, mainChunk.locZ - 1); // Extremo arriba izquierdo
         return nearbyChunks;
     }
-
 }

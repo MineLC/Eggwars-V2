@@ -9,8 +9,9 @@ import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-public final class EggsLoader {
-    public void load(final GameMap map) {
+public final class EggsManager {
+
+    public void setEggs(final GameMap map) {
         final Set<Entry<BaseTeam, BlockLocation>> eggs = map.getEggs().entrySet();
     
         for (final Entry<BaseTeam, BlockLocation> egg : eggs) {

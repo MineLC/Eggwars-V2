@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.commands.SubCommand;
 import lc.eggwars.generators.BaseGenerator;
+import lc.eggwars.generators.GeneratorData;
 import lc.eggwars.generators.GeneratorStorage;
-import lc.eggwars.generators.SignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.BlockLocation;
@@ -51,8 +51,8 @@ final class AddGeneratorSubCommand implements SubCommand {
             send(player, "&cThe level need be positive");
             return;
         }
-        if (level > baseGenerator.maxLevel()) {
-            send(player, "&cThe maximun level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxLevel());
+        if (level > baseGenerator.maxlevel()) {
+            send(player, "&cThe maximun level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxlevel());
             return;
         }
 
@@ -71,9 +71,9 @@ final class AddGeneratorSubCommand implements SubCommand {
             return;
         }
 
-        final SignGenerator mapGenerator = new SignGenerator(location, baseGenerator, level);
-        creatorData.addGenerator(mapGenerator);
-        GeneratorStorage.getStorage().setGeneratorLines(targetBlock, mapGenerator);
+        final GeneratorData generator = new GeneratorData(location, level, baseGenerator);
+        creatorData.addGenerator(generator);
+        GeneratorStorage.getStorage().setLines(targetBlock, baseGenerator, level);
 
         send(player, "&aGenerator set!");
     }
@@ -92,8 +92,8 @@ final class AddGeneratorSubCommand implements SubCommand {
             return List.of();
         }
 
-        final List<String> levels = new ArrayList<>(baseGenerator.maxLevel());
-        for (int i = 1; i <= baseGenerator.maxLevel(); i++) {
+        final List<String> levels = new ArrayList<>(baseGenerator.maxlevel());
+        for (int i = 1; i <= baseGenerator.maxlevel(); i++) {
             levels.add(String.valueOf(i));
         }
         return levels;

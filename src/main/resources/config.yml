@@ -1,8 +1,8 @@
 sign-lines:
-  - ""
   - "%name% &8(%level%)"
-  - "&8%amount% &0/ &8%speed%s"
-  - ""
+  - "&0[&l%progress%&r&0]"
+  - "&8Click derecho"
+  - "%speed% -> %speed_next%"
 
 spawn-world: "spawnegg"
 spawn: "-1,65,8"

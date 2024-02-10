@@ -8,7 +8,7 @@ import java.util.HashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.game.GameState;
-import lc.eggwars.generators.SignGenerator;
+import lc.eggwars.generators.GeneratorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
@@ -21,9 +21,11 @@ public final class GameMap {
     private final IntObjectHashMap<ClickableBlock> clickableBlocks;
     private final Map<BaseTeam, BlockLocation> spawns;
     private final Map<BaseTeam, BlockLocation> eggs;
-    private final SignGenerator[] generators;
+    private final GeneratorData[] generators;
     private final int borderSize;
     private final int id;
+
+    private boolean generatorsNeedUpdate = true;
 
     private World world;
     private Set<BaseTeam> teamsWithoutEggs;
@@ -32,7 +34,7 @@ public final class GameMap {
     private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
-    GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, SignGenerator[] generators, Map<BaseTeam, BlockLocation> spawns, Map<BaseTeam, BlockLocation> eggs, int borderSize, int id) {
+    GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, GeneratorData[] generators, Map<BaseTeam, BlockLocation> spawns, Map<BaseTeam, BlockLocation> eggs, int borderSize, int id) {
         this.clickableBlocks = clickableBlocks;
         this.generators = generators;
         this.spawns = spawns;
@@ -94,8 +96,16 @@ public final class GameMap {
     public Map<BaseTeam, BlockLocation> getSpawns() {
         return spawns;
     }
+
+    public boolean generatorsNeedUpdate() {
+        return generatorsNeedUpdate;
+    }
+
+    public void setGeneratorsNeedUpdate(boolean update) {
+        this.generatorsNeedUpdate = update;
+    }
     
-    public SignGenerator[] getGenerators() {
+    public GeneratorData[] getGenerators() {
         return generators;
     }
 

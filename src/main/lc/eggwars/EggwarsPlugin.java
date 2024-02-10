@@ -50,7 +50,7 @@ public class EggwarsPlugin extends JavaPlugin {
         }
         final Messages messages = new StartMessages().load(this);
 
-        new StartGenerators(this).load();
+        new StartGenerators().load(this);
         new StartTeams(this).load();
         new StartGameData().load(this, messages);
 

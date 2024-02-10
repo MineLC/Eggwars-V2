@@ -7,16 +7,16 @@ import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
-import lc.eggwars.generators.managers.GeneratorsLoader;
-import lc.eggwars.generators.managers.GeneratorsUnloader;
+import lc.eggwars.generators.GeneratorManager;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.mapsystem.manager.EggsLoader;
+import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 
 public final class GameStorage {
@@ -47,8 +47,6 @@ public final class GameStorage {
 
         map.setState(GameState.PREGAME);
         map.setWorld(world);
-
-        new GeneratorsLoader().load(map);
 
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 
@@ -92,11 +90,27 @@ public final class GameStorage {
         }
     }
 
+    public void finalDeath(final GameMap map, final Player player) {
+        if (map.getPlayers().size() - 1 <= 0) {
+            if (map.getTaskId() != -1) {
+                Bukkit.getScheduler().cancelTask(map.getTaskId());
+            }
+
+            player.teleport(SpawnStorage.getStorage().getLocation());
+            player.setGameMode(GameMode.ADVENTURE);
+
+            unloadGame(map);
+            MapStorage.getStorage().unload(map.getWorld());
+        }
+        map.getPlayers().remove(player);
+    }
+
     public void unloadGame(final GameMap map) {
-        new GeneratorsUnloader().unload(map);
+        new GeneratorManager().unload(map);
         map.setState(GameState.NONE);
         map.resetData();
         map.setWorld(null);
+        System.gc();
     }
 
     public GameMap getGame(UUID uuid) {

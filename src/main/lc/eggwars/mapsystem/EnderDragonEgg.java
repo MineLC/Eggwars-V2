@@ -2,7 +2,9 @@ package lc.eggwars.mapsystem;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
+import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
@@ -19,13 +21,13 @@ public final class EnderDragonEgg implements ClickableBlock  {
     }
 
     @Override
-    public void onClick(Player player) {
+    public void onClick(final Player player, final Action action) {
         final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
-        if (map == null) {
+        if (map == null || map.getState() != GameState.IN_GAME) {
             return;
         }
-        final BaseTeam teamToBreakEgg = map.getPlayersPerTeam().get(player);
-        if (team.equals(teamToBreakEgg)) {
+        final BaseTeam playerEgg = map.getPlayersPerTeam().get(player);
+        if (team.equals(playerEgg)) {
             player.sendMessage("No puedes romper tu propio huevo...");
             return;
         }

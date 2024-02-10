@@ -5,25 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lc.eggwars.generators.SignGenerator;
+import lc.eggwars.generators.GeneratorData;
+import lc.eggwars.generators.TemporaryGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
 public final class CreatorData {
 
-    private final Map<String, List<SignGenerator>> generatorsPerIdentifier = new HashMap<>();
-    private final Map<BlockLocation, SignGenerator> generators = new HashMap<>();
+    private final Map<String, List<GeneratorData>> generatorsPerIdentifier = new HashMap<>();
+    private final Map<BlockLocation, GeneratorData> generators = new HashMap<>();
 
     private final Map<BaseTeam, BlockLocation> teamEggs = new HashMap<>();
 
     private final Map<BaseTeam, BlockLocation> spawns = new HashMap<>();
 
-    public boolean addGenerator(final SignGenerator generator) {
+    public boolean addGenerator(final GeneratorData generator) {
         if (generators.get(generator.getLocation()) != null) {
             return false;
         }
         generators.put(generator.getLocation(), generator);
-        List<SignGenerator> generators = generatorsPerIdentifier.get(generator.getBase().key());
+        List<GeneratorData> generators = generatorsPerIdentifier.get(generator.getBase().key());
         if (generators == null) {
             generators = new ArrayList<>();
             generatorsPerIdentifier.put(generator.getBase().key(), generators);
@@ -33,7 +34,7 @@ public final class CreatorData {
     }
 
     public boolean removeGenerator(final BlockLocation location) {
-        final SignGenerator generator = generators.remove(location);
+        final GeneratorData generator = generators.remove(location);
         if (generator != null) {
             generatorsPerIdentifier.remove(generator.getBase().key());
             return true;
@@ -69,11 +70,11 @@ public final class CreatorData {
         return teamEggs;
     }
 
-    public Map<BlockLocation, SignGenerator> getGeneratorsMap() {
+    public Map<BlockLocation, GeneratorData> getGeneratorsMap() {
         return generators;
     }
 
-    public Map<String, List<SignGenerator>> getGeneratorsMapPerID() {
+    public Map<String, List<GeneratorData>> getGeneratorsMapPerID() {
         return generatorsPerIdentifier;
     }
 }

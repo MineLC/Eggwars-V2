@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.commands.BasicSubCommand;
-import lc.eggwars.generators.SignGenerator;
+import lc.eggwars.generators.GeneratorData;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
 import lc.eggwars.mapsystem.MapCreatorData;
@@ -97,16 +97,16 @@ final class SaveSubCommand implements BasicSubCommand {
     }
 
     private Map<String, String[]> saveGenerators(final CreatorData data) {
-        final Set<Entry<String, List<SignGenerator>>> generatorsData = data.getGeneratorsMapPerID().entrySet();
+        final Set<Entry<String, List<GeneratorData>>> generatorsData = data.getGeneratorsMapPerID().entrySet();
         final Map<String, String[]> generatorsParsed = new HashMap<>();
 
-        for (final Entry<String, List<SignGenerator>> entry : generatorsData) {
-            final List<SignGenerator> list = entry.getValue();
+        for (final Entry<String, List<GeneratorData>> entry : generatorsData) {
+            final List<GeneratorData> list = entry.getValue();
             final String[] generatorsString = new String[list.size()];
 
             for (int i = 0; i < list.size(); i++) {
-                final SignGenerator generator = list.get(i);
-                generatorsString[i] = generator.getLevel() + ":" + generator.getLocation().toString();
+                final GeneratorData generator = list.get(i);
+                generatorsString[i] = generator.getDefaultLevel() + ":" + generator.getLocation().toString();
             }
 
             generatorsParsed.put(entry.getKey(), generatorsString);

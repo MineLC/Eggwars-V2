@@ -39,7 +39,7 @@ final class GameStarter {
                     continue;
                 }
 
-                if (!playerTeam.equals(team.getKey())) {
+                if (playerTeam == null) {
                     map.getPlayersPerTeam().put(player, playerTeam);
                     team.getKey().getTeam().addPlayer(player);   
                 }

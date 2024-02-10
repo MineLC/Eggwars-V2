@@ -3,27 +3,23 @@ package lc.eggwars.generators;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
 import lc.eggwars.game.GameState;
-import lc.eggwars.generators.BaseGenerator.Level;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ItemUtils;
 
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntityItem;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
-import net.minecraft.server.v1_8_R3.World;
 
-public final class GeneratorThread extends Thread {
+public class GeneratorThread extends Thread {
 
-    private static GeneratorThread generatorThread;
+    private static GeneratorThread currentThread;
 
     private final GameMap[] maps;
     private boolean run = true;
@@ -37,106 +33,112 @@ public final class GeneratorThread extends Thread {
         while (run) {
             try {
                 Thread.sleep(1000);
-                for (final GameMap map : maps) {
-                    if (map.getState() != GameState.IN_GAME) {
-                        continue;
-                    }
-                    tryGenerate(map.getGenerators(), ((CraftWorld)map.getWorld()).getHandle());
+                for (final GameMap generator : maps) {
+                    generateItems(generator);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }        
+        }
     }
 
-    private boolean tryGenerate(final SignGenerator[] generators, final World world) {
-        for (final SignGenerator generator : generators) {
-            if (!canGenerateItem(generator)) {
+    private void generateItems(final GameMap map) {
+        if (map.getState() != GameState.IN_GAME) {
+            return;
+        }
+
+        if (map.generatorsNeedUpdate()) {
+            new GeneratorManager().load(map);
+            map.setGeneratorsNeedUpdate(false);
+        }
+
+        final GeneratorData[] generators = map.getGenerators();
+
+        for (final GeneratorData data : generators) {
+            final TemporaryGenerator generator = data.getGenerator();
+            generator.addOneSecond();
+
+            if (generator.getWaitToSpawn() != generator.getWaitedTime()) {
+                if (generator.getAmount() == 0 || generator.getEntitiesInNearbyChunks() == 0) {
+                    continue;
+                }
+                if (generator.canRefreshItem()) {
+                    tryPickupItemAndRegenerate(generator);
+                    continue;
+                }
+                tryPickupItem(generator);
                 continue;
             }
-
-            if (generator.getAmount() >= 256) {
-                continue;
+        
+            generator.addItem();
+        
+            if (generator.getAmount() >= 64) {
+                generator.setAmount(64);
             }
-
-            int amountToGenerate = generator.getAmount() + generator.getBase().levels()[generator.getLevel()].amountGenerated();
-
-            if (amountToGenerate > 256) {
-                amountToGenerate = 256;
+        
+            generator.resetWaitedTime();
+        
+            if (generator.getEntitiesInNearbyChunks() != 0) {
+                tryPickupItemAndRegenerate(generator);
             }
-
-            generateItem(world, generator, amountToGenerate);
         }
-        return true;
     }
 
-    private boolean canGenerateItem(final SignGenerator generator) {
-        int amountEntities = 0;
-        for (final Chunk chunk : generator.getChunks()) {
-            final List<Entity> entities = generator.getEntities(chunk);
-            if (entities != null) {
-                amountEntities += entities.size();
-            }
-        }
-
-        if (amountEntities != 0) {
-            return true;
-        }
-        if (generator.getAmount() >= 256) {
-            return false;
-        }
-
-        final Level level = generator.getBase().levels()[generator.getLevel()];
-        if (generator.getAmount() + level.amountGenerated() >= 256) {
-            return false;
-        }
-        generator.setAmount(generator.getAmount() + level.amountGenerated());
-
-        return false;
-    }
-
-    private void generateItem(final World world, final SignGenerator generator, final int amountToGenerate) {
-        final EntityItem item = generator.getBase().dropItem();
-
-        item.world = world;
-        item.locX = generator.getLocation().x();
-        item.locY = generator.getLocation().y();
-        item.locZ = generator.getLocation().z();
-
-        item.setCustomName(String.valueOf(generator.getAmount()));
-
-        final PacketPlayOutSpawnEntity packetEntity = new PacketPlayOutSpawnEntity(item, 2, item.getId());
-        final PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(item.getId(), item.getDataWatcher(), true);
-
-        boolean pickupItem = false;
-
-        chunkLoop : for (final Chunk nearbyChunk : generator.getChunks()) {
+    private void tryPickupItem(final TemporaryGenerator generator) {
+        for (final Chunk nearbyChunk : generator.getChunks()) {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {
                 if (!(entity instanceof EntityPlayer entityPlayer)) {
                     continue;
                 }
-                final BlockLocation location = generator.getLocation();
-                if (isNearby(location.x(), location.y(), location.z(), entityPlayer)) {
-                    generator.setAmount(ItemUtils.addItem(generator.getBase().item(), amountToGenerate, entityPlayer.inventory));
+                final BlockLocation loc = generator.loc();
+                if (isNearby(loc.x(), loc.y(), loc.z(), entityPlayer)) {
+                    pickupItem(generator, entityPlayer);
+                    destroyItem(generator.getEntityItem().getId(), generator);
+                    break;
+                }
+            }
+            continue;
+        }
+    }
 
-                    final PacketPlayOutNamedSoundEffect itemPickupSound = new PacketPlayOutNamedSoundEffect("random.pop", entityPlayer.locX, entityPlayer.locY, entity.locZ, 1.0f, 1.0f);
-                    entityPlayer.playerConnection.sendPacket(itemPickupSound);
-                    pickupItem = true;
-                    break chunkLoop;
+    private void tryPickupItemAndRegenerate(final TemporaryGenerator generator) {
+        final Entity item = generator.getEntityItem();
+        item.setCustomName(String.valueOf(generator.getAmount()));
+
+        final PacketPlayOutSpawnEntity packetEntity = new PacketPlayOutSpawnEntity(item, 2, item.getId());
+        final PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(item.getId(), item.getDataWatcher(), true);
+
+        for (final Chunk nearbyChunk : generator.getChunks()) {
+            final List<Entity> entities = generator.getEntities(nearbyChunk);
+
+            for (final Entity entity : entities) {
+                if (!(entity instanceof EntityPlayer entityPlayer)) {
+                    continue;
+                }
+                final BlockLocation loc = generator.loc();
+                if (isNearby(loc.x(), loc.y(), loc.z(), entityPlayer)) {
+                    pickupItem(generator, entityPlayer);
+                    destroyItem(item.getId(), generator);
+                    break;
                 }
                 entityPlayer.playerConnection.sendPacket(packetEntity);
                 entityPlayer.playerConnection.sendPacket(meta);
             }
             continue;
         }
+    }
 
-        if (!pickupItem) {
-            return;
-        }
+    private void pickupItem(final TemporaryGenerator generator, final EntityPlayer player) {
+        generator.setAmount(ItemUtils.addItem(generator.getItem(), generator.getAmount(), player.inventory));
 
-        final PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(item.getId());
+        final PacketPlayOutNamedSoundEffect itemPickupSound = new PacketPlayOutNamedSoundEffect("random.pop", player.locX, player.locY, player.locZ, 1.0f, 1.0f);
+        player.playerConnection.sendPacket(itemPickupSound);
+    }
+
+    private void destroyItem(final int itemId, final TemporaryGenerator generator) {
+        final PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(itemId);
 
         for (final Chunk nearbyChunk : generator.getChunks()) {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
@@ -149,23 +151,19 @@ public final class GeneratorThread extends Thread {
             }
         }
     }
-
-
+   
     private static final boolean isNearby(final int x, final int y, final int z, final EntityPlayer player) {
         return
-            Math.max(x, player.locX) - Math.min(x, player.locX) <= 2.5D &&
-            Math.max(y, player.locY) - Math.min(y, player.locY) <= 2.5D &&
-            Math.max(z, player.locZ) - Math.min(z, player.locZ) <= 2.5D;
-    }
-
-    public void stopThread() {
-        this.run = false;
+            Math.max(x, player.locX) - Math.min(x, player.locX) <= 2 &&
+            Math.max(y, player.locY) - Math.min(y, player.locY) <= 2 &&
+            Math.max(z, player.locZ) - Math.min(z, player.locZ) <= 2;
     }
 
     public static void setThread(final GeneratorThread thread) {
-        if (generatorThread != null) {
-            generatorThread.stopThread();
-        }
-        generatorThread = thread;
+        currentThread = thread;
+    }
+
+    public static void stopThread() {
+        currentThread.run = false;
     }
 }

@@ -2,9 +2,17 @@ package lc.eggwars.utils;
 
 public final class IntegerUtils {
 
-    // Gracias chatgpt xd
+    /*
+     * Max value of any number is 999
+     */
     public static int combineCords(int x, int y, int z) {
-        return ((x << 5) | (x >> 27)) ^ ((y << 17) | (y >> 15)) ^ ((z << 13) | (z >> 19));
+        int hash = 0;
+
+        hash += y;
+        hash += z * 100;
+        hash += x * 100_000;
+
+        return hash;  
     }
 
     public static int parsePositive(final String text) {

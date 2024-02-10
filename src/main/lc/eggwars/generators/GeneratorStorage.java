@@ -7,47 +7,55 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public final class GeneratorStorage {
-    private static GeneratorStorage generatorStorage;
+    private static GeneratorStorage storage;
 
-    private final Map<String, BaseGenerator> generators;
-    private final String[] signLines;
+    private final Map<String, BaseGenerator> generatorsPerName;
+    private final String[] lines;
 
-    GeneratorStorage(Map<String, BaseGenerator> generators, String[] signLines) {
-        this.generators = generators;
-        this.signLines = signLines;
+    GeneratorStorage(Map<String, BaseGenerator> generatorsPerName, String[] lines) {
+        this.generatorsPerName = generatorsPerName;
+        this.lines = lines;
     }
 
-    public BaseGenerator getGenerator(final String name) {
-        return generators.get(name);
-    }
-
-    public Set<String> getGeneratorsName() {
-        return generators.keySet();
-    }
-
-    public void setGeneratorLines(final Block block, final SignGenerator generator) {
+    public void setLines(final Block block, final BaseGenerator generator, final int level) {
         if (!(block.getState() instanceof Sign sign)) {
+            System.out.println("ete bloque no e un cartel papu");
             return;
         }
-        for (int i = 0; i < signLines.length; i++) {
-            if (signLines[i].isEmpty()) {
-                continue;
-            }
-            final BaseGenerator.Level level = generator.getBase().levels()[generator.getLevel()];
-            sign.setLine(i, signLines[i]
-                .replace("%name%", generator.getBase().name())
-                .replace("%level%", String.valueOf(generator.getLevel()))
-                .replace("%speed%", String.valueOf(level.secondsToGenerate()))
-                .replace("%amount%", String.valueOf(level.amountGenerated())));
+        final BaseGenerator.Level genLevel = generator.levels()[level];
+        final String levelString = String.valueOf(level);
+        final String progress = genLevel.percentage() + "-" + generator.levels()[generator.maxlevel()].percentage() + "%";
+
+        final String speed = genLevel.itemsToGenerate() + "/" + genLevel.waitingTime() + "s";
+        final String speedNext = (level == generator.maxlevel())
+            ? "MAX"
+            : generator.levels()[level + 1].itemsToGenerate() + "/" + generator.levels()[level + 1].waitingTime() + "s";
+
+        for (int i = 0; i < lines.length; i++) {
+            sign.setLine(i, lines[i]
+                .replace("%name%", generator.name())
+                .replace("%level%", levelString)
+                .replace("%progress%", progress)
+                .replace("%speed%", speed)
+                .replace("%speed_next%", speedNext));
         }
+
         sign.update();
     }
 
-    public static GeneratorStorage getStorage() {
-        return generatorStorage;
+    public Set<String> getGeneratorsName() {
+        return this.generatorsPerName.keySet();
     }
 
-    final static void update(final GeneratorStorage newGeneratorStorage) {
-        generatorStorage = newGeneratorStorage;
+    public BaseGenerator getGenerator(final String name) {
+        return generatorsPerName.get(name);
+    }
+
+    public static GeneratorStorage getStorage() {
+        return storage;
+    }
+
+    static final void update(GeneratorStorage newStorage) {
+        storage = newStorage;
     }
 }

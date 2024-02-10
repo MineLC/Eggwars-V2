@@ -2,6 +2,7 @@ package lc.eggwars.game;
 
 import java.util.Map.Entry;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,33 +28,53 @@ final class GameStarter {
         final Set<Entry<BaseTeam, BlockLocation>> teams = map.getSpawns().entrySet();
         final Map<BaseTeam, Integer> personsPerTeam = new HashMap<>();
 
-        for (final Player player : map.getPlayers()) {
-            final BaseTeam playerTeam = map.getPlayersPerTeam().get(player);
+        playerLoop : for (final Player player : map.getPlayers()) {
+            final BaseTeam playerTeam = map.getTeamPerPlayer().get(player);
 
             for (final Entry<BaseTeam, BlockLocation> team : teams) {
                 final Integer amountPersons = personsPerTeam.get(team.getKey());
 
-                if (playerTeam == null && amountPersons != null && amountPersons > maxPersonsPerTeam) {
+                if (amountPersons != null && amountPersons > maxPersonsPerTeam) {
                     continue;
-                } else if (playerTeam != null && !playerTeam.equals(team.getKey())) {
+                }
+
+                Set<Player> players = map.getPlayersInTeam().get(team.getKey());
+
+                if (players == null) {
+                    players = new HashSet<>();
+                    map.getPlayersInTeam().put(team.getKey(), players);
+                }
+        
+                if (players.size() == map.getMaxPersonsPerTeam()) {
                     continue;
                 }
 
                 if (playerTeam == null) {
-                    map.getPlayersPerTeam().put(player, playerTeam);
-                    team.getKey().getTeam().addPlayer(player);   
+                    player.sendMessage("Se ha añadido al equipo " + team.getKey().getKey());
+                    map.getTeamPerPlayer().put(player, team.getKey());
+                    team.getKey().getTeam().addPlayer(player);
+                    addToTeam(amountPersons, team.getValue(), playerTeam, player, personsPerTeam);
+                    continue playerLoop;
                 }
 
-                final BlockLocation spawnTeam = team.getValue();
-                player.teleport(new Location(world, spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
-                player.setGameMode(GameMode.SURVIVAL);
-                
-                if (amountPersons == null) {
-                    personsPerTeam.put(playerTeam, 1);
-                    continue;
+                if (playerTeam.equals(team.getKey())) {
+                    addToTeam(amountPersons, team.getValue(), playerTeam, player, personsPerTeam);
+                    continue playerLoop;
                 }
-                personsPerTeam.replace(playerTeam, amountPersons + 1);
+
+                continue playerLoop;
             }
         }
+    }
+
+    private void addToTeam(final Integer amount, final BlockLocation spawnTeam, final BaseTeam team, final Player player, Map<BaseTeam, Integer> personsPerTeam) {
+        player.teleport(new Location(player.getWorld(), spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
+        player.setGameMode(GameMode.SURVIVAL);
+
+        if (amount == null) {
+            personsPerTeam.put(team, 1);
+            return;
+        }
+        personsPerTeam.replace(team, amount + 1);
     }
 }

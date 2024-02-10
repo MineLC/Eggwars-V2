@@ -1,4 +1,4 @@
-package lc.eggwars.listeners;
+package lc.eggwars.listeners.pvp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -44,7 +44,7 @@ public final class PlayerRespawnListener implements EventListener {
             return;
         }
 
-        final BaseTeam team = map.getPlayersPerTeam().get(player);
+        final BaseTeam team = map.getTeamPerPlayer().get(player);
 
         if (team == null) {
             return;
@@ -52,18 +52,18 @@ public final class PlayerRespawnListener implements EventListener {
 
         // TODO - Add death messages
 
-        if (map.getTeamsWithoutEgg().contains(team)) {
-            player.setGameMode(GameMode.SPECTATOR);
-            player.sendMessage("Esta es tu muerte definitiva");
-            player.teleport(map.getWorld().getSpawnLocation());
-            GameStorage.getStorage().finalDeath(map, player);
+        if (!map.getTeamsWithoutEgg().contains(team)) {
+            final BlockLocation spawn = map.getSpawn(team);
+            final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
+            final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
+            cinematic.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, cinematic, 0, 20).getTaskId());
             return;
         }
 
-        final BlockLocation spawn = map.getSpawn(team);
-        final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
-        final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
-        cinematic.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, cinematic, 0, 20).getTaskId());
+        player.setGameMode(GameMode.SPECTATOR);
+        player.sendMessage("Esta es tu muerte definitiva");
+        player.teleport(map.getWorld().getSpawnLocation());
+        GameStorage.getStorage().finalDeath(map, player);
     }
 
     private static final class DeathCinematic implements Runnable {

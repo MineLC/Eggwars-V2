@@ -74,12 +74,13 @@ public final class StartMaps {
                     plugin.getLogger().warning("The world " + data.world() + " don't exist or is unloaded");
                     continue;
                 }
-
+                
                 final GameMap map = new GameMap(
                     worldClickableBlocks,
                     getGenerators(data, worldClickableBlocks),
                     getSpawns(data),
                     getTeamEggs(data, worldClickableBlocks),
+                    data.maxPersonsPerTeam(),
                     data.borderSize(),
                     ++id);
 

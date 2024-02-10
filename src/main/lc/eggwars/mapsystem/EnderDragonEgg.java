@@ -26,8 +26,8 @@ public final class EnderDragonEgg implements ClickableBlock  {
         if (map == null || map.getState() != GameState.IN_GAME) {
             return;
         }
-        final BaseTeam playerEgg = map.getPlayersPerTeam().get(player);
-        if (team.equals(playerEgg)) {
+        final BaseTeam playerTeam = map.getTeamPerPlayer().get(player);
+        if (team.equals(playerTeam)) {
             player.sendMessage("No puedes romper tu propio huevo...");
             return;
         }

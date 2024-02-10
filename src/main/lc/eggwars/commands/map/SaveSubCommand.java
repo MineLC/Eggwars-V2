@@ -79,6 +79,7 @@ final class SaveSubCommand implements BasicSubCommand {
     private JsonMapData saveMapInfo(final CreatorData data, final World world) {
         return new JsonMapData(
             world.getName(),
+            4,
             (int)world.getWorldBorder().getSize(),
             saveSpawns(data),
             saveGenerators(data),

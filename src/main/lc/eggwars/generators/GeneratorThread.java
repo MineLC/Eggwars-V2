@@ -2,7 +2,6 @@ package lc.eggwars.generators;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 
 import lc.eggwars.game.GameState;
 import lc.eggwars.mapsystem.GameMap;
@@ -154,9 +153,9 @@ public class GeneratorThread extends Thread {
    
     private static final boolean isNearby(final int x, final int y, final int z, final EntityPlayer player) {
         return
-            Math.max(x, player.locX) - Math.min(x, player.locX) <= 2 &&
-            Math.max(y, player.locY) - Math.min(y, player.locY) <= 2 &&
-            Math.max(z, player.locZ) - Math.min(z, player.locZ) <= 2;
+            Math.max(x, player.locX) - Math.min(x, player.locX) <= 1.5 &&
+            Math.max(y, player.locY) - Math.min(y, player.locY) <= 1.5 &&
+            Math.max(z, player.locZ) - Math.min(z, player.locZ) <= 1.5;
     }
 
     public static void setThread(final GeneratorThread thread) {

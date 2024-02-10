@@ -1,6 +1,7 @@
 {
     "world":"eggwars1",
-    "border-size": 250,
+    "maxPersonsPerTeam": 1,
+    "borderSize": 250,
     "generators": {
         "iron": ["1:-7,63,6"]
     },

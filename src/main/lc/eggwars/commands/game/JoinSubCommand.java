@@ -37,13 +37,21 @@ final class JoinSubCommand implements SubCommand {
             return;
         }
 
+        if (map.getState() == GameState.PREGAME) {
+            if (map.getPlayers().size() >= map.getMaxPersonsPerTeam()) {
+                send(player, "Este mapa ya está lleno");
+                return;
+            }
+        }
+
         if (map.getState() != GameState.NONE) {
             GameStorage.getStorage().join(map.getWorld(), map, player);
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(map.getWorld().getSpawnLocation());
+            return;
         }
 
-        if (map.getState() == GameState.NONE){
+        if (map.getState() == GameState.NONE) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                 final World world = MapStorage.getStorage().load(args[1]);
                 if (world == null) {
@@ -51,11 +59,12 @@ final class JoinSubCommand implements SubCommand {
                     return;
                 }
                 GameStorage.getStorage().join(world, map, player);
+
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    player.setGameMode(GameMode.ADVENTURE);
-                    player.teleport(world.getSpawnLocation());
                     new GeneratorManager().setGeneratorSigns(map);
                     new EggsManager().setEggs(map);
+                    player.setGameMode(GameMode.ADVENTURE);
+                    player.teleport(map.getWorld().getSpawnLocation());
                 });
             });
         }

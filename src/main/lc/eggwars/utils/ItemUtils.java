@@ -5,6 +5,47 @@ import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class ItemUtils {
 
+    public static int getAmount(final ItemStack item, final PlayerInventory inventory) {
+        final ItemStack[] items = inventory.items;
+        int amount = 0;
+
+        for (final ItemStack nmsItem : items) {
+            if (nmsItem == null) {
+                continue;
+            }
+            if (nmsItem.getItem() == item.getItem()) {
+                amount += nmsItem.count;
+            }
+        }
+        return amount;
+    }
+
+    public static void removeAmount(final int amount, final ItemStack item, final PlayerInventory inventory) {
+        final ItemStack[] items = inventory.items;
+        int removedAmount = 0;
+        int index = 0;
+
+        for (final ItemStack nmsItem : items) {
+            if (nmsItem == null || nmsItem.getItem() != item.getItem()) {
+                index++;
+                continue;
+            }
+            removedAmount += nmsItem.count;
+
+            if (removedAmount == amount) {
+                inventory.items[index] = null;
+                return;
+            }
+
+            if (removedAmount > amount) {
+                nmsItem.count = (removedAmount - amount);
+                return;
+            }
+            inventory.items[index++] = null;
+        }
+        inventory.update();
+    }
+
     public static int addItem(final ItemStack item, final int amount, final PlayerInventory inventory) {
         final ItemStack[] items = inventory.items;
         int amountItems = amount;
@@ -52,10 +93,10 @@ public final class ItemUtils {
                 if (amountItems >= 64) {
                     continue;
                 }
-                break;
+                return 0;
             }
             items[i] = new ItemStack(item.getItem(), amountItems);
-            break;
+            return 0;
         }
 
         return amountItems;

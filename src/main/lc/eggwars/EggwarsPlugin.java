@@ -19,17 +19,21 @@ import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.generators.GeneratorThread;
 import lc.eggwars.generators.StartGenerators;
-import lc.eggwars.listeners.BlockPhysicsListener;
-import lc.eggwars.listeners.EntityDamageListener;
-import lc.eggwars.listeners.PlayerDeathListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
-import lc.eggwars.listeners.PlayerRespawnListener;
 import lc.eggwars.listeners.internal.ListenerRegister;
+import lc.eggwars.listeners.others.BlockGrowListener;
+import lc.eggwars.listeners.others.BlockPhysicsListener;
+import lc.eggwars.listeners.pvp.EntityDamageListener;
+import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
+import lc.eggwars.listeners.pvp.PlayerDeathListener;
+import lc.eggwars.listeners.pvp.PlayerRespawnListener;
+
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.messages.StartMessages;
+
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
@@ -68,10 +72,14 @@ public class EggwarsPlugin extends JavaPlugin {
             }
         }, 20);
 
+        // PvP
         listeners.register(new PlayerDeathListener());
         listeners.register(new PlayerRespawnListener(this, getConfig()));
-        listeners.register(new BlockPhysicsListener());
         listeners.register(new EntityDamageListener());
+        listeners.register(new PlayerDamageByPlayerListener());
+
+        listeners.register(new BlockPhysicsListener());
+        listeners.register(new BlockGrowListener());
     }
 
     @Override

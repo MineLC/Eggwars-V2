@@ -22,6 +22,7 @@ public final class GameMap {
     private final Map<BaseTeam, BlockLocation> spawns;
     private final Map<BaseTeam, BlockLocation> eggs;
     private final GeneratorData[] generators;
+    private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
 
@@ -29,24 +30,38 @@ public final class GameMap {
 
     private World world;
     private Set<BaseTeam> teamsWithoutEggs;
-    private Map<Player, BaseTeam> playersPerTeam;
+
+    private Map<Player, BaseTeam> teamPerPlayer;
+    private Map<BaseTeam, Set<Player>> playersInTeams;
+
     private Set<Player> players;
     private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
-    GameMap(IntObjectHashMap<ClickableBlock> clickableBlocks, GeneratorData[] generators, Map<BaseTeam, BlockLocation> spawns, Map<BaseTeam, BlockLocation> eggs, int borderSize, int id) {
+    GameMap(
+        IntObjectHashMap<ClickableBlock> clickableBlocks,
+        GeneratorData[] generators,
+        Map<BaseTeam, BlockLocation> spawns,
+        Map<BaseTeam, BlockLocation> eggs,
+        int maxPersonsPerTeam,
+        int borderSize,
+        int id
+    ) {
         this.clickableBlocks = clickableBlocks;
         this.generators = generators;
         this.spawns = spawns;
         this.eggs = eggs;
+        this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
         this.id = id;
     }
 
     public void resetData() {
         this.players = new HashSet<>();
-        this.playersPerTeam = new HashMap<>();
+        this.teamPerPlayer = new HashMap<>();
         this.teamsWithoutEggs = new HashSet<>();
+        this.playersInTeams = new HashMap<>();
+        this.generatorsNeedUpdate = true;
     }
 
     public void setWorld(final World world) {
@@ -69,8 +84,8 @@ public final class GameMap {
         return players;
     }
 
-    public Map<Player, BaseTeam> getPlayersPerTeam() {
-        return playersPerTeam;
+    public Map<Player, BaseTeam> getTeamPerPlayer() {
+        return teamPerPlayer;
     }
 
     public Set<BaseTeam> getTeamsWithoutEgg() {
@@ -115,6 +130,14 @@ public final class GameMap {
 
     public int getBorderSize() {
         return borderSize;
+    }
+
+    public int getMaxPersonsPerTeam() {
+        return maxPersonsPerTeam;
+    }
+
+    public Map<BaseTeam, Set<Player>> getPlayersInTeam() {
+        return playersInTeams;
     }
 
     @Override

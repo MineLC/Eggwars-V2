@@ -1,4 +1,4 @@
-package lc.eggwars.listeners;
+package lc.eggwars.listeners.pvp;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -37,6 +37,10 @@ public final class EntityDamageListener implements EventListener {
             event.setCancelled(true);
             event.setDamage(0);
 
+            if (event.getCause() == DamageCause.FIRE) {
+                event.getEntity().setFireTicks(0);
+            }
+
             if (event.getCause() == DamageCause.VOID) {
                 player.teleport(player.getWorld().getSpawnLocation());
             }
@@ -45,6 +49,7 @@ public final class EntityDamageListener implements EventListener {
 
         if (event.getCause() == DamageCause.VOID) {
             player.setHealth(0);
+            event.setCancelled(true);
         }
     }
 }

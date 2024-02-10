@@ -19,7 +19,8 @@ public final class MapCreatorCommand implements TabExecutor {
     private final SetSpawnSubCommand setspawn;
     private final RemoveSpawnSubCommand removeSpawn;
     private final SetEggSubCommand setEgg;
-    private final RemoveEggSubCommand remvoeEgg;
+    private final RemoveEggSubCommand removeEgg;
+    private final SetMaxPersonsSubCommand maxPersons;
     private final SaveSubCommand save;
 
     public MapCreatorCommand(EggwarsPlugin plugin, MapCreatorData data) {
@@ -29,7 +30,8 @@ public final class MapCreatorCommand implements TabExecutor {
         this.setspawn = new SetSpawnSubCommand(data);
         this.removeSpawn = new RemoveSpawnSubCommand(data);
         this.setEgg = new SetEggSubCommand(data);
-        this.remvoeEgg = new RemoveEggSubCommand(data);
+        this.removeEgg = new RemoveEggSubCommand(data);
+        this.maxPersons = new SetMaxPersonsSubCommand(data);
         this.save = new SaveSubCommand(plugin, data);
     }
 
@@ -65,7 +67,10 @@ public final class MapCreatorCommand implements TabExecutor {
                 setEgg.execute(player, args);
                 break;
             case "removeegg":
-                remvoeEgg.execute(player, args);
+                removeEgg.execute(player, args);
+                break;
+            case "setmax":
+                maxPersons.execute(player, args);
                 break;
             case "save":
                 save.execute(player, args);

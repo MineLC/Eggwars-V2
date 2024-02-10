@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import lc.eggwars.generators.GeneratorData;
-import lc.eggwars.generators.TemporaryGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
@@ -18,6 +17,16 @@ public final class CreatorData {
     private final Map<BaseTeam, BlockLocation> teamEggs = new HashMap<>();
 
     private final Map<BaseTeam, BlockLocation> spawns = new HashMap<>();
+
+    private int maxPersonsPerTeam = 1;
+
+    public void setMaxPersonsPerTeam(int max) {
+        this.maxPersonsPerTeam = max;
+    }
+
+    public int getMaxPersonsPerTeam() {
+        return maxPersonsPerTeam;
+    }
 
     public boolean addGenerator(final GeneratorData generator) {
         if (generators.get(generator.getLocation()) != null) {

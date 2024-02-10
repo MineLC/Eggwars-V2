@@ -2,11 +2,14 @@ package lc.eggwars.generators;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
+import lc.eggwars.utils.ItemUtils;
+import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class GeneratorData implements ClickableBlock {
 
@@ -66,12 +69,24 @@ public final class GeneratorData implements ClickableBlock {
         if (player.getGameMode() == GameMode.ADVENTURE) {
             return;
         }
-
-        if (temporaryGenerator.levelUp()) {
-            GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
-            player.sendMessage("El generador ha subido de nivel");
+        if (temporaryGenerator.getLevel() == base.maxlevel()) {
+            player.sendMessage("El generador ya está al nivel máximo");
             return;
         }
-        player.sendMessage("El generador ya está al nivel máximo");
+
+        final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
+        final int amount = ItemUtils.getAmount(base.drop(), inventory);
+        final int needAmount = base.levels()[temporaryGenerator.getLevel()].upgradeItems();
+
+        if (amount < needAmount) {
+            player.sendMessage("Necesitas " + needAmount + " items, en total, para subirlo de nivel");
+            return;
+        }
+
+        ItemUtils.removeAmount(needAmount, base.drop(), inventory);
+
+        temporaryGenerator.levelUp();
+        GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
+        player.sendMessage("El generador ha subido de nivel");
     }
 }

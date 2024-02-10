@@ -1,4 +1,4 @@
-package lc.eggwars.listeners;
+package lc.eggwars.listeners.others;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;

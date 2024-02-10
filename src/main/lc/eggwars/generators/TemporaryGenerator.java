@@ -37,12 +37,8 @@ public final class TemporaryGenerator {
         this.location = location;
     }
 
-    public boolean levelUp() {
-        if (level == base.maxlevel()) {
-            return false;
-        }
+    public void levelUp() {
         this.currentLevel = base.levels()[++level];
-        return true;
     }
 
     public void update(World world, Chunk[] chunks) {

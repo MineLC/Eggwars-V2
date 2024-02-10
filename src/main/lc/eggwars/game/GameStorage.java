@@ -56,12 +56,7 @@ public final class GameStorage {
                 new GameStarter().start(world, map);
             },
             () -> {
-                final Set<Entry<Player, BaseTeam>> playersWithTeams = map.getPlayersPerTeam().entrySet();
-                for (final Entry<Player, BaseTeam> playerWithTeam : playersWithTeams) {
-                    playerWithTeam.getValue().getTeam().removePlayer(playerWithTeam.getKey());
-                }
-                unloadGame(map);
-                Bukkit.unloadWorld(world, false);
+                unloadGame(map, map.getWorld());
             }
         );
 
@@ -71,22 +66,21 @@ public final class GameStorage {
     }
 
     public void leave(final GameMap map, final Player player, final World world) {
-        remove(player.getUniqueId());
+        playersInGame.remove(player.getUniqueId());
         map.getPlayers().remove(player);
-        final BaseTeam team = map.getPlayersPerTeam().get(player);
+        final BaseTeam team = map.getTeamPerPlayer().get(player);
 
         if (team != null) {
             team.getTeam().removePlayer(player);
-            map.getPlayersPerTeam().remove(player);
+            map.getTeamPerPlayer().remove(player);
         }
 
-        if (map.getPlayers().size() - 1 <= 0) {
+        if (map.getPlayers().size() <= 0) {
             if (map.getTaskId() != -1) {
                 Bukkit.getScheduler().cancelTask(map.getTaskId());
             }
 
-            unloadGame(map);
-            MapStorage.getStorage().unload(world);
+            unloadGame(map, map.getWorld());
         }
     }
 
@@ -99,26 +93,30 @@ public final class GameStorage {
             player.teleport(SpawnStorage.getStorage().getLocation());
             player.setGameMode(GameMode.ADVENTURE);
 
-            unloadGame(map);
-            MapStorage.getStorage().unload(map.getWorld());
+            unloadGame(map, map.getWorld());
+            return;
         }
         map.getPlayers().remove(player);
     }
 
-    public void unloadGame(final GameMap map) {
+    private void unloadGame(final GameMap map, final World world) {
         new GeneratorManager().unload(map);
+
+        final Set<Entry<Player, BaseTeam>> playersWithTeams = map.getTeamPerPlayer().entrySet();
+        for (final Entry<Player, BaseTeam> playerWithTeam : playersWithTeams) {
+            playerWithTeam.getValue().getTeam().removePlayer(playerWithTeam.getKey());
+        }
+
         map.setState(GameState.NONE);
         map.resetData();
         map.setWorld(null);
+
+        MapStorage.getStorage().unload(world);
         System.gc();
     }
 
     public GameMap getGame(UUID uuid) {
         return playersInGame.get(uuid);
-    }
-
-    public void remove(UUID uuid) {
-        playersInGame.remove(uuid);
     }
 
     public static GameStorage getStorage() {

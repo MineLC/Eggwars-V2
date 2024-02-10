@@ -1,6 +1,8 @@
 package lc.eggwars.commands.game;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,8 +44,22 @@ final class TeamJoinSubCommand implements SubCommand {
             return;
         }
 
-        game.getPlayersPerTeam().remove(player);
-        game.getPlayersPerTeam().put(player, team);
+        Set<Player> players = game.getPlayersInTeam().get(team);
+
+        if (players == null) {
+            players = new HashSet<>();
+            game.getPlayersInTeam().put(team, players);
+        }
+
+        if (players.size() == game.getMaxPersonsPerTeam()) {
+            send(player, "Este equipo ya está lleno");
+            return;
+        }
+
+        players.add(player);
+
+        game.getTeamPerPlayer().remove(player);
+        game.getTeamPerPlayer().put(player, team);
         team.getTeam().addPlayer(player);
         send(player, "You are in the team " + args[1]);
     }

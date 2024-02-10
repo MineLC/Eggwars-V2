@@ -9,6 +9,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
 import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.spawn.SpawnStorage;
 
 public final class PlayerQuitListener implements EventListener {
 
@@ -20,6 +21,8 @@ public final class PlayerQuitListener implements EventListener {
         final PlayerQuitEvent event = (PlayerQuitEvent)defaultEvent;
         final Player player = event.getPlayer();
         final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
+
+        player.teleport(SpawnStorage.getStorage().getLocation());
 
         GameStorage.getStorage().leave(map, player, map.getWorld());
     }

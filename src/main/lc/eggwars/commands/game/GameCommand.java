@@ -2,6 +2,7 @@ package lc.eggwars.commands.game;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -23,7 +24,7 @@ public final class GameCommand implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {   
         if (!(sender instanceof Player player)) {
             sender.sendMessage("You need be a player to use map creator");
             return true;
@@ -32,7 +33,7 @@ public final class GameCommand implements TabExecutor {
             sender.sendMessage(format());
             return true;
         }
-
+    
         switch (args[0].toLowerCase()) {
             case "join":
                 join.execute(player, args);

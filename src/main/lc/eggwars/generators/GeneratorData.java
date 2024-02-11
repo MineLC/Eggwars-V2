@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
+import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.ItemUtils;
@@ -70,7 +71,7 @@ public final class GeneratorData implements ClickableBlock {
             return;
         }
         if (temporaryGenerator.getLevel() == base.maxlevel()) {
-            player.sendMessage("El generador ya está al nivel máximo");
+            Messages.send(player, "generator-max");
             return;
         }
 
@@ -79,7 +80,7 @@ public final class GeneratorData implements ClickableBlock {
         final int needAmount = base.levels()[temporaryGenerator.getLevel()].upgradeItems();
 
         if (amount < needAmount) {
-            player.sendMessage("Necesitas " + needAmount + " items, en total, para subirlo de nivel");
+            player.sendMessage(Messages.get("generator-need").replace("%amount%", String.valueOf(needAmount)));
             return;
         }
 
@@ -87,6 +88,6 @@ public final class GeneratorData implements ClickableBlock {
 
         temporaryGenerator.levelUp();
         GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
-        player.sendMessage("El generador ha subido de nivel");
+        Messages.send(player, "generator-levelup");
     }
 }

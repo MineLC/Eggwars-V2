@@ -52,7 +52,7 @@ public final class PlayerRespawnListener implements EventListener {
 
         // TODO - Add death messages
 
-        if (!map.getTeamsWithoutEgg().contains(team)) {
+        if (map.getTeamsWithEgg().contains(team)) {
             final BlockLocation spawn = map.getSpawn(team);
             final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
             final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
@@ -63,7 +63,8 @@ public final class PlayerRespawnListener implements EventListener {
         player.setGameMode(GameMode.SPECTATOR);
         player.sendMessage("Esta es tu muerte definitiva");
         player.teleport(map.getWorld().getSpawnLocation());
-        GameStorage.getStorage().finalDeath(map, player);
+
+        GameStorage.getStorage().finalKill(map, team, player);
     }
 
     private static final class DeathCinematic implements Runnable {

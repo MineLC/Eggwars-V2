@@ -2,6 +2,9 @@ package lc.eggwars.listeners.internal;
 
 import java.lang.reflect.Method;
 
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,4 +30,19 @@ public final class ListenerRegister {
         }
         plugin.getLogger().warning("Can't register the listener of the class " + listener.getClass().getName() + " because don't contains ListenerData annontation");
     }
+
+    public void cancelEvent(final Class<? extends Event> event) {
+        plugin.getServer().getPluginManager().registerEvent(
+            event,
+            new EventListener() {
+                @Override
+                public void handle(Event defaultEvent) {
+                    ((Cancellable)defaultEvent).setCancelled(true);
+                }
+            },
+            EventPriority.LOWEST,
+            EXECUTOR,
+            plugin
+        );
+   }
 }

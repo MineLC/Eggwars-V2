@@ -13,7 +13,7 @@ import java.util.List;
 
 public class StartMessages {
 
-    public Messages load(EggwarsPlugin plugin) {
+    public void load(EggwarsPlugin plugin) {
         final FileConfiguration config = plugin.loadConfig("messages");
 
         final Set<String> messages = config.getKeys(false);
@@ -35,7 +35,6 @@ public class StartMessages {
             }
             parsedMessages.put(key, builder.toString());
         }
-
-        return new Messages(parsedMessages);
+        Messages.update(new Messages(parsedMessages));
     }
 }

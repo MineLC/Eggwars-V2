@@ -8,7 +8,7 @@ import lc.eggwars.messages.Messages;
 
 public class StartGameData {
 
-    public void load(EggwarsPlugin plugin, Messages messages) {
+    public void load(EggwarsPlugin plugin) {
         final FileConfiguration config = plugin.loadConfig("countdowns");
         final PreGameCountdown.Data preGameData = new PreGameCountdown.Data(
             config.getInt("waiting-to-start"),
@@ -16,9 +16,9 @@ public class StartGameData {
             config.getInt("sound-starting"),
             config.getInt("spam-message"),
             config.getInt("minimum-players-to-start"),
-            messages.get("waiting-players"),
-            messages.get("start-game"),
-            messages.get("start-in"));
+            Messages.get("waiting-players"),
+            Messages.get("start-game"),
+            Messages.get("start-in"));
 
         GameStorage.update(new GameStorage(plugin, preGameData));
     }

@@ -16,6 +16,7 @@ import lc.eggwars.game.countdown.types.PreGameCountdown;
 import lc.eggwars.generators.GeneratorManager;
 import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 
@@ -73,6 +74,7 @@ public final class GameStorage {
         if (team != null) {
             team.getTeam().removePlayer(player);
             map.getTeamPerPlayer().remove(player);
+            finalKill(map, team, player);
         }
 
         if (map.getPlayers().size() <= 0) {
@@ -82,21 +84,7 @@ public final class GameStorage {
 
             unloadGame(map, map.getWorld());
         }
-    }
-
-    public void finalDeath(final GameMap map, final Player player) {
-        if (map.getPlayers().size() - 1 <= 0) {
-            if (map.getTaskId() != -1) {
-                Bukkit.getScheduler().cancelTask(map.getTaskId());
-            }
-
-            player.teleport(SpawnStorage.getStorage().getLocation());
-            player.setGameMode(GameMode.ADVENTURE);
-
-            unloadGame(map, map.getWorld());
-            return;
-        }
-        map.getPlayers().remove(player);
+        player.getInventory().clear();
     }
 
     private void unloadGame(final GameMap map, final World world) {
@@ -113,6 +101,54 @@ public final class GameStorage {
 
         MapStorage.getStorage().unload(world);
         System.gc();
+    }
+
+    public void finalKill(final GameMap map, final BaseTeam team, final Player player) {
+        map.getPlayersLiving().remove(player);
+
+        final Set<Player> players = map.getPlayersInTeam().get(team);
+        players.remove(player);
+
+        if (players.size() >= 1) {
+            return;
+        }
+
+        Messages.sendNoGet(map.getPlayers(), Messages.get("team-death").replace("%team%", team.getName()));
+
+        if (map.getTeamsWithEgg().size() > 1) {
+            return;
+        }
+
+        BaseTeam finalTeam = null;
+        boolean anotherTeamLive = false;
+
+        for (final Player livingPlayer : map.getPlayersLiving()) {
+            if (finalTeam == null) {
+                finalTeam = map.getTeamPerPlayer().get(livingPlayer);
+                continue;
+            }
+            if (!finalTeam.equals(map.getTeamPerPlayer().get(livingPlayer))) {
+                anotherTeamLive = true;
+                break;
+            }
+        }
+
+        if (!anotherTeamLive) {
+            Messages.sendNoGet(map.getPlayers(), Messages.get("team-win").replace("%team%", team.getName()));        
+            for (final Player livingPlayer : map.getPlayersLiving()) {
+                livingPlayer.setGameMode(GameMode.SPECTATOR);
+            }
+            map.setTaskId(plugin.getServer().getScheduler().runTaskLater(plugin, () -> endGame(map), 200).getTaskId());
+        }
+    }
+
+    private void endGame(final GameMap map) {
+        for (final Player player : map.getPlayers()) {
+            player.teleport(SpawnStorage.getStorage().getLocation());
+            player.setGameMode(GameMode.ADVENTURE);
+            player.getInventory().clear();
+        };
+        unloadGame(map, map.getWorld());
     }
 
     public GameMap getGame(UUID uuid) {

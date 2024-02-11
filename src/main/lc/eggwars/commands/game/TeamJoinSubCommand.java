@@ -11,6 +11,7 @@ import lc.eggwars.commands.SubCommand;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 
@@ -19,28 +20,28 @@ final class TeamJoinSubCommand implements SubCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 2) {
-            send(player, "Format: /game teamjoin (teamname)");
+            send(player, "&cFormat: /game teamjoin (teamname)");
             return;
         }
         final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
         if (team == null) {
-            send(player, "The team " + args[1] + " don't exist");
+            send(player, "&cThe team " + args[1] + " don't exist");
             return;
         }
         final GameMap game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game == null || game.getState() == GameState.NONE) {
-            send(player, "You aren't in a game");
+            send(player, "&cYou aren't in a game");
             return;
         }
 
         if (game.getState() == GameState.IN_GAME) {
-            send(player, "This game already started");
+            send(player, "&cThis game already started");
             return;
         }
 
         if (game.getSpawn(team) == null) {
-            send(player, "Este team no existe, almenos para este mapa");
+            send(player, "&cThis team don't exist");
             return;
         }
 
@@ -52,7 +53,7 @@ final class TeamJoinSubCommand implements SubCommand {
         }
 
         if (players.size() == game.getMaxPersonsPerTeam()) {
-            send(player, "Este equipo ya está lleno");
+            Messages.send(player, "team-full");
             return;
         }
 
@@ -61,7 +62,8 @@ final class TeamJoinSubCommand implements SubCommand {
         game.getTeamPerPlayer().remove(player);
         game.getTeamPerPlayer().put(player, team);
         team.getTeam().addPlayer(player);
-        send(player, "You are in the team " + args[1]);
+
+        player.sendMessage(Messages.get("team-join").replace("%team%", team.getName()));
     }
 
     @Override

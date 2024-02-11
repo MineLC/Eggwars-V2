@@ -29,12 +29,14 @@ public final class GameMap {
     private boolean generatorsNeedUpdate = true;
 
     private World world;
-    private Set<BaseTeam> teamsWithoutEggs;
+    private Set<BaseTeam> teamsWithEgg;
 
     private Map<Player, BaseTeam> teamPerPlayer;
     private Map<BaseTeam, Set<Player>> playersInTeams;
 
     private Set<Player> players;
+    private Set<Player> playersLiving;
+
     private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
@@ -59,8 +61,9 @@ public final class GameMap {
     public void resetData() {
         this.players = new HashSet<>();
         this.teamPerPlayer = new HashMap<>();
-        this.teamsWithoutEggs = new HashSet<>();
+        this.teamsWithEgg = new HashSet<>();
         this.playersInTeams = new HashMap<>();
+        this.playersLiving = new HashSet<>();
         this.generatorsNeedUpdate = true;
     }
 
@@ -88,8 +91,8 @@ public final class GameMap {
         return teamPerPlayer;
     }
 
-    public Set<BaseTeam> getTeamsWithoutEgg() {
-        return teamsWithoutEggs;
+    public Set<BaseTeam> getTeamsWithEgg() {
+        return teamsWithEgg;
     }
 
     public GameState getState() {
@@ -138,6 +141,10 @@ public final class GameMap {
 
     public Map<BaseTeam, Set<Player>> getPlayersInTeam() {
         return playersInTeams;
+    }
+
+    public Set<Player> getPlayersLiving() {
+        return playersLiving;
     }
 
     @Override

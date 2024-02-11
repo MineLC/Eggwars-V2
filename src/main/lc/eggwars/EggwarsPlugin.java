@@ -10,6 +10,8 @@ import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.grinderwolf.swm.api.SlimePlugin;
@@ -19,11 +21,10 @@ import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.generators.GeneratorThread;
 import lc.eggwars.generators.StartGenerators;
+
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.internal.ListenerRegister;
-import lc.eggwars.listeners.others.BlockGrowListener;
-import lc.eggwars.listeners.others.BlockPhysicsListener;
 import lc.eggwars.listeners.pvp.EntityDamageListener;
 import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
@@ -31,7 +32,6 @@ import lc.eggwars.listeners.pvp.PlayerRespawnListener;
 
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
-import lc.eggwars.messages.Messages;
 import lc.eggwars.messages.StartMessages;
 
 import lc.eggwars.spawn.StartSpawn;
@@ -52,11 +52,11 @@ public class EggwarsPlugin extends JavaPlugin {
             getLogger().log(Level.SEVERE, "Error on load commands. ¿Invalid plugin.yml?");
             return;
         }
-        final Messages messages = new StartMessages().load(this);
 
+        new StartMessages().load(this);
         new StartGenerators().load(this);
         new StartTeams(this).load();
-        new StartGameData().load(this, messages);
+        new StartGameData().load(this);
 
         final ListenerRegister listeners = new ListenerRegister(this);
    
@@ -78,8 +78,8 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new EntityDamageListener());
         listeners.register(new PlayerDamageByPlayerListener());
 
-        listeners.register(new BlockPhysicsListener());
-        listeners.register(new BlockGrowListener());
+        listeners.cancelEvent(BlockPhysicsEvent.class);
+        listeners.cancelEvent(BlockGrowEvent.class);
     }
 
     @Override

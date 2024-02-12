@@ -103,7 +103,6 @@ public final class PlayerRespawnListener implements EventListener {
             if (seconds == 0) {
                 player.teleport(spawn);
                 player.setGameMode(GameMode.SURVIVAL);
-                player.sendMessage("Has muerto, pero reapareceras en el spawn de tu equipo");
                 Bukkit.getScheduler().cancelTask(id);
                 return;
             }

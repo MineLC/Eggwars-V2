@@ -15,25 +15,61 @@
         <maven.compiler.source>17</maven.compiler.source>
     </properties>
 
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+        <repository>
+		    <id>songoda</id>
+		    <url>https://repo.songoda.com/repository/public/</url>
+		</repository>
+        <repository>
+            <id>glaremasters</id>
+            <url>https://repo.glaremasters.me/repository/concuncan/</url>
+        </repository>
+	</repositories>
+
     <dependencies>
-        <!-- Don't forgot put the spigot in lib folder-->
         <dependency>
-            <groupId>com.spigotmc</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.8.8</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.grinderwolf</groupId>
             <artifactId>slimeworldmanager-api</artifactId>
             <version>2.2.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/slimeworldmanager-api-2.2.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ichocomilk</groupId>
+            <artifactId>LightSidebar</artifactId>
+            <version>696540edd9</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>${basedir}/src/main</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

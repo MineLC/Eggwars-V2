@@ -20,20 +20,25 @@ public class StartMessages {
         final Map<String, String> parsedMessages = new HashMap<>(messages.size());
 
         for (final String key : messages) {
-            final Object object = config.get(key);
-            if (object instanceof String) {
-                parsedMessages.put(key, Chat.color(object.toString()));
-                continue;
+            final Set<String> subMessages = config.getConfigurationSection(key).getKeys(false);
+
+            for (final String message : subMessages) {
+                final String path = key + "." + message;
+                final Object object = config.get(path);
+                if (object instanceof String) {
+                    parsedMessages.put(path, Chat.color(object.toString()));
+                    continue;
+                }
+                if (!(object instanceof List<?> list)) {
+                    parsedMessages.put(path, object.toString());
+                    continue;
+                }
+                final StringBuilder builder = new StringBuilder();
+                for (final Object objectList : list) {
+                    builder.append(Chat.color(objectList.toString()));
+                }
+                parsedMessages.put(path, builder.toString());
             }
-            if (!(object instanceof List<?> list)) {
-                parsedMessages.put(key, object.toString());
-                continue;
-            }
-            final StringBuilder builder = new StringBuilder();
-            for (final Object objectList : list) {
-                builder.append(Chat.color(objectList.toString()));
-            }
-            parsedMessages.put(key, builder.toString());
         }
         Messages.update(new Messages(parsedMessages));
     }

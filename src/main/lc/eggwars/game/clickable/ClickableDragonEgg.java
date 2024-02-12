@@ -36,6 +36,6 @@ public final class ClickableDragonEgg implements ClickableBlock  {
 
         map.getTeamsWithEgg().remove(team);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
-        Chat.send("Se ha roto el juego del equipo " + team.getName(), map.getPlayers());
+        Chat.send("Se ha roto el huevo del equipo " + team.getName(), map.getPlayers());
     }
 }

@@ -80,7 +80,6 @@ public final class GameStorage {
             if (map.getTaskId() != -1) {
                 Bukkit.getScheduler().cancelTask(map.getTaskId());
             }
-
             unloadGame(map, map.getWorld());
         }
         player.getInventory().clear();
@@ -112,7 +111,7 @@ public final class GameStorage {
             return;
         }
 
-        Messages.sendNoGet(map.getPlayers(), Messages.get("team-death").replace("%team%", team.getName()));
+        Messages.sendNoGet(map.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
 
         if (map.getTeamsWithEgg().size() > 1) {
             return;

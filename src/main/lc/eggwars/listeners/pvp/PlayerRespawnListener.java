@@ -14,6 +14,7 @@ import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
@@ -80,7 +81,7 @@ public final class PlayerRespawnListener implements EventListener {
         if (player.getKiller() != null) {
             finalMessage = finalMessage.replace("%d%", player.getKiller().getName()) + suffixIfPlayerKill;
         }
-        Chat.send(finalMessage, map.getPlayers());
+        Messages.sendNoGet(map.getPlayers(), finalMessage);
     }
 
     private static final class DeathCinematic implements Runnable {

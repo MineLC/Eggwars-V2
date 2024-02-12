@@ -8,6 +8,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.game.GameMap;
+import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.utils.EntityLocation;
@@ -28,7 +29,14 @@ public final class ShopKeeperManager {
 
     public void send(final Player player, final PlayerData data, final GameMap map) {
         for (final EntityLocation location : map.getShopSpawns()) {
-            spawn(player, player.getWorld(), data.getShopSkinID(), location.x(), location.y(), location.z(), location.yaw());
+            spawn(
+                player,
+                player.getWorld(),
+                data.getShopSkinID(),
+                location.x(),
+                location.y() + ShopKeepersStorage.getInstance().getSkin(data.getShopSkinID()).addHeight(),
+                location.z(),
+                location.yaw());
         }
     }
 

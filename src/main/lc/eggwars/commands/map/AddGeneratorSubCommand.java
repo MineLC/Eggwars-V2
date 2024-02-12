@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.commands.SubCommand;
-import lc.eggwars.generators.BaseGenerator;
-import lc.eggwars.generators.GeneratorData;
-import lc.eggwars.generators.GeneratorStorage;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
+import lc.eggwars.game.generators.BaseGenerator;
+import lc.eggwars.game.generators.GeneratorStorage;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.BlockLocation;
@@ -71,7 +71,7 @@ final class AddGeneratorSubCommand implements SubCommand {
             return;
         }
 
-        final GeneratorData generator = new GeneratorData(location, level, baseGenerator);
+        final ClickableSignGenerator generator = new ClickableSignGenerator(location, level, baseGenerator);
         creatorData.addGenerator(generator);
         GeneratorStorage.getStorage().setLines(targetBlock, baseGenerator, level);
 

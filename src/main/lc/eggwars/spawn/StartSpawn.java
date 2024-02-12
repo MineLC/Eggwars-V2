@@ -16,12 +16,12 @@ public class StartSpawn {
 
     public Location load() {
         final FileConfiguration config = plugin.getConfig();
-        final World world = Bukkit.getWorld(config.getString("spawn-world"));
+        final World world = Bukkit.getWorld(config.getString("spawn.world"));
         if (world == null) {
             plugin.getLogger().warning("The spawn world don't exist");
             return null;
         }
-        final String spawn = config.getString("spawn");
+        final String spawn = config.getString("spawn.cords");
 
         if (spawn == null) {
             return null;
@@ -33,7 +33,7 @@ public class StartSpawn {
             Integer.parseInt(split[1]),
             Integer.parseInt(split[2]));
 
-        world.getWorldBorder().setSize(config.getInt("spawn-border"));
+        world.getWorldBorder().setSize(config.getInt("spawn.border"));
 
         SpawnStorage.update(spawnLocation);
 

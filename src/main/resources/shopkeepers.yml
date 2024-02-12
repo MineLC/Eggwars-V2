@@ -1,0 +1,502 @@
+Creeper:
+  click-send: "&aLa batalla ya ha empezado..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 0
+  name: "&aCreeper"
+  item: "289" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Skeleton:
+  click-send: "&fVengo con aimbot integrado papu"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 1
+  name: "&fEsqueleto"
+  item: "352" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Spider:
+  click-send: "&bItsy Bitsy araña otra vez subió. Ella es caprichosa y desobediente."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 2
+  name: "&5Araña"
+  item: "287" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Zombie:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 3
+  name: "&2Zombie"
+  item: "367" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Rabbit:
+  click-send: "&fHola nena, *procede a comerse 50 hectareas de cesped*"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 4
+  name: "&f&lConejo"
+  item: "38:8" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Villager:
+  click-send: "&e&lLegends never die..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 5
+  name: "&e&lAldeano"
+  item: "388" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Silverfish:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 6
+  name: "&7Silverfish"
+  item: "97:2" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+
+Bat:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 7
+  name: "&8Muerciélago"
+  item: "383:65" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Witch:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 8
+  name: "&5&lBruja"
+  item: "373:0" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Pig:
+  click-send: "&dNo estados unidos... no me hagas tocino de vuelta"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 9
+  name: "&d&lCerdo"
+  item: "319" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Sheep:
+  click-send: "&fLa ropa de lana está bien cara"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 10
+  name: "&f&lOveja"
+  item: "35" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Cow:
+  click-send: "&6Directito para el McDonals"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 11
+  name: "&6&lVaca"
+  item: "334" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Chicken:
+  click-send: "&f¡No KFC!, no lo hagas"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 12
+  name: "&f&lPollo"
+  item: "288" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+Squid:
+  click-send: "&3Que me ves oe &7*le tira tinta en la cara*"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 13
+  name: "&3&lCalamar"
+  item: "351" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+Endermite:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 14
+  name: "&5Endermite"
+  item: "121" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+Slime:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 1
+
+  # Inventory Settings
+  slot: 15
+  name: "&a&lSlime"
+  item: "341" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+PigZombie:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 16
+  name: "&a&lSlime"
+  item: "383:57" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+Wolf:
+  click-send: "&fSiempre fiel, amo"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 16
+  name: "&f&lPerro"
+  item: "352" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+Ozelot:
+  click-send: "&fMiau... miau"
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 17
+  name: "&6&lGato"
+  item: "349" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &6750 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+MushroomCow:
+  click-send: "&cTu tranqui, con estas setas si vas a volar"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 18
+  name: "&c&lVaca de setas"
+  item: "40" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+SnowMan:
+  click-send: "&fNi el yeti puede contra mi"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 19
+  name: "&f&lHombre de nieve"
+  item: "332" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+Blaze:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 20
+  name: "&6&lBlaze"
+  item: "369" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+Enderman:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 21
+  name: "&d&lEnderman"
+  item: "368" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+CaveSpider:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 22
+  name: "&5&lAraña de cueva"
+  item: "376" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+LavaSlime:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 23
+  name: "&c&lSlime de lava"
+  item: "378" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+VillagerGolem:
+  click-send: "&7&lEstoy mamadísimo"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 24
+  name: "&7&lGolem de hierro"
+  item: "42" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+EntityHorse:
+  click-send: "&e¡Corre como el viento tiro al blanco!"
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 25
+  name: "&6&lCaballo"
+  item: "419" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &61500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+
+WitherBoss:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+
+  # Inventory Settings
+  slot: 26
+  name: "&8&lWither"
+  item: "399" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7(Solo para pros, desventaja en pvp)"
+    - ""
+    - "&7Coste: &62000 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"
+
+EnderDragon:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 1
+
+  # Inventory Settings
+  slot: 27
+  name: "&5&lDragón del end"
+  item: "381" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7(Se recomienda bajar el sonido)"
+    - "&7(Solo para pros, desventaja en pvp)"
+    - ""
+    - "&7Coste: &62000 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"
+
+Guardian:
+  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  addHeight: 0
+
+  # Inventory Settings
+  slot: 28
+  name: "&a&lGuardían"
+  item: "168:0" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7Coste: &62000 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"
+
+Giant:
+  click-send: "&aGigante tengo la..."
+  addHeight: -1
+
+  # Inventory Settings
+  slot: 29
+  name: "&a&lGIGANTE"
+  item: "397:2" # ID:DATA
+  lore:
+    - "&8(&7Clic para usarlo&8)"
+    - "&8(&7Presiona &cQ &7para verlo&8)"
+    - ""
+    - "&7(Solo para pros, desventaja en pvp)"
+    - ""
+    - "&7Coste: &62000 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"

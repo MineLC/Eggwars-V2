@@ -1,9 +1,10 @@
-package lc.eggwars.mapsystem;
+package lc.eggwars.game.clickable;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.teams.BaseTeam;
@@ -11,11 +12,11 @@ import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.Chat;
 import lc.eggwars.utils.ClickableBlock;
 
-public final class EnderDragonEgg implements ClickableBlock  {
+public final class ClickableDragonEgg implements ClickableBlock  {
     private final BaseTeam team;
     private final BlockLocation location;
 
-    EnderDragonEgg(BaseTeam team, BlockLocation location) {
+    public ClickableDragonEgg(BaseTeam team, BlockLocation location) {
         this.team = team;
         this.location = location;
     }

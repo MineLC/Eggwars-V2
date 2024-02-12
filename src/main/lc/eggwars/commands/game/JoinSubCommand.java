@@ -9,12 +9,15 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.commands.SubCommand;
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.generators.GeneratorManager;
-import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.game.managers.EggsManager;
+import lc.eggwars.game.managers.GeneratorManager;
+import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.mapsystem.manager.EggsManager;
+import lc.eggwars.players.PlayerData;
+import lc.eggwars.players.PlayerStorage;
 
 final class JoinSubCommand implements SubCommand {
 
@@ -48,6 +51,7 @@ final class JoinSubCommand implements SubCommand {
             GameStorage.getStorage().join(map.getWorld(), map, player);
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(map.getWorld().getSpawnLocation());
+            new ShopKeeperManager().send(player, PlayerStorage.getInstance().get(player.getUniqueId()), map);
             return;
         }
 

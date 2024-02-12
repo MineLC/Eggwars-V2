@@ -19,6 +19,7 @@ import com.grinderwolf.swm.api.world.properties.SlimeProperties;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
 
 import io.netty.util.collection.IntObjectHashMap;
+import lc.eggwars.game.GameMap;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.IntegerUtils;
 

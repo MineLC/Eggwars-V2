@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.commands.SubCommand;
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
@@ -53,7 +53,7 @@ final class TeamJoinSubCommand implements SubCommand {
         }
 
         if (players.size() == game.getMaxPersonsPerTeam()) {
-            Messages.send(player, "team-full");
+            Messages.send(player, "team.full");
             return;
         }
 
@@ -63,7 +63,7 @@ final class TeamJoinSubCommand implements SubCommand {
         game.getTeamPerPlayer().put(player, team);
         team.getTeam().addPlayer(player);
 
-        player.sendMessage(Messages.get("team-join").replace("%team%", team.getName()));
+        player.sendMessage(Messages.get("team.join").replace("%team%", team.getName()));
     }
 
     @Override

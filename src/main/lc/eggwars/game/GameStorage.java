@@ -13,8 +13,7 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
-import lc.eggwars.generators.GeneratorManager;
-import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.spawn.SpawnStorage;

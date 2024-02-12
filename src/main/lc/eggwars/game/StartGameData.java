@@ -16,9 +16,9 @@ public class StartGameData {
             config.getInt("sound-starting"),
             config.getInt("spam-message"),
             config.getInt("minimum-players-to-start"),
-            Messages.get("waiting-players"),
-            Messages.get("start-game"),
-            Messages.get("start-in"));
+            Messages.get("pregame.waiting-players"),
+            Messages.get("pregame.start-game"),
+            Messages.get("pregame.start-in"));
 
         GameStorage.update(new GameStorage(plugin, preGameData));
     }

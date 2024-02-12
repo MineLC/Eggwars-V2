@@ -1,10 +1,11 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.generators;
 
 import java.util.List;
 
-
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameState;
-import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
+import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ItemUtils;
 
@@ -51,9 +52,9 @@ public class GeneratorThread extends Thread {
             map.setGeneratorsNeedUpdate(false);
         }
 
-        final GeneratorData[] generators = map.getGenerators();
+        final ClickableSignGenerator[] generators = map.getGenerators();
 
-        for (final GeneratorData data : generators) {
+        for (final ClickableSignGenerator data : generators) {
             final TemporaryGenerator generator = data.getGenerator();
             generator.addOneSecond();
 

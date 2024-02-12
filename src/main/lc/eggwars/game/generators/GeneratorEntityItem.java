@@ -1,10 +1,10 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.generators;
 
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
-final class GeneratorEntityItem extends Entity {
+public final class GeneratorEntityItem extends Entity {
 
     public GeneratorEntityItem() {
         super(null);

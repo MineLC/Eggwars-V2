@@ -1,8 +1,10 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.managers;
 
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
-import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.game.GameMap;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
+import lc.eggwars.game.generators.GeneratorStorage;
 import lc.eggwars.utils.BlockLocation;
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.World;
@@ -10,9 +12,9 @@ import net.minecraft.server.v1_8_R3.World;
 public final class GeneratorManager {
 
     public void setGeneratorSigns(final GameMap map) {
-        final GeneratorData[] generators = map.getGenerators();
+        final ClickableSignGenerator[] generators = map.getGenerators();
 
-        for(final GeneratorData generator : generators) {
+        for(final ClickableSignGenerator generator : generators) {
             final BlockLocation loc = generator.getLocation();
             GeneratorStorage.getStorage().setLines(
                 map.getWorld().getBlockAt(loc.x(), loc.y(), loc.z()),
@@ -22,9 +24,9 @@ public final class GeneratorManager {
     }
 
     public void load(final GameMap map) {
-        final GeneratorData[] generators = map.getGenerators();
+        final ClickableSignGenerator[] generators = map.getGenerators();
     
-        for(final GeneratorData generator : generators) {
+        for(final ClickableSignGenerator generator : generators) {
             generator.setGenerator(map.getWorld());
             final World world = ((CraftWorld)map.getWorld()).getHandle();
 
@@ -36,9 +38,9 @@ public final class GeneratorManager {
     }
 
     public void unload(final GameMap map) {
-        final GeneratorData[] generators = map.getGenerators();
+        final ClickableSignGenerator[] generators = map.getGenerators();
     
-        for(final GeneratorData generator : generators) {
+        for(final ClickableSignGenerator generator : generators) {
             generator.cleanData();
         }
     }

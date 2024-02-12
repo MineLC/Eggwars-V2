@@ -1,4 +1,4 @@
-package lc.eggwars.mapsystem;
+package lc.eggwars.game;
 
 import java.util.Map;
 import java.util.Set;
@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import io.netty.util.collection.IntObjectHashMap;
-
-import lc.eggwars.game.GameState;
-import lc.eggwars.generators.GeneratorData;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
+import lc.eggwars.utils.EntityLocation;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -21,7 +20,9 @@ public final class GameMap {
     private final IntObjectHashMap<ClickableBlock> clickableBlocks;
     private final Map<BaseTeam, BlockLocation> spawns;
     private final Map<BaseTeam, BlockLocation> eggs;
-    private final GeneratorData[] generators;
+    private final ClickableSignGenerator[] generators;
+    private final EntityLocation[] shopSpawns;
+
     private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
@@ -40,11 +41,12 @@ public final class GameMap {
     private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
-    GameMap(
+    public GameMap(
         IntObjectHashMap<ClickableBlock> clickableBlocks,
-        GeneratorData[] generators,
+        ClickableSignGenerator[] generators,
         Map<BaseTeam, BlockLocation> spawns,
         Map<BaseTeam, BlockLocation> eggs,
+        EntityLocation[] shopSpawns,
         int maxPersonsPerTeam,
         int borderSize,
         int id
@@ -53,6 +55,7 @@ public final class GameMap {
         this.generators = generators;
         this.spawns = spawns;
         this.eggs = eggs;
+        this.shopSpawns = shopSpawns;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
         this.id = id;
@@ -123,7 +126,7 @@ public final class GameMap {
         this.generatorsNeedUpdate = update;
     }
     
-    public GeneratorData[] getGenerators() {
+    public ClickableSignGenerator[] getGenerators() {
         return generators;
     }
 
@@ -145,6 +148,10 @@ public final class GameMap {
 
     public Set<Player> getPlayersLiving() {
         return playersLiving;
+    }
+
+    public EntityLocation[] getShopSpawns() {
+        return shopSpawns;
     }
 
     @Override

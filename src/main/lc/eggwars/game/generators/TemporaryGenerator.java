@@ -1,4 +1,4 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.generators;
 
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.Entity;

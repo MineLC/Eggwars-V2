@@ -10,10 +10,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
-import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.Chat;

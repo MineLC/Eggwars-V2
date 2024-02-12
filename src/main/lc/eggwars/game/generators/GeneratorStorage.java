@@ -1,4 +1,4 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.generators;
 
 import java.util.Map;
 import java.util.Set;

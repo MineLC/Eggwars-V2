@@ -7,10 +7,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
-import lc.eggwars.mapsystem.GameMap;
 import lc.eggwars.teams.BaseTeam;
 
 public final class PlayerDamageByPlayerListener implements EventListener {

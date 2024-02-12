@@ -1,11 +1,11 @@
-package lc.eggwars.mapsystem.manager;
+package lc.eggwars.game.managers;
 
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
 
-import lc.eggwars.mapsystem.GameMap;
+import lc.eggwars.game.GameMap;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 

@@ -1,19 +1,23 @@
-# PreGameCountdown
-waiting-players: "&cEsperando por más jugadores..."
-start-game: "&aEl juego ha iniciado!"
-start-in: "&aEl juego inicia en %time%"
+pregame:
+  waiting-players: "&cEsperando por más jugadores..."
+  start-game: "&aEl juego ha iniciado!"
+  start-in: "&aEl juego inicia en %time%"
 
-# Team
-team-join: "&aAhora estás en el team %team%"
-team-full: "&cEste equipo está lleno"
-team-death: "&cEl equipo %team% ha sido eliminado"
-team-win:
-  - " "
-  - "&a¡El juego ha acabado!"
-  - "&aEl equipo ganador es %team%"
-  - " "
+team:
+  join: "&aAhora estás en el team %team%"
+  full: "&cEste equipo está lleno"
+  death: "&cEl equipo %team% ha sido eliminado"
+  win:
+    - " "
+    - "&a¡El juego ha acabado!"
+    - "&aEl equipo ganador es %team%"
+    - " "
 
-# Generator
-generator-levelup: "&aEl generador ha subido de nivel!"
-generator-need: "&aNecesitas %amount%, en total, para subirlo de nivel"
-generator-max: "&cEl generador ya está al máximo"
+generator:
+  levelup: "&aEl generador ha subido de nivel!"
+  need: "&aNecesitas %amount%, en total, para subirlo de nivel"
+  max: "&cEl generador ya está al máximo"
+
+shopkeepers:
+  preview: "&aMira a tu alrededor"
+  skin-change: "&aHas cambiado la skin de tu tienda"

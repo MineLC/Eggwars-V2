@@ -2,21 +2,25 @@ package lc.eggwars.mapsystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import lc.eggwars.generators.GeneratorData;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
+import lc.eggwars.utils.EntityLocation;
 
 public final class CreatorData {
 
-    private final Map<String, List<GeneratorData>> generatorsPerIdentifier = new HashMap<>();
-    private final Map<BlockLocation, GeneratorData> generators = new HashMap<>();
+    private final Map<String, List<ClickableSignGenerator>> generatorsPerIdentifier = new HashMap<>();
+    private final Map<BlockLocation, ClickableSignGenerator> generators = new HashMap<>();
 
     private final Map<BaseTeam, BlockLocation> teamEggs = new HashMap<>();
 
     private final Map<BaseTeam, BlockLocation> spawns = new HashMap<>();
+    private final Set<EntityLocation> shopkeeperSpawns = new HashSet<>();
 
     private int maxPersonsPerTeam = 1;
 
@@ -28,12 +32,12 @@ public final class CreatorData {
         return maxPersonsPerTeam;
     }
 
-    public boolean addGenerator(final GeneratorData generator) {
+    public boolean addGenerator(final ClickableSignGenerator generator) {
         if (generators.get(generator.getLocation()) != null) {
             return false;
         }
         generators.put(generator.getLocation(), generator);
-        List<GeneratorData> generators = generatorsPerIdentifier.get(generator.getBase().key());
+        List<ClickableSignGenerator> generators = generatorsPerIdentifier.get(generator.getBase().key());
         if (generators == null) {
             generators = new ArrayList<>();
             generatorsPerIdentifier.put(generator.getBase().key(), generators);
@@ -43,7 +47,7 @@ public final class CreatorData {
     }
 
     public boolean removeGenerator(final BlockLocation location) {
-        final GeneratorData generator = generators.remove(location);
+        final ClickableSignGenerator generator = generators.remove(location);
         if (generator != null) {
             generatorsPerIdentifier.remove(generator.getBase().key());
             return true;
@@ -79,11 +83,15 @@ public final class CreatorData {
         return teamEggs;
     }
 
-    public Map<BlockLocation, GeneratorData> getGeneratorsMap() {
+    public Set<EntityLocation> getShopKeepersSpawns() {
+        return shopkeeperSpawns;
+    }
+
+    public Map<BlockLocation, ClickableSignGenerator> getGeneratorsMap() {
         return generators;
     }
 
-    public Map<String, List<GeneratorData>> getGeneratorsMapPerID() {
+    public Map<String, List<ClickableSignGenerator>> getGeneratorsMapPerID() {
         return generatorsPerIdentifier;
     }
 }

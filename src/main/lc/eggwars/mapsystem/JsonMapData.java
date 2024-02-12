@@ -9,14 +9,21 @@ public class JsonMapData {
     private final Map<String, String> spawns;
     private final Map<String, String[]> generators;
     private final Map<String, String> teamEggs;
+    private final String[] shopspawns;
 
-    public JsonMapData(String world, int maxPersonsPerTeam, int borderSize, Map<String, String> spawns, Map<String, String[]> generators, Map<String, String> teamEggs) {
+    public JsonMapData(
+        String world,
+        int maxPersonsPerTeam, int borderSize,
+        Map<String, String> spawns, Map<String, String[]> generators,
+        Map<String, String> teamEggs, String[] shopSpawns
+    ) {
         this.world = world;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
         this.spawns = spawns;
         this.generators = generators;
         this.teamEggs = teamEggs;
+        this.shopspawns = shopSpawns;
     }
 
     public String world() {
@@ -41,5 +48,9 @@ public class JsonMapData {
 
     public Map<String, String> teamEggs() {
         return teamEggs;
+    }
+
+    public String[] shopSpawns() {
+        return shopspawns;
     }
 }

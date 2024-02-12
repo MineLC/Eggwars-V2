@@ -21,6 +21,8 @@ public final class MapCreatorCommand implements TabExecutor {
     private final SetEggSubCommand setEgg;
     private final RemoveEggSubCommand removeEgg;
     private final SetMaxPersonsSubCommand maxPersons;
+    private final AddShopkeeperSubCommand addshopkeeper;
+    private final RemoveShoopkeperSubCommand removeshopkeeper;
     private final SaveSubCommand save;
 
     public MapCreatorCommand(EggwarsPlugin plugin, MapCreatorData data) {
@@ -32,6 +34,8 @@ public final class MapCreatorCommand implements TabExecutor {
         this.setEgg = new SetEggSubCommand(data);
         this.removeEgg = new RemoveEggSubCommand(data);
         this.maxPersons = new SetMaxPersonsSubCommand(data);
+        this.addshopkeeper = new AddShopkeeperSubCommand(data);
+        this.removeshopkeeper = new RemoveShoopkeperSubCommand(data);
         this.save = new SaveSubCommand(plugin, data);
     }
 
@@ -72,6 +76,12 @@ public final class MapCreatorCommand implements TabExecutor {
             case "setmax":
                 maxPersons.execute(player, args);
                 break;
+            case "addshopspawn":
+                addshopkeeper.execute(player, args);
+                break;
+            case "removeshopspawn":
+                removeshopkeeper.execute(player, args);
+                break;
             case "save":
                 save.execute(player, args);
                 break;
@@ -84,7 +94,7 @@ public final class MapCreatorCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            return List.of("editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "save");
+            return List.of("editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "addshopspawn", "removeshopspawn", "save");
         }
         switch (args[0].toLowerCase()) {
             case "editor": return editor.onTab(sender, args);
@@ -111,6 +121,9 @@ public final class MapCreatorCommand implements TabExecutor {
                 &r
                 &6setegg &7(team) - &fSet egg for a team
                 &6removeegg &7(team) - &fRemove egg of the team
+                &r
+                &6addshopspawn - &fAdd a shopkeeper spawn
+                &6removeshopspawn &7(team) - &fRemove a shopkeeper spawn
                 &r
                 &6save &7- &fSave all settings in the world
             """.replace('&', ChatColor.COLOR_CHAR);

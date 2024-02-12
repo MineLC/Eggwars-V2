@@ -4,11 +4,17 @@ sign-lines:
   - "&8Click derecho"
   - "%speed% -> %speed_next%"
 
-spawn-world: "spawnegg"
-spawn: "-1,65,8"
-spawn-border: 60
+spawn:
+  world: "spawnegg"
+  cords: "-1,65,8"
+  border: 60
 
 respawn:
   seconds: 3
   title: "&e&c&lRespawn in %seconds% &e"
   subtitle: "&7Remember learn pvp"
+
+shopkeepers:
+  rows: 5
+  title: "Seleciona la skin de tu tienda"
+  preview-seconds-duration: 5 

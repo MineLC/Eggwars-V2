@@ -1,4 +1,4 @@
-package lc.eggwars.generators;
+package lc.eggwars.game.clickable;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -6,13 +6,17 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
+import lc.eggwars.game.generators.BaseGenerator;
+import lc.eggwars.game.generators.GeneratorEntityItem;
+import lc.eggwars.game.generators.GeneratorStorage;
+import lc.eggwars.game.generators.TemporaryGenerator;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.ItemUtils;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 
-public final class GeneratorData implements ClickableBlock {
+public final class ClickableSignGenerator implements ClickableBlock {
 
     private final BlockLocation loc;
     private final int defaultLevel;
@@ -21,13 +25,13 @@ public final class GeneratorData implements ClickableBlock {
     private TemporaryGenerator temporaryGenerator;
     private World world;
 
-    public GeneratorData(BlockLocation loc, int defaultLevel, BaseGenerator base) {
+    public ClickableSignGenerator(BlockLocation loc, int defaultLevel, BaseGenerator base) {
         this.loc = loc;
         this.defaultLevel = defaultLevel;
         this.base = base;
     }
 
-    final TemporaryGenerator getGenerator() {
+    public TemporaryGenerator getGenerator() {
         return temporaryGenerator;
     }
 
@@ -71,7 +75,7 @@ public final class GeneratorData implements ClickableBlock {
             return;
         }
         if (temporaryGenerator.getLevel() == base.maxlevel()) {
-            Messages.send(player, "generator-max");
+            Messages.send(player, "generator.max");
             return;
         }
 
@@ -80,7 +84,7 @@ public final class GeneratorData implements ClickableBlock {
         final int needAmount = base.levels()[temporaryGenerator.getLevel()].upgradeItems();
 
         if (amount < needAmount) {
-            player.sendMessage(Messages.get("generator-need").replace("%amount%", String.valueOf(needAmount)));
+            player.sendMessage(Messages.get("generator.need").replace("%amount%", String.valueOf(needAmount)));
             return;
         }
 
@@ -88,6 +92,6 @@ public final class GeneratorData implements ClickableBlock {
 
         temporaryGenerator.levelUp();
         GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
-        Messages.send(player, "generator-levelup");
+        Messages.send(player, "generator.levelup");
     }
 }

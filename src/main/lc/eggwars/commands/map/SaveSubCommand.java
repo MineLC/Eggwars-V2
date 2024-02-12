@@ -18,13 +18,14 @@ import com.google.gson.Gson;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.commands.BasicSubCommand;
-import lc.eggwars.generators.GeneratorData;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
+import lc.eggwars.utils.EntityLocation;
 
 final class SaveSubCommand implements BasicSubCommand {
 
@@ -83,7 +84,8 @@ final class SaveSubCommand implements BasicSubCommand {
             (int)world.getWorldBorder().getSize(),
             saveSpawns(data),
             saveGenerators(data),
-            saveEggs(data)
+            saveEggs(data),
+            saveShopSpawns(data)
         );
     }
 
@@ -98,15 +100,15 @@ final class SaveSubCommand implements BasicSubCommand {
     }
 
     private Map<String, String[]> saveGenerators(final CreatorData data) {
-        final Set<Entry<String, List<GeneratorData>>> generatorsData = data.getGeneratorsMapPerID().entrySet();
+        final Set<Entry<String, List<ClickableSignGenerator>>> generatorsData = data.getGeneratorsMapPerID().entrySet();
         final Map<String, String[]> generatorsParsed = new HashMap<>();
 
-        for (final Entry<String, List<GeneratorData>> entry : generatorsData) {
-            final List<GeneratorData> list = entry.getValue();
+        for (final Entry<String, List<ClickableSignGenerator>> entry : generatorsData) {
+            final List<ClickableSignGenerator> list = entry.getValue();
             final String[] generatorsString = new String[list.size()];
 
             for (int i = 0; i < list.size(); i++) {
-                final GeneratorData generator = list.get(i);
+                final ClickableSignGenerator generator = list.get(i);
                 generatorsString[i] = generator.getDefaultLevel() + ":" + generator.getLocation().toString();
             }
 
@@ -123,5 +125,16 @@ final class SaveSubCommand implements BasicSubCommand {
             eggs.put(entry.getKey().getKey(), entry.getValue().toString());
         }
         return eggs;
+    }
+
+    private String[] saveShopSpawns(final CreatorData data) {
+        final Set<EntityLocation> spawns = data.getShopKeepersSpawns();
+        final String[] parsedSpawns = new String[spawns.size()];
+        int index = 0;
+
+        for (final EntityLocation location : spawns) {
+            parsedSpawns[index++] = location.toString();
+        }
+        return parsedSpawns;
     }
 }

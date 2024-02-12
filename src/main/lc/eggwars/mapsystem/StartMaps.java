@@ -21,14 +21,18 @@ import com.grinderwolf.swm.api.loaders.SlimeLoader;
 
 import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.generators.BaseGenerator;
-import lc.eggwars.generators.GeneratorData;
-import lc.eggwars.generators.GeneratorStorage;
-import lc.eggwars.generators.GeneratorThread;
+import lc.eggwars.game.GameMap;
+import lc.eggwars.game.clickable.ClickableDragonEgg;
+import lc.eggwars.game.clickable.ClickableShopkeeper;
+import lc.eggwars.game.clickable.ClickableSignGenerator;
+import lc.eggwars.game.generators.BaseGenerator;
+import lc.eggwars.game.generators.GeneratorStorage;
+import lc.eggwars.game.generators.GeneratorThread;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
+import lc.eggwars.utils.EntityLocation;
 import lc.eggwars.utils.IntegerUtils;
 
 public final class StartMaps {
@@ -80,6 +84,7 @@ public final class StartMaps {
                     getGenerators(data, worldClickableBlocks),
                     getSpawns(data),
                     getTeamEggs(data, worldClickableBlocks),
+                    getShopSpawns(data, worldClickableBlocks),
                     data.maxPersonsPerTeam(),
                     data.borderSize(),
                     ++id);
@@ -114,10 +119,22 @@ public final class StartMaps {
 
             final BlockLocation location = BlockLocation.create(entry.getValue());
             eggsParsed.put(team, location);
-            clickableBlocks.put(location.hashCode(), new EnderDragonEgg(team, location));
+            clickableBlocks.put(location.hashCode(), new ClickableDragonEgg(team, location));
         }
 
         return eggsParsed;
+    }
+
+    private EntityLocation[] getShopSpawns(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+        final String[] locations = data.shopSpawns();
+        final EntityLocation[] parsedLocations = new EntityLocation[locations.length];
+        int index = 0;
+        for (final String location : locations) {
+            final EntityLocation entityLocation = EntityLocation.create(location);
+            parsedLocations[index++] = entityLocation;
+            clickableBlocks.put(entityLocation.hashCode(), new ClickableShopkeeper());
+        }
+        return parsedLocations;
     }
 
     private Map<BaseTeam, BlockLocation> getSpawns(final JsonMapData data) {
@@ -137,7 +154,7 @@ public final class StartMaps {
         return spawnsParsed;
     }
     
-    private GeneratorData[] getGenerators(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+    private ClickableSignGenerator[] getGenerators(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
         final Set<Entry<String, String[]>> generatorsEntries = data.generators().entrySet();
 
         int size = 0;
@@ -146,7 +163,7 @@ public final class StartMaps {
             size += generator.getValue().length;
         }
 
-        final GeneratorData[] generatorsData = new GeneratorData[size];
+        final ClickableSignGenerator[] generatorsData = new ClickableSignGenerator[size];
         int index = 0;
 
         for (final Entry<String, String[]> generator : generatorsEntries) {
@@ -161,7 +178,7 @@ public final class StartMaps {
                 final String[] split = generatorString.split(":");
                 final int defaultLevel = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
-                final GeneratorData generatorData = new GeneratorData(location, defaultLevel, baseGenerator);
+                final ClickableSignGenerator generatorData = new ClickableSignGenerator(location, defaultLevel, baseGenerator);
 
                 generatorsData[index++] = generatorData;
                 clickableBlocks.put(location.hashCode(), generatorData);

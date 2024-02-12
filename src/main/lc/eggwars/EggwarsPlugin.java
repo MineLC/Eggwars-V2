@@ -19,9 +19,9 @@ import com.grinderwolf.swm.api.SlimePlugin;
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
-import lc.eggwars.generators.GeneratorThread;
-import lc.eggwars.generators.StartGenerators;
-
+import lc.eggwars.game.generators.GeneratorThread;
+import lc.eggwars.game.generators.StartGenerators;
+import lc.eggwars.game.shopkeepers.StartShopkeepers;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.internal.ListenerRegister;
@@ -29,11 +29,10 @@ import lc.eggwars.listeners.pvp.EntityDamageListener;
 import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
 import lc.eggwars.listeners.pvp.PlayerRespawnListener;
-
+import lc.eggwars.listeners.shop.PlayerInventoryClickListener;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
-
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
@@ -54,6 +53,7 @@ public class EggwarsPlugin extends JavaPlugin {
         }
 
         new StartMessages().load(this);
+        new StartShopkeepers().load(this);
         new StartGenerators().load(this);
         new StartTeams(this).load();
         new StartGameData().load(this);
@@ -77,6 +77,7 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerRespawnListener(this, getConfig()));
         listeners.register(new EntityDamageListener());
         listeners.register(new PlayerDamageByPlayerListener());
+        listeners.register(new PlayerInventoryClickListener(this));
 
         listeners.cancelEvent(BlockPhysicsEvent.class);
         listeners.cancelEvent(BlockGrowEvent.class);

@@ -53,7 +53,7 @@ public final class EntityLocation {
             Integer.parseInt(split[0]),
             Integer.parseInt(split[1]),
             Integer.parseInt(split[2]),
-            Integer.parseInt(split[3]));
+            Float.parseFloat(split[3]));
     }
 
     public static EntityLocation toEntityLocation(final Location location) {

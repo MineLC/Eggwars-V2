@@ -1,4 +1,4 @@
-package lc.eggwars.spawn;
+package lc.eggwars.others.spawn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -33,7 +33,8 @@ import lc.eggwars.listeners.shop.PlayerInventoryClickListener;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
-import lc.eggwars.spawn.StartSpawn;
+import lc.eggwars.others.deaths.StartDeaths;
+import lc.eggwars.others.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
 public class EggwarsPlugin extends JavaPlugin {
@@ -57,7 +58,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartGenerators().load(this);
         new StartTeams(this).load();
         new StartGameData().load(this);
-
+        final StartDeaths deaths = new StartDeaths(this);
         final ListenerRegister listeners = new ListenerRegister(this);
    
         // Remember start maps on final
@@ -74,7 +75,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
         // PvP
         listeners.register(new PlayerDeathListener());
-        listeners.register(new PlayerRespawnListener(this, getConfig()));
+        listeners.register(new PlayerRespawnListener(this, deaths.load(this), deaths));
         listeners.register(new EntityDamageListener());
         listeners.register(new PlayerDamageByPlayerListener());
         listeners.register(new PlayerInventoryClickListener(this));

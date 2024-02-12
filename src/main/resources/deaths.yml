@@ -1,0 +1,28 @@
+# TODO Add amount of lcoins to killer and vip points
+
+suffix-if-killer-exist: " por el jugador &6%d%"
+final-death-prefix: "&6&lFINAL KILL "
+
+deaths:
+  CONTACT: "&6%v% ha muerto"
+  ENTITY_ATTACK: "&6%v% ha muerto"
+  PROJECTILE: "&6%v% ha muerto por un proyectil lanzado"
+  SUFFOCATION: "&6%v% ha muerto por ser sofocado"
+  FALL: "&6%v% ha muerto de caida"
+  FIRE: "&6%v% &cha muerto quemado"
+  FIRE_TICK: "&6%v% ha muerto quemado"
+  MELTING: "&6%v% ha muerto por daños causados ​​por el derretimiento de un muñeco de nieve"
+  LAVA: "&6%v% ha muerto por lava"
+  DROWNING: "&6%v% se ha ahogado"
+  BLOCK_EXPLOSION: "&6%v% ha muerto por la explosión de una tnt"
+  ENTITY_EXPLOSION: "&6%v% ha muerto por un creeper"
+  VOID: "&6%v% ha muerto por el vacio"
+  LIGHTNING: "&6%v% ha muerto por un rayo"
+  SUICIDE: "&6%v% se ha suicidado"
+  STARVATION: "&6%v% ha muerto por hambre"
+  POISON: "&6%v% ha muerto por veneno"
+  MAGIC: "&6%v% ha muerto por poción de daño"
+  WITHER: "&6%v% ha muerto por el efecto del wither"
+  FALLING_BLOCK: "&6%v% ha muerto porque un bloque se le cayo encima"
+  THORNS: "&6%v% ha muerto "
+  CUSTOM: "&6%v% ha muerto en raras circustancias"

@@ -16,7 +16,7 @@ import lc.eggwars.game.countdown.types.PreGameCountdown;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 
 public final class GameStorage {

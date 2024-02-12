@@ -1,9 +1,7 @@
-package lc.eggwars.listeners.shop;
+package lc.eggwars.inventory.types;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -11,38 +9,30 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shopkeepers.ShopkeepersData;
-import lc.eggwars.listeners.internal.EventListener;
-import lc.eggwars.listeners.internal.ListenerData;
+import lc.eggwars.inventory.SecundaryInventory;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 
-public class PlayerInventoryClickListener implements EventListener {
+public final class SkinShopInventory implements SecundaryInventory {
 
-    private final EggwarsPlugin plugin;
-    private final int removeEntity;
+    private final int removeEntityDelay;
 
-    public PlayerInventoryClickListener(EggwarsPlugin plugin) {
-        this.plugin = plugin;
-        this.removeEntity = plugin.getConfig().getInt("shopkeepers.preview-seconds-duration") * 20;
+    public SkinShopInventory() {
+        this.removeEntityDelay = EggwarsPlugin.getInstance().getConfig().getInt("shopkeepers.preview-seconds-duration") * 20;
     }
 
-    @ListenerData(
-        event = InventoryClickEvent.class,
-        priority = EventPriority.LOWEST
-    )
-    public void handle(final Event defaultEvent) {
-        final InventoryClickEvent event = (InventoryClickEvent)defaultEvent;
+    @Override
+    public void handle(InventoryClickEvent event) {
         final ShopkeepersData data = ShopKeepersStorage.getInstance().getData();
-        if (event.getClickedInventory() == null || !data.inventory().getHolder().equals(event.getClickedInventory().getHolder())) {
-            return;
-        }
-
         final ShopkeepersData.Skin skinClicked = data.items().get(event.getSlot());
+
         event.setCancelled(true);
+
         if (skinClicked == null) {
             return;
         }
+
         final Player player = (Player)event.getWhoClicked();
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
@@ -63,7 +53,9 @@ public class PlayerInventoryClickListener implements EventListener {
             loc.getYaw());
 
         player.closeInventory();
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> new ShopKeeperManager().deleteEntity(entityId, player), removeEntity);
+        EggwarsPlugin.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(
+            EggwarsPlugin.getInstance(),
+            () -> new ShopKeeperManager().deleteEntity(entityId, player), removeEntityDelay);
         Messages.send(player, "shopkeepers-preview");
     }
 }

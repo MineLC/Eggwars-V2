@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.spawn.SpawnStorage;
 
 final class LeaveSubCommand implements BasicSubCommand {
 

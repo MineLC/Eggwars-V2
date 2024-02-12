@@ -32,17 +32,21 @@ public final class ListenerRegister {
     }
 
     public void cancelEvent(final Class<? extends Event> event) {
+        fastListener(event, new EventListener() {
+            @Override
+            public void handle(Event defaultEvent) {
+                ((Cancellable)defaultEvent).setCancelled(true);
+            }
+        });
+    }
+
+    public void fastListener(final Class<? extends Event> event, final EventListener listener) {
         plugin.getServer().getPluginManager().registerEvent(
             event,
-            new EventListener() {
-                @Override
-                public void handle(Event defaultEvent) {
-                    ((Cancellable)defaultEvent).setCancelled(true);
-                }
-            },
+            listener,
             EventPriority.LOWEST,
             EXECUTOR,
             plugin
         );
-   }
+    }
 }

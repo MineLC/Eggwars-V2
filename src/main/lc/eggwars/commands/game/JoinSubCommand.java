@@ -16,7 +16,6 @@ import lc.eggwars.game.managers.EggsManager;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 
 final class JoinSubCommand implements SubCommand {

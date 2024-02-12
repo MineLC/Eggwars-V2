@@ -1,9 +1,22 @@
 package lc.eggwars.utils;
 
+import org.bukkit.inventory.Inventory;
+
+import lc.eggwars.inventory.CustomInventoryHolder;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 
-public final class ItemUtils {
+public final class InventoryUtils {
+
+    public static int getId(final Inventory inventory) {
+        if (inventory.getHolder() == null) {
+            return -1;
+        }
+        if (inventory.getHolder() instanceof CustomInventoryHolder custom) {
+            return custom.hashCode();
+        }
+        return -1;
+    }
 
     public static int getAmount(final ItemStack item, final PlayerInventory inventory) {
         final ItemStack[] items = inventory.items;

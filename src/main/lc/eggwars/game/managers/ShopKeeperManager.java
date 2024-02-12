@@ -66,7 +66,7 @@ public final class ShopKeeperManager {
         try {
             Class<? extends Entity> classEntity = EntityTypes.a(id);
             if (classEntity != null) {
-                return (Entity)classEntity.getConstructor(World.class).newInstance(world);
+                return (Entity)classEntity.getConstructor(net.minecraft.server.v1_8_R3.World.class).newInstance(world);
             }
         } catch (Exception var4) {
            var4.printStackTrace();

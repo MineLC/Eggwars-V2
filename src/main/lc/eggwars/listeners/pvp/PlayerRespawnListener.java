@@ -27,14 +27,14 @@ public final class PlayerRespawnListener implements EventListener {
     private final String[] deathMessages;
     private final int waitTime;
 
-    public PlayerRespawnListener(EggwarsPlugin plugin, String[] deathMessages, StartDeaths deaths) {
+    public PlayerRespawnListener(EggwarsPlugin plugin, StartDeaths deaths) {
         this.plugin = plugin;
         this.title = Chat.color(plugin.getConfig().getString("respawn.title"));
         this.subtitle = Chat.color(plugin.getConfig().getString("respawn.subtitle"));
         this.waitTime = plugin.getConfig().getInt("respawn.seconds");
         this.finalKillPrefix = deaths.get("final-death-prefix");
         this.suffixIfPlayerKill = deaths.get("suffix-if-killer-exist");
-        this.deathMessages = deathMessages;
+        this.deathMessages = deaths.load(plugin);
     }
 
     @ListenerData(

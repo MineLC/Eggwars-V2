@@ -7,9 +7,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import lc.eggwars.inventory.PrincipalInventory;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
 
 public final class PlayerInteractListener implements EventListener {
@@ -22,6 +24,20 @@ public final class PlayerInteractListener implements EventListener {
         final PlayerInteractEvent event = (PlayerInteractEvent)defaultEvent;
 
         if (event.getAction() == Action.LEFT_CLICK_AIR) {
+            return;
+        }
+
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)
+            && event.getPlayer().getWorld().equals(SpawnStorage.getStorage().getLocation().getWorld())
+        ) {
+            event.setCancelled(true);
+            if (event.getItem() == null) {
+                return;
+            }
+            final PrincipalInventory inventory = SpawnStorage.getStorage().getItems().get(event.getItem().getType());
+            if (inventory != null) {
+                event.getPlayer().openInventory(inventory.getInventory());
+            }
             return;
         }
 

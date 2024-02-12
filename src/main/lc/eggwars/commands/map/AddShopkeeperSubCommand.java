@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
-import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.EntityLocation;
 
 final class AddShopkeeperSubCommand implements BasicSubCommand {

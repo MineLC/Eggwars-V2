@@ -1,0 +1,6 @@
+shop-item:
+  slot: 0
+  item: "388"
+  name: "&aTienda de eggwars"
+  lore:
+    - "&7(Clic para entrar)"

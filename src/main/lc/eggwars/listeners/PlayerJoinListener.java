@@ -6,9 +6,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
-import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
+import lc.eggwars.spawn.SpawnStorage;
 
 public final class PlayerJoinListener implements EventListener {
 
@@ -26,5 +26,7 @@ public final class PlayerJoinListener implements EventListener {
         PlayerStorage.getInstance().addPlayer(
             event.getPlayer().getUniqueId(),
             new PlayerData(VILLAGER_SKIN));
+        
+        SpawnStorage.getStorage().setItems(event.getPlayer());
     }
 }

@@ -9,8 +9,8 @@ import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.listeners.internal.EventListener;
 import lc.eggwars.listeners.internal.ListenerData;
-import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.players.PlayerStorage;
+import lc.eggwars.spawn.SpawnStorage;
 
 public final class PlayerQuitListener implements EventListener {
 
@@ -26,6 +26,7 @@ public final class PlayerQuitListener implements EventListener {
         // TODO Before of delete player data, save in database
 
         PlayerStorage.getInstance().removePlayer(event.getPlayer().getUniqueId());
+        player.getInventory().clear();
 
         if (map == null) {
             return;

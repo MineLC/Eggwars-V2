@@ -7,7 +7,7 @@ import lc.eggwars.game.GameState;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.utils.BlockLocation;
-import lc.eggwars.utils.ItemUtils;
+import lc.eggwars.utils.InventoryUtils;
 
 import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.Entity;
@@ -135,7 +135,7 @@ public class GeneratorThread extends Thread {
     }
 
     private void pickupItem(final TemporaryGenerator generator, final EntityPlayer player) {
-        generator.setAmount(ItemUtils.addItem(generator.getItem(), generator.getAmount(), player.inventory));
+        generator.setAmount(InventoryUtils.addItem(generator.getItem(), generator.getAmount(), player.inventory));
 
         final PacketPlayOutNamedSoundEffect itemPickupSound = new PacketPlayOutNamedSoundEffect("random.pop", player.locX, player.locY, player.locZ, 1.0f, 1.0f);
         player.playerConnection.sendPacket(itemPickupSound);

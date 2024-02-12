@@ -1,0 +1,11 @@
+inventory:
+  title: "Tienda de eggwars"
+  rows: 4
+
+skin-selector:
+  slot: 0
+  item: "334"
+  name: "&aSkins para tu aldeano"
+  lore:
+    - "&7(Clic para entrar)"
+  

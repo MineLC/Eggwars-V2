@@ -22,7 +22,7 @@ import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
 import lc.eggwars.mapsystem.MapCreatorData;
-import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.EntityLocation;

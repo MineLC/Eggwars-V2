@@ -13,7 +13,7 @@ import lc.eggwars.game.generators.TemporaryGenerator;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
-import lc.eggwars.utils.ItemUtils;
+import lc.eggwars.utils.InventoryUtils;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class ClickableSignGenerator implements ClickableBlock {
@@ -80,7 +80,7 @@ public final class ClickableSignGenerator implements ClickableBlock {
         }
 
         final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
-        final int amount = ItemUtils.getAmount(base.drop(), inventory);
+        final int amount = InventoryUtils.getAmount(base.drop(), inventory);
         final int needAmount = base.levels()[temporaryGenerator.getLevel()].upgradeItems();
 
         if (amount < needAmount) {
@@ -88,7 +88,7 @@ public final class ClickableSignGenerator implements ClickableBlock {
             return;
         }
 
-        ItemUtils.removeAmount(needAmount, base.drop(), inventory);
+        InventoryUtils.removeAmount(needAmount, base.drop(), inventory);
 
         temporaryGenerator.levelUp();
         GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());

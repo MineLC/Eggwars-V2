@@ -46,6 +46,8 @@ final class JoinSubCommand implements SubCommand {
             }
         }
 
+        player.getInventory().clear();
+
         if (map.getState() != GameState.NONE) {
             GameStorage.getStorage().join(map.getWorld(), map, player);
             player.setGameMode(GameMode.ADVENTURE);

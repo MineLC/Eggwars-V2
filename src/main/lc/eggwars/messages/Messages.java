@@ -32,7 +32,8 @@ public final class Messages {
     }
 
     public static final String get(final String key) {
-        return instance.parsedMessages.get(key);
+        final String message = instance.parsedMessages.get(key);
+        return (message == null) ? "Can't found the message " + key : message;
     }
 
     static final void update(Messages messages) {

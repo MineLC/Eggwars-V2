@@ -132,7 +132,7 @@ public final class GameStorage {
         }
 
         if (!anotherTeamLive) {
-            Messages.sendNoGet(map.getPlayers(), Messages.get("team-win").replace("%team%", team.getName()));        
+            Messages.sendNoGet(map.getPlayers(), Messages.get("team.win").replace("%team%", team.getName()));        
             for (final Player livingPlayer : map.getPlayersLiving()) {
                 livingPlayer.setGameMode(GameMode.SPECTATOR);
             }

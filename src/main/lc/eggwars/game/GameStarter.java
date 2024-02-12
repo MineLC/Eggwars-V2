@@ -77,6 +77,7 @@ final class GameStarter {
     private void addToTeam(final Integer amount, final GameMap map, final BlockLocation spawnTeam, final BaseTeam team, final Player player, Map<BaseTeam, Integer> personsPerTeam) {
         player.teleport(new Location(player.getWorld(), spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
         player.setGameMode(GameMode.SURVIVAL);
+        map.getPlayersLiving().add(player);
 
         if (amount == null) {
             personsPerTeam.put(team, 1);

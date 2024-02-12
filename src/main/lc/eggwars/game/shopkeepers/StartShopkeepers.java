@@ -21,7 +21,7 @@ import net.minecraft.server.v1_8_R3.World;
 public final class StartShopkeepers {
 
     public void load(final EggwarsPlugin plugin) {
-        final FileConfiguration config = plugin.loadConfig("shopkeepers");
+        final FileConfiguration config = plugin.loadConfig("inventories/shopkeepers");
         final Set<String> mobs = config.getKeys(false);
         final InventoryCreator creator = new InventoryCreator(config);
         final Inventory inventory = new InventoryCreator(plugin.getConfig()).create("shopkeeperskins", "shopkeepers");

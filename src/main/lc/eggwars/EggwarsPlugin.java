@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.grinderwolf.swm.api.SlimePlugin;
@@ -104,6 +105,11 @@ public class EggwarsPlugin extends JavaPlugin {
 
         register.cancelEvent(BlockPhysicsEvent.class);
         register.cancelEvent(BlockGrowEvent.class);
+        register.fastListener(PlayerDropItemEvent.class, (event) -> {
+            if (((PlayerDropItemEvent)event).getPlayer().getWorld().equals(SpawnStorage.getStorage().getLocation().getWorld())) {
+                ((PlayerDropItemEvent)event).setCancelled(true);
+            }
+        });
     }
 
     public FileConfiguration loadConfig(final String name) {

@@ -22,7 +22,7 @@ public final class StartInventories {
     }
 
     private SpawnShopInventory getSpawnShopInventory() {
-        final FileConfiguration config = EggwarsPlugin.getInstance().loadConfig("spawnshop");
+        final FileConfiguration config = EggwarsPlugin.getInstance().loadConfig("inventories/spawnshop");
         final InventoryCreator creator = new InventoryCreator(config);
         final Inventory inventory = creator.create("spawnshop", "inventory");
         

@@ -137,7 +137,10 @@ public final class GameStorage {
             for (final Player livingPlayer : map.getPlayersLiving()) {
                 livingPlayer.setGameMode(GameMode.SPECTATOR);
             }
-            map.setTaskId(plugin.getServer().getScheduler().runTaskLater(plugin, () -> endGame(map), 200).getTaskId());
+            map.setTaskId(plugin.getServer().getScheduler().runTaskLater(
+                plugin,
+                () -> endGame(map),
+                plugin.getConfig().getInt("win-celebration-duration-in-seconds") * 20).getTaskId());
         }
     }
 

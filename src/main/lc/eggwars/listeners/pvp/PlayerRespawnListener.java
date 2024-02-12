@@ -67,9 +67,7 @@ public final class PlayerRespawnListener implements EventListener {
         } else {
             finalMessage = finalKillPrefix;
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendMessage("Esta es tu muerte definitiva");
             player.teleport(map.getWorld().getSpawnLocation());
-    
             GameStorage.getStorage().finalKill(map, team, player);
         }
 

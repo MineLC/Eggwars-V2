@@ -45,6 +45,7 @@ public final class StartGenerators {
 
     private BaseGenerator.Level[] getLevels(final FileConfiguration config, final String generatorPath, final int amountLevels) {
         final BaseGenerator.Level[] levels = new BaseGenerator.Level[amountLevels];
+        int percentageFirstLevel = 0;
 
         for (int level = 0; level < amountLevels; level++) {
             final String levelPath = generatorPath + "level." + level + ".";
@@ -53,7 +54,14 @@ public final class StartGenerators {
             final int amountToGenerate = config.getInt(levelPath + "amount-generate");
 
             final float itemsPerSecond = (amountToGenerate == 0) ? 0 : (float)waitingTime / (float)amountToGenerate;
-            final int percentage = (int) (100 - (itemsPerSecond * 100));
+            int percentage = (itemsPerSecond == 0)
+                ? 0
+                : Math.abs((int) (100 - (itemsPerSecond * 100)) - percentageFirstLevel);
+
+            if (percentageFirstLevel == 0 && amountToGenerate != 0) {
+                percentageFirstLevel = percentage;
+                percentage = 0;
+            }
 
             levels[level] = new BaseGenerator.Level(
                 config.getInt(levelPath + "upgrade-item-need"),

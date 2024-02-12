@@ -56,6 +56,10 @@ public class GeneratorThread extends Thread {
 
         for (final ClickableSignGenerator data : generators) {
             final TemporaryGenerator generator = data.getGenerator();
+            if (generator.getBase().levels()[generator.getLevel()].itemsToGenerate() == 0) {
+                continue;
+            }
+
             generator.addOneSecond();
 
             if (generator.getWaitToSpawn() != generator.getWaitedTime()) {

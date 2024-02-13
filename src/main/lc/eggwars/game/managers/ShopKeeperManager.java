@@ -17,6 +17,7 @@ import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 
 public final class ShopKeeperManager {
@@ -46,15 +47,19 @@ public final class ShopKeeperManager {
         if (!(entity instanceof EntityLiving livingEntity)) {
             return -1;
         }
+        entity.setCustomName(ShopKeepersStorage.getInstance().getName());
+        entity.setCustomNameVisible(true);
 
-        livingEntity.locX = x;
+        livingEntity.locX = x + 0.5D;
         livingEntity.locY = y;
-        livingEntity.locZ = z;
+        livingEntity.locZ = z + 0.5D;
         livingEntity.yaw = yaw;
     
         final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(livingEntity);
+        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(livingEntity.getId(), livingEntity.getDataWatcher(), false);
     
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(spawn);
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(data);
         return entity.getId();
     }
 

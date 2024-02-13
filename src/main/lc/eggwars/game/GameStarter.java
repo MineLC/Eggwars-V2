@@ -41,7 +41,7 @@ final class GameStarter {
                 final BaseTeam team = entry.getKey();
                 final Integer amountPersons = personsPerTeam.get(team);
 
-                if (amountPersons != null && amountPersons > maxPersonsPerTeam) {
+                if (amountPersons != null && amountPersons >= maxPersonsPerTeam) {
                     continue;
                 }
 

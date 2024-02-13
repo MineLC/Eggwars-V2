@@ -6,10 +6,12 @@ public final class ShopKeepersStorage {
 
     private static ShopKeepersStorage instance;
 
+    private final String name;
     private final IntObjectHashMap<ShopkeepersData.Skin> skins;
     private final ShopkeepersData data;
 
-    ShopKeepersStorage(IntObjectHashMap<ShopkeepersData.Skin> skins, ShopkeepersData data) {
+    ShopKeepersStorage(String name, IntObjectHashMap<ShopkeepersData.Skin> skins, ShopkeepersData data) {
+        this.name = name;
         this.skins = skins;
         this.data = data;
     }
@@ -20,6 +22,10 @@ public final class ShopKeepersStorage {
 
     public ShopkeepersData getData() {
         return data;
+    }
+
+    public String getName() {
+        return name;
     }
 
     final static void update(ShopKeepersStorage data) {

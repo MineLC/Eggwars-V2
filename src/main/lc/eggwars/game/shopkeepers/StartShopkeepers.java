@@ -47,6 +47,10 @@ public final class StartShopkeepers {
             skinsPerID.put(skin.id(), skin);
         }
 
-        ShopKeepersStorage.update(new ShopKeepersStorage(skinsPerID, new ShopkeepersData(inventory, inventoryItems)));
+        ShopKeepersStorage.update(new ShopKeepersStorage(
+            Chat.color(plugin.getConfig().getString("shopkeepers.name")),
+            skinsPerID,
+            new ShopkeepersData(inventory, inventoryItems)
+        ));
     }
 }

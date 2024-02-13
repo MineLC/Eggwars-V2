@@ -56,7 +56,7 @@ public final class EntityLocation {
             Float.parseFloat(split[3]));
     }
 
-    public static EntityLocation toEntityLocation(final Location location) {
-        return new EntityLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ(), location.getYaw());
+    public static EntityLocation toEntityLocation(final Location location, float yaw) {
+        return new EntityLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ(), yaw);
     }
 }

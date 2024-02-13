@@ -56,7 +56,7 @@ public final class ShopKeeperManager {
         livingEntity.yaw = yaw;
     
         final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(livingEntity);
-        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(livingEntity.getId(), livingEntity.getDataWatcher(), false);
+        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(livingEntity.getId(), livingEntity.getDataWatcher(), true);
     
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(spawn);
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(data);

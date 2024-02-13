@@ -47,6 +47,8 @@ public final class StartGenerators {
         final BaseGenerator.Level[] levels = new BaseGenerator.Level[amountLevels];
         int percentageFirstLevel = 0;
 
+        final int startLevel = config.getInt(generatorPath + "startLevel");
+
         for (int level = 0; level < amountLevels; level++) {
             final String levelPath = generatorPath + "level." + level + ".";
 
@@ -56,9 +58,9 @@ public final class StartGenerators {
             final float itemsPerSecond = (amountToGenerate == 0) ? 0 : (float)waitingTime / (float)amountToGenerate;
             int percentage = (itemsPerSecond == 0)
                 ? 0
-                : Math.abs((int) (100 - (itemsPerSecond * 100)) - percentageFirstLevel);
+                : Math.abs(percentageFirstLevel - (int) (100 - (itemsPerSecond * 100)));
 
-            if (percentageFirstLevel == 0 && amountToGenerate != 0) {
+            if (level == startLevel) {
                 percentageFirstLevel = percentage;
                 percentage = 0;
             }

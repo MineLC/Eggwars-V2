@@ -37,7 +37,7 @@ final class RemoveShoopkeperSubCommand implements BasicSubCommand {
             return;
         }
 
-        final EntityLocation location = EntityLocation.toEntityLocation(targetBlock.getLocation());
+        final EntityLocation location = EntityLocation.toEntityLocation(targetBlock.getLocation(), player.getLocation().getYaw());
         if (!creatorData.getShopKeepersSpawns().contains(location)) {
             send(player, "&cIn this site don't exist a shopkeeper spawn");
             return;

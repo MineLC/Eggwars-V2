@@ -2,6 +2,7 @@ iron:
   name: "&0&lHierro"
   drop: "IRON_INGOT"
   max-level: 3
+  start-level: 0
   level:
     0:
       seconds-to-generate: 1 #1/1

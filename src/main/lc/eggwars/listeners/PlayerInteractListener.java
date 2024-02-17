@@ -8,11 +8,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import lc.eggwars.inventory.PrincipalInventory;
-import lc.eggwars.listeners.internal.EventListener;
-import lc.eggwars.listeners.internal.ListenerData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
+import lc.lcspigot.listeners.EventListener;
+import lc.lcspigot.listeners.ListenerData;
 
 public final class PlayerInteractListener implements EventListener {
 

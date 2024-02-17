@@ -1,9 +1,9 @@
 package lc.eggwars.game.generators;
 
-import net.minecraft.server.v1_8_R3.Chunk;
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.ItemStack;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.Chunk;
+import net.minecraft.server.Entity;
+import net.minecraft.server.ItemStack;
+import net.minecraft.server.World;
 
 import java.util.List;
 

@@ -23,7 +23,6 @@ import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameMap;
 import lc.eggwars.game.clickable.ClickableDragonEgg;
-import lc.eggwars.game.clickable.ClickableShopkeeper;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
@@ -84,7 +83,7 @@ public final class StartMaps {
                     getGenerators(data, worldClickableBlocks),
                     getSpawns(data),
                     getTeamEggs(data, worldClickableBlocks),
-                    getShopSpawns(data, worldClickableBlocks),
+                    getShopSpawns(data),
                     data.maxPersonsPerTeam(),
                     data.borderSize(),
                     ++id);
@@ -125,14 +124,13 @@ public final class StartMaps {
         return eggsParsed;
     }
 
-    private EntityLocation[] getShopSpawns(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
+    private EntityLocation[] getShopSpawns(final JsonMapData data) {
         final String[] locations = data.shopSpawns();
         final EntityLocation[] parsedLocations = new EntityLocation[locations.length];
         int index = 0;
         for (final String location : locations) {
             final EntityLocation entityLocation = EntityLocation.create(location);
             parsedLocations[index++] = entityLocation;
-            clickableBlocks.put(entityLocation.hashCode(), new ClickableShopkeeper());
         }
         return parsedLocations;
     }

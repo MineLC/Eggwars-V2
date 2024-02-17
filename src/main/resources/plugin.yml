@@ -4,7 +4,6 @@ version: 0.0.1
 
 main: lc.eggwars.EggwarsPlugin
 description: EggwarsCore for minelc
-load: POSTWORLD
 
 commands:
   map:

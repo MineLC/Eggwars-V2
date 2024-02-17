@@ -3,8 +3,8 @@ package lc.eggwars.utils;
 import org.bukkit.inventory.Inventory;
 
 import lc.eggwars.inventory.CustomInventoryHolder;
-import net.minecraft.server.v1_8_R3.ItemStack;
-import net.minecraft.server.v1_8_R3.PlayerInventory;
+import net.minecraft.server.ItemStack;
+import net.minecraft.server.PlayerInventory;
 
 public final class InventoryUtils {
 

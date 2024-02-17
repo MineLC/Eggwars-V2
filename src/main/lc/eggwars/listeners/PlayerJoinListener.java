@@ -4,8 +4,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import lc.eggwars.listeners.internal.EventListener;
-import lc.eggwars.listeners.internal.ListenerData;
+import lc.lcspigot.listeners.EventListener;
+import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.spawn.SpawnStorage;

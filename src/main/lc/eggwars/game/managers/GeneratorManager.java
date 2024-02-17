@@ -1,13 +1,13 @@
 package lc.eggwars.game.managers;
 
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.CraftWorld;
 
 import lc.eggwars.game.GameMap;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
 import lc.eggwars.utils.BlockLocation;
-import net.minecraft.server.v1_8_R3.Chunk;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.Chunk;
+import net.minecraft.server.World;
 
 public final class GeneratorManager {
 

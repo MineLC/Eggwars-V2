@@ -1,6 +1,6 @@
 package lc.eggwars.game.generators;
 
-import net.minecraft.server.v1_8_R3.ItemStack;
+import net.minecraft.server.ItemStack;
 
 public final record BaseGenerator(
     String key,

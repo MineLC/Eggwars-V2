@@ -7,8 +7,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import lc.eggwars.game.GameMap;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.listeners.internal.EventListener;
-import lc.eggwars.listeners.internal.ListenerData;
+import lc.lcspigot.listeners.EventListener;
+import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.spawn.SpawnStorage;
 

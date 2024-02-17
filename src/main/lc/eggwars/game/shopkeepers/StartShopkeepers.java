@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.inventory.Inventory;
 
 import io.netty.util.collection.IntObjectHashMap;
@@ -14,9 +14,9 @@ import lc.eggwars.inventory.InventoryCreator;
 import lc.eggwars.inventory.InventoryCreator.Item;
 import lc.eggwars.utils.Chat;
 
-import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.EntityTypes;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityTypes;
+import net.minecraft.server.World;
 
 public final class StartShopkeepers {
 

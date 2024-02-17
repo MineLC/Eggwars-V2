@@ -47,6 +47,7 @@ public final class SkinShopInventory implements SecundaryInventory {
             ((Player)event.getWhoClicked()),
             event.getWhoClicked().getWorld(),
             skinClicked.id(),
+            Integer.MAX_VALUE - 1,
             loc.getBlockX(),
             loc.getBlockY(),
             loc.getBlockZ(),

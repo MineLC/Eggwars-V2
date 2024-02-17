@@ -7,12 +7,12 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import lc.eggwars.EggwarsPlugin;
 import net.md_5.bungee.api.ChatColor;
 
-import net.minecraft.server.v1_8_R3.ItemStack;
+import net.minecraft.server.ItemStack;
 
 public final class StartGenerators {
 
@@ -45,7 +45,7 @@ public final class StartGenerators {
 
     private BaseGenerator.Level[] getLevels(final FileConfiguration config, final String generatorPath, final int amountLevels) {
         final BaseGenerator.Level[] levels = new BaseGenerator.Level[amountLevels];
-        int percentageFirstLevel = 0;
+        float itemsPerSecondFirstLevel = 1.0F;
 
         final int startLevel = config.getInt(generatorPath + "startLevel");
 
@@ -55,14 +55,13 @@ public final class StartGenerators {
             final int waitingTime = config.getInt(levelPath + "seconds-to-generate");
             final int amountToGenerate = config.getInt(levelPath + "amount-generate");
 
-            final float itemsPerSecond = (amountToGenerate == 0) ? 0 : (float)waitingTime / (float)amountToGenerate;
-            int percentage = (itemsPerSecond == 0)
-                ? 0
-                : Math.abs(percentageFirstLevel - (int) (100 - (itemsPerSecond * 100)));
+            final float itemsPerSecond = (float)amountToGenerate / (float)waitingTime;
+            int percentage = 0;
 
             if (level == startLevel) {
-                percentageFirstLevel = percentage;
-                percentage = 0;
+                itemsPerSecondFirstLevel = itemsPerSecond;
+            } else {
+                percentage = (int) (((itemsPerSecond / itemsPerSecondFirstLevel) - 1) * 100);
             }
 
             levels[level] = new BaseGenerator.Level(

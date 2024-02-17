@@ -7,8 +7,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.inventory.InventoryStorage;
 import lc.eggwars.inventory.PrincipalInventory;
-import lc.eggwars.listeners.internal.EventListener;
-import lc.eggwars.listeners.internal.ListenerData;
+import lc.lcspigot.listeners.EventListener;
+import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.utils.InventoryUtils;
 

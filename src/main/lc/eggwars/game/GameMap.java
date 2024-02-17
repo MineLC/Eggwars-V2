@@ -23,6 +23,7 @@ public final class GameMap {
     private final ClickableSignGenerator[] generators;
     private final EntityLocation[] shopSpawns;
 
+    private final int[] shopkeepersID;
     private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
@@ -58,6 +59,7 @@ public final class GameMap {
         this.shopSpawns = shopSpawns;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
+        this.shopkeepersID = new int[shopSpawns.length];
         this.id = id;
     }
 
@@ -100,6 +102,10 @@ public final class GameMap {
 
     public GameState getState() {
         return state;
+    }
+
+    public int[] getShopIDs() {
+        return shopkeepersID;
     }
 
     public int getTaskId() {

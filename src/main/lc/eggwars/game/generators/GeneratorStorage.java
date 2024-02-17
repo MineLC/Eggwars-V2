@@ -6,6 +6,8 @@ import java.util.Set;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
+import net.md_5.bungee.api.ChatColor;
+
 public final class GeneratorStorage {
     private static GeneratorStorage storage;
 
@@ -24,7 +26,10 @@ public final class GeneratorStorage {
         }
         final BaseGenerator.Level genLevel = generator.levels()[level];
         final String levelString = String.valueOf(level);
-        final String progress = genLevel.percentage() + "-" + generator.levels()[generator.maxlevel()].percentage() + "%";
+        final String currentProgress = (genLevel.percentage() < 0)
+            ? ChatColor.RED + "X" : String.valueOf(genLevel.percentage());
+
+        final String progress = currentProgress + "-" + generator.levels()[generator.maxlevel()].percentage() + "%";
 
         final String speed = genLevel.itemsToGenerate() + "/" + genLevel.waitingTime() + "s";
         final String speedNext = (level == generator.maxlevel())

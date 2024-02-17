@@ -32,10 +32,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8</version>
-            <scope>provided</scope>
+            <groupId>lc.lcspigot</groupId>
+            <artifactId>lcspigot</artifactId>
+            <version>1.8.4</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/lcspigot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.grinderwolf</groupId>

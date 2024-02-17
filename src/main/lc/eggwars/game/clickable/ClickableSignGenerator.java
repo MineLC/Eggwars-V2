@@ -2,7 +2,7 @@ package lc.eggwars.game.clickable;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
@@ -14,7 +14,7 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.InventoryUtils;
-import net.minecraft.server.v1_8_R3.PlayerInventory;
+import net.minecraft.server.PlayerInventory;
 
 public final class ClickableSignGenerator implements ClickableBlock {
 

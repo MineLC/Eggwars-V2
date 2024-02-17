@@ -20,7 +20,14 @@ final class GameStarter {
 
     void start(final World world, final GameMap map) {
         setTeams(world, map);
+        setShopkeepersId(map);
         new ShopKeeperManager().send(map.getPlayers(), world, map);
+    }
+
+    private void setShopkeepersId(final GameMap map) {
+        for (int i = 0; i < map.getShopIDs().length; i++) {
+            map.getShopIDs()[i] = Integer.MAX_VALUE - i;
+        }
     }
 
     private void setTeams(final World world, final GameMap map) {

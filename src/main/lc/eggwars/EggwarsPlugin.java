@@ -26,11 +26,11 @@ import lc.eggwars.inventory.StartInventories;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerInventoryClickListener;
 import lc.eggwars.listeners.PlayerJoinListener;
-import lc.eggwars.listeners.internal.ListenerRegister;
 import lc.eggwars.listeners.pvp.EntityDamageListener;
 import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
 import lc.eggwars.listeners.pvp.PlayerRespawnListener;
+import lc.eggwars.listeners.shopkeepers.PreInteractWithEntityListener;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
@@ -38,6 +38,7 @@ import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
+import lc.lcspigot.listeners.ListenerRegister;
 
 public class EggwarsPlugin extends JavaPlugin {
 
@@ -92,15 +93,17 @@ public class EggwarsPlugin extends JavaPlugin {
 
 
     private void registerListeners(final ListenerRegister register) {
-        register.register(new PlayerDeathListener());
-        register.register(new PlayerRespawnListener(this, new StartDeaths(this)));
-        register.register(new EntityDamageListener());
-        register.register(new PlayerDamageByPlayerListener());
-        register.register(new PlayerInventoryClickListener());
-        register.register(new PlayerInteractListener());
+        register.register(new PlayerDeathListener(), true);
+        register.register(new PlayerRespawnListener(this, new StartDeaths(this)), true);
+        register.register(new EntityDamageListener(), true);
+        register.register(new PlayerDamageByPlayerListener(), true);
+        register.register(new PlayerInventoryClickListener(), true);
+        register.register(new PlayerInteractListener(), true);
+
+        register.register(new PreInteractWithEntityListener(), false);
 
         if (SpawnStorage.getStorage().getLocation() != null) {
-            register.register(new PlayerJoinListener());  
+            register.register(new PlayerJoinListener(), true);  
         }
 
         register.cancelEvent(BlockPhysicsEvent.class);

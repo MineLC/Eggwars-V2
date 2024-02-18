@@ -28,9 +28,10 @@ final class TeamJoinSubCommand implements SubCommand {
             send(player, "&cThe team " + args[1] + " don't exist");
             return;
         }
+
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        if (game == null || game.getState() == GameState.NONE) {
+        if (game == null) {
             send(player, "&cYou aren't in a game");
             return;
         }

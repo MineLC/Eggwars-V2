@@ -67,7 +67,7 @@ public final class StartMaps {
         int index = 0;
         int id = -1;
 
-        int shopAmount = Integer.MAX_VALUE;
+        int shopsAmount = 0;
 
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
@@ -85,7 +85,7 @@ public final class StartMaps {
                 final EntityLocation[] shopSpawns = getShopSpawns(data);
                 final int[] shopkeepersID = new int[shopSpawns.length];
                 for (int i = 0; i < shopSpawns.length; i++) {
-                    shopkeepersID[i] = Integer.MAX_VALUE - shopAmount;
+                    shopkeepersID[i] = Integer.MAX_VALUE - shopsAmount;
                 }
 
                 final MapData map = new MapData(

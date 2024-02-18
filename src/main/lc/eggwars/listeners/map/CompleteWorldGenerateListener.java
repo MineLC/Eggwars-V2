@@ -35,6 +35,8 @@ public final class CompleteWorldGenerateListener implements EventListener {
                 EggwarsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(
                     EggwarsPlugin.getInstance(),
                     () -> event.getSlimeWorld().unloadWorld(false));
+
+                MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
             }
             return;
         }

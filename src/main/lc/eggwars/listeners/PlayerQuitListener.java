@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -21,7 +21,7 @@ public final class PlayerQuitListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerQuitEvent event = (PlayerQuitEvent)defaultEvent;
         final Player player = event.getPlayer();
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
         // TODO Before of delete player data, save in database
 

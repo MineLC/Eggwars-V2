@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -18,7 +18,6 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
-import lc.eggwars.utils.Chat;
 
 public final class PlayerRespawnListener implements EventListener {
 
@@ -30,8 +29,8 @@ public final class PlayerRespawnListener implements EventListener {
 
     public PlayerRespawnListener(EggwarsPlugin plugin, StartDeaths deaths) {
         this.plugin = plugin;
-        this.title = Chat.color(plugin.getConfig().getString("respawn.title"));
-        this.subtitle = Chat.color(plugin.getConfig().getString("respawn.subtitle"));
+        this.title = Messages.color(plugin.getConfig().getString("respawn.title"));
+        this.subtitle = Messages.color(plugin.getConfig().getString("respawn.subtitle"));
         this.waitTime = plugin.getConfig().getInt("respawn.seconds");
         this.finalKillPrefix = deaths.get("final-death-prefix");
         this.suffixIfPlayerKill = deaths.get("suffix-if-killer-exist");
@@ -45,7 +44,7 @@ public final class PlayerRespawnListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerRespawnEvent event = (PlayerRespawnEvent)defaultEvent;
         final Player player = event.getPlayer();
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (map == null) {
             return;
@@ -61,7 +60,7 @@ public final class PlayerRespawnListener implements EventListener {
         String finalMessage = "";
 
         if (map.getTeamsWithEgg().contains(team)) {
-            final BlockLocation spawn = map.getSpawn(team);
+            final BlockLocation spawn = map.getMapData().getSpawns().get(team);
             final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
             final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
             cinematic.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, cinematic, 0, 20).getTaskId());

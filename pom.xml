@@ -38,12 +38,12 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/lcspigot.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>com.grinderwolf</groupId>
-            <artifactId>slimeworldmanager-api</artifactId>
-            <version>2.2.1</version>
-            <scope>provided</scope>
-        </dependency>
+        <dependency>  
+            <groupId>net.swofty</groupId>  
+            <artifactId>swoftyworldmanager-api</artifactId>  
+            <version>4.0.0</version>
+            <scope>provided</scope>  
+        </dependency>  
         <dependency>
             <groupId>com.github.ichocomilk</groupId>
             <artifactId>LightSidebar</artifactId>

@@ -7,12 +7,13 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import net.md_5.bungee.api.ChatColor;
 
-import net.minecraft.server.ItemStack;
+import net.minecraft.server.v1_8_R3.ItemStack;
 
 public final class StartGenerators {
 
@@ -26,7 +27,7 @@ public final class StartGenerators {
 
             Material drop = Material.getMaterial(config.getString(generatorPath + "drop"));
             if (drop == null) {
-                plugin.getLogger().warning("The item to generate is invalid. Generator: " + generator);
+                Logger.warn("The item to generate is invalid. Generator: " + generator);
                 drop = Material.STONE;
             }
 

@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.lcspigot.listeners.EventListener;
@@ -25,7 +25,7 @@ public final class EntityDamageListener implements EventListener {
             return;
         }
 
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (map == null) {
             event.setCancelled(true);

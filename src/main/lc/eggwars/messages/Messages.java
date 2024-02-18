@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -34,6 +35,10 @@ public final class Messages {
     public static final String get(final String key) {
         final String message = instance.parsedMessages.get(key);
         return (message == null) ? "Can't found the message " + key : message;
+    }
+
+    public static final String color(final String message) {
+        return (message == null) ? "" : message.replace('&', ChatColor.COLOR_CHAR);
     }
 
     static final void update(Messages messages) {

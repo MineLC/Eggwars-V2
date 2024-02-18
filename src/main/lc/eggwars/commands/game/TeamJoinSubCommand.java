@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.commands.SubCommand;
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.messages.Messages;
@@ -28,7 +28,7 @@ final class TeamJoinSubCommand implements SubCommand {
             send(player, "&cThe team " + args[1] + " don't exist");
             return;
         }
-        final GameMap game = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game == null || game.getState() == GameState.NONE) {
             send(player, "&cYou aren't in a game");
@@ -40,7 +40,7 @@ final class TeamJoinSubCommand implements SubCommand {
             return;
         }
 
-        if (game.getSpawn(team) == null) {
+        if (game.getMapData().getSpawns().get(team) == null) {
             send(player, "&cThis team don't exist");
             return;
         }
@@ -52,7 +52,7 @@ final class TeamJoinSubCommand implements SubCommand {
             game.getPlayersInTeam().put(team, players);
         }
 
-        if (players.size() == game.getMaxPersonsPerTeam()) {
+        if (players.size() == game.getMapData().getMaxPersonsPerTeam()) {
             Messages.send(player, "team.full");
             return;
         }
@@ -74,7 +74,7 @@ final class TeamJoinSubCommand implements SubCommand {
         if (!(sender instanceof Player player)) {
             return List.of();
         }
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
-        return (map == null) ? List.of() : map.getSpawns().keySet().stream().map(BaseTeam::getKey).toList();
+        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
+        return (map == null) ? List.of() : map.getMapData().getSpawns().keySet().stream().map(BaseTeam::getKey).toList();
     }
 }

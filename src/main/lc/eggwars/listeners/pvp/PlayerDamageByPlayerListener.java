@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -28,7 +28,7 @@ public final class PlayerDamageByPlayerListener implements EventListener {
             return;
         }
 
-        final GameMap map = GameStorage.getStorage().getGame(damager.getUniqueId());
+        final GameInProgress map = GameStorage.getStorage().getGame(damager.getUniqueId());
 
         if (map == null) {
             return;

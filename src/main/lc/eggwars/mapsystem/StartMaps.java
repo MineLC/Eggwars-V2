@@ -11,17 +11,16 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.tinylog.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
-import com.grinderwolf.swm.api.SlimePlugin;
-import com.grinderwolf.swm.api.loaders.SlimeLoader;
 
 import io.netty.util.collection.IntObjectHashMap;
+
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.GameMap;
 import lc.eggwars.game.clickable.ClickableDragonEgg;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
@@ -33,6 +32,9 @@ import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.EntityLocation;
 import lc.eggwars.utils.IntegerUtils;
+
+import net.swofty.swm.api.SlimePlugin;
+import net.swofty.swm.api.loaders.SlimeLoader;
 
 public final class StartMaps {
 
@@ -59,10 +61,13 @@ public final class StartMaps {
         }
 
         final Gson gson = new Gson();
-        final Map<String, GameMap> mapsPerName = new HashMap<>();
-        final GameMap[] maps = new GameMap[mapFiles.length];
+        final Map<String, MapData> mapsPerName = new HashMap<>();
+        final MapData[] maps = new MapData[mapFiles.length];
+
         int index = 0;
         int id = -1;
+
+        int shopAmount = Integer.MAX_VALUE;
 
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
@@ -74,16 +79,22 @@ public final class StartMaps {
                 final World world = Bukkit.getWorld(data.world());
 
                 if (world == null) {
-                    plugin.getLogger().warning("The world " + data.world() + " don't exist or is unloaded");
+                    Logger.warn("The world " + data.world() + " don't exist or is unloaded");
                     continue;
                 }
-                
-                final GameMap map = new GameMap(
+                final EntityLocation[] shopSpawns = getShopSpawns(data);
+                final int[] shopkeepersID = new int[shopSpawns.length];
+                for (int i = 0; i < shopSpawns.length; i++) {
+                    shopkeepersID[i] = Integer.MAX_VALUE - shopAmount;
+                }
+
+                final MapData map = new MapData(
                     worldClickableBlocks,
-                    getGenerators(data, worldClickableBlocks),
                     getSpawns(data),
                     getTeamEggs(data, worldClickableBlocks),
-                    getShopSpawns(data),
+                    getGenerators(data, worldClickableBlocks),
+                    shopSpawns,
+                    shopkeepersID,
                     data.maxPersonsPerTeam(),
                     data.borderSize(),
                     ++id);
@@ -93,7 +104,7 @@ public final class StartMaps {
                 mapsPerName.put(world.getName(), map);
                 plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, true));
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-                plugin.getLogger().warning("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
+                Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 e.printStackTrace();
             }
         }
@@ -112,7 +123,7 @@ public final class StartMaps {
             final BaseTeam team = TeamStorage.getStorage().getTeam(entry.getKey());
 
             if (team == null) {
-                plugin.getLogger().warning("The map " + data.world() + " uses a inexistent team: " + entry.getKey());
+                Logger.warn("The map " + data.world() + " uses a inexistent team: " + entry.getKey());
                 continue;
             }
 
@@ -143,7 +154,7 @@ public final class StartMaps {
             final BaseTeam team = TeamStorage.getStorage().getTeam(spawn.getKey());
 
             if (team == null) {
-                plugin.getLogger().warning("The map " + data.world() + " uses a inexistent team: " + spawn.getKey());
+                Logger.warn("The map " + data.world() + " uses a inexistent team: " + spawn.getKey());
                 continue;
             }
 
@@ -167,7 +178,7 @@ public final class StartMaps {
         for (final Entry<String, String[]> generator : generatorsEntries) {
             final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(generator.getKey());
             if (baseGenerator == null) {
-                plugin.getLogger().warning("The generator " + generator.getKey() + " don't exist");
+                Logger.warn("The generator " + generator.getKey() + " don't exist");
                 return null;
             }
             final String[] cordsAndLevels = generator.getValue();

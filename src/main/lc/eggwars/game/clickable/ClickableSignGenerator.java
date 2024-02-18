@@ -2,7 +2,7 @@ package lc.eggwars.game.clickable;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
@@ -14,7 +14,7 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.InventoryUtils;
-import net.minecraft.server.PlayerInventory;
+import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class ClickableSignGenerator implements ClickableBlock {
 
@@ -23,7 +23,6 @@ public final class ClickableSignGenerator implements ClickableBlock {
     private final BaseGenerator base;
 
     private TemporaryGenerator temporaryGenerator;
-    private World world;
 
     public ClickableSignGenerator(BlockLocation loc, int defaultLevel, BaseGenerator base) {
         this.loc = loc;
@@ -49,7 +48,6 @@ public final class ClickableSignGenerator implements ClickableBlock {
 
     public void cleanData() {
         this.temporaryGenerator = null;
-        this.world = null;
     }
 
     public void setGenerator(final World world) {
@@ -61,13 +59,12 @@ public final class ClickableSignGenerator implements ClickableBlock {
         item.setCustomNameVisible(true);
         item.setItemStack(base.drop());
 
-        this.temporaryGenerator = new TemporaryGenerator(defaultLevel, base, item, loc);
-        this.world = world;
+        this.temporaryGenerator = new TemporaryGenerator(defaultLevel, base, item, loc, world);
     }
 
     @Override
     public void onClick(final Player player, final Action action) {
-        if (temporaryGenerator == null || action != Action.RIGHT_CLICK_BLOCK || !player.getWorld().equals(world)) {
+        if (temporaryGenerator == null || action != Action.RIGHT_CLICK_BLOCK || !player.getWorld().equals(temporaryGenerator.getWorld().getWorld())) {
             return;
         }
 
@@ -91,7 +88,7 @@ public final class ClickableSignGenerator implements ClickableBlock {
         InventoryUtils.removeAmount(needAmount, base.drop(), inventory);
 
         temporaryGenerator.levelUp();
-        GeneratorStorage.getStorage().setLines(world.getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
+        GeneratorStorage.getStorage().setLines(temporaryGenerator.getWorld().getWorld().getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
         Messages.send(player, "generator.levelup");
     }
 }

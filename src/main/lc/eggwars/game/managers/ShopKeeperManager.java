@@ -3,39 +3,39 @@ package lc.eggwars.game.managers;
 import java.util.Collection;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.utils.EntityLocation;
 
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityTypes;
-import net.minecraft.server.PacketPlayOutEntityDestroy;
-import net.minecraft.server.PacketPlayOutEntityMetadata;
-import net.minecraft.server.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.EntityTypes;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 
 public final class ShopKeeperManager {
 
-    public void send(final Collection<Player> players, final World world, final GameMap map) {
+    public void send(final Collection<Player> players, final World world, final GameInProgress game) {
         for (final Player player : players) {
-            send(player, PlayerStorage.getInstance().get(player.getUniqueId()), map);
+            send(player, PlayerStorage.getInstance().get(player.getUniqueId()), game);
         }
     }
 
-    public void send(final Player player, final PlayerData data, final GameMap map) {
+    public void send(final Player player, final PlayerData data, final GameInProgress game) {
         int index = 0;
-        for (final EntityLocation location : map.getShopSpawns()) {
+        for (final EntityLocation location : game.getMapData().getShopSpawns()) {
             spawn(
                 player,
                 player.getWorld(),
                 data.getShopSkinID(),
-                map.getShopIDs()[index++],
+                game.getMapData().getShopIDs()[index++],
                 location.x(),
                 location.y() + ShopKeepersStorage.getInstance().getSkin(data.getShopSkinID()).addHeight(),
                 location.z(),
@@ -70,12 +70,12 @@ public final class ShopKeeperManager {
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(id));
     }
 
-    private Entity createEntityById(int typeID, net.minecraft.server.World world) {  
+    private Entity createEntityById(int typeID, net.minecraft.server.v1_8_R3.World world) {  
         try {
             Class<? extends Entity> classEntity = EntityTypes.a(typeID);
 
             if (classEntity != null) {
-                return (Entity)classEntity.getConstructor(net.minecraft.server.World.class).newInstance(world);
+                return (Entity)classEntity.getConstructor(net.minecraft.server.v1_8_R3.World.class).newInstance(world);
             }
         } catch (Exception var4) {
            var4.printStackTrace();

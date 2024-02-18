@@ -1,12 +1,13 @@
 package lc.eggwars.game.generators;
 
-import net.minecraft.server.Chunk;
-import net.minecraft.server.Entity;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_8_R3.Chunk;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.ItemStack;
+import net.minecraft.server.v1_8_R3.World;
 
 import java.util.List;
 
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
 import lc.eggwars.utils.BlockLocation;
 
@@ -14,8 +15,9 @@ public final class TemporaryGenerator {
 
     private final int height;
     private final BaseGenerator base;
-
     private final Entity entityItem;
+    private final BlockLocation location;
+    private final World world;
 
     private int waitedTime = 0;
     private int itemsAmount = 0;
@@ -23,26 +25,23 @@ public final class TemporaryGenerator {
     private BaseGenerator.Level currentLevel;
     private int level;
 
-    private World world;
     private Chunk[] chunks;
 
-    private final BlockLocation location;
-
-    public TemporaryGenerator(int level, BaseGenerator base, Entity entityItem, BlockLocation location) {
+    public TemporaryGenerator(int level, BaseGenerator base, Entity entityItem, BlockLocation location, org.bukkit.World world) {
         this.currentLevel = base.levels()[level];
         this.level = level;
         this.base = base;
         this.height = location.y() >> 4;
         this.entityItem = entityItem;
         this.location = location;
+        this.world = ((CraftWorld)world).getHandle();
     }
 
     public void levelUp() {
         this.currentLevel = base.levels()[++level];
     }
 
-    public void update(World world, Chunk[] chunks) {
-        this.world = world;
+    public void update(Chunk[] chunks) {
         this.chunks = chunks;
     }
 

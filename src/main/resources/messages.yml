@@ -2,6 +2,7 @@ pregame:
   waiting-players: "&cEsperando por más jugadores..."
   start-game: "&aEl juego ha iniciado!"
   start-in: "&aEl juego inicia en %time%"
+  full: "&cEste mapa ya está lleno"
 
 team:
   join: "&aAhora estás en el team %team%"
@@ -12,6 +13,10 @@ team:
     - "&a¡El juego ha acabado!"
     - "&aEl equipo ganador es %team%"
     - " "
+
+eggs:
+  break-it-egg: "&cNo puedes romper tu propio huevo"
+  break-other: "&bSe ha roto el huevo del equipo %team%"
 
 generator:
   levelup: "&aEl generador ha subido de nivel!"

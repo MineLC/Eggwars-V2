@@ -2,7 +2,6 @@ package lc.eggwars;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -13,8 +12,7 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.grinderwolf.swm.api.SlimePlugin;
+import org.tinylog.Logger;
 
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
@@ -26,6 +24,7 @@ import lc.eggwars.inventory.StartInventories;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerInventoryClickListener;
 import lc.eggwars.listeners.PlayerJoinListener;
+import lc.eggwars.listeners.map.CompleteWorldGenerateListener;
 import lc.eggwars.listeners.pvp.EntityDamageListener;
 import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
@@ -39,6 +38,7 @@ import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 import lc.lcspigot.listeners.ListenerRegister;
+import net.swofty.swm.api.SlimePlugin;
 
 public class EggwarsPlugin extends JavaPlugin {
 
@@ -49,14 +49,14 @@ public class EggwarsPlugin extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
 
-        final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
+        final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SwoftyWorldManager");
         if (slimePlugin == null) {
-            getLogger().log(Level.SEVERE, "EggwarsCore need slimeworld manager to work");
+            Logger.error("EggwarsCore need slimeworld manager to work");
             return;
         }
 
-        if (!loadCommands()) {
-            getLogger().log(Level.SEVERE, "Error on load commands. ¿Invalid plugin.yml?");
+        if (!loadCommands(slimePlugin)) {
+            Logger.error("Error on load commands. ¿Invalid plugin.yml?");
             return;
         }
 
@@ -99,6 +99,7 @@ public class EggwarsPlugin extends JavaPlugin {
         register.register(new PlayerDamageByPlayerListener(), true);
         register.register(new PlayerInventoryClickListener(), true);
         register.register(new PlayerInteractListener(), true);
+        register.register(new CompleteWorldGenerateListener(), true);
 
         register.register(new PreInteractWithEntityListener(), false);
 
@@ -124,7 +125,7 @@ public class EggwarsPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    private boolean loadCommands() {
+    private boolean loadCommands(SlimePlugin slimePlugin) {
         final PluginCommand pluginMapCommand = getCommand("map");
         final PluginCommand pluginGameCommand = getCommand("game");
 
@@ -132,7 +133,7 @@ public class EggwarsPlugin extends JavaPlugin {
             return false;
         }
 
-        final MapCreatorCommand mapCommand = new MapCreatorCommand(this, new MapCreatorData());
+        final MapCreatorCommand mapCommand = new MapCreatorCommand(slimePlugin, this, new MapCreatorData());
         pluginMapCommand.setExecutor(mapCommand);       
         pluginMapCommand.setTabCompleter(mapCommand);    
 

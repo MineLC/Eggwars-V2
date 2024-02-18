@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
@@ -24,16 +24,13 @@ public final class PreInteractWithEntityListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PreInteractEntityEvent event = (PreInteractEntityEvent)defaultEvent;
         final Player player = event.getPlayer();
-        player.sendMessage("INTERACUTADO");
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
-
+        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
         if (map == null || map.getState() != GameState.IN_GAME) {
             return;
         }
-        final int[] shopKeepersID = map.getShopIDs();
+        final int[] shopKeepersID = map.getMapData().getShopIDs();
 
         for (final int id : shopKeepersID) {
-            event.getPlayer().sendMessage("ENTITYID: " + event.getEntityID() + " ID: " + id);
             if (id == event.getEntityID()) {
                 final PlayerData data = PlayerStorage.getInstance().get(player.getUniqueId());
                 final ShopkeepersData.Skin skin = ShopKeepersStorage.getInstance().getSkin(data.getShopSkinID());

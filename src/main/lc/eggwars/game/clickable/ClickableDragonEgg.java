@@ -4,12 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
-import lc.eggwars.utils.Chat;
 import lc.eggwars.utils.ClickableBlock;
 
 public final class ClickableDragonEgg implements ClickableBlock  {
@@ -23,19 +23,21 @@ public final class ClickableDragonEgg implements ClickableBlock  {
 
     @Override
     public void onClick(final Player player, final Action action) {
-        final GameMap map = GameStorage.getStorage().getGame(player.getUniqueId());
-        if (map == null || map.getState() != GameState.IN_GAME || !map.getTeamsWithEgg().contains(team)) {
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
+        if (game == null || game.getState() != GameState.IN_GAME || !game.getTeamsWithEgg().contains(team)) {
             return;
         }
 
-        final BaseTeam playerTeam = map.getTeamPerPlayer().get(player);
+        final BaseTeam playerTeam = game.getTeamPerPlayer().get(player);
         if (team.equals(playerTeam)) {
-            player.sendMessage("No puedes romper tu propio huevo...");
+            Messages.send(player, "eggs.break-it-egg");
             return;
         }
 
-        map.getTeamsWithEgg().remove(team);
+        game.getTeamsWithEgg().remove(team);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
-        Chat.send("Se ha roto el huevo del equipo " + team.getName(), map.getPlayers());
+     
+        final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName());
+        Messages.sendNoGet(game.getPlayers(), eggBreaked);
     }
 }

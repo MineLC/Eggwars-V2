@@ -2,26 +2,28 @@ package lc.eggwars.mapsystem;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
-import com.grinderwolf.swm.api.SlimePlugin;
-import com.grinderwolf.swm.api.exceptions.CorruptedWorldException;
-import com.grinderwolf.swm.api.exceptions.NewerFormatException;
-import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
-import com.grinderwolf.swm.api.exceptions.WorldInUseException;
-import com.grinderwolf.swm.api.loaders.SlimeLoader;
-import com.grinderwolf.swm.api.world.SlimeWorld;
-import com.grinderwolf.swm.api.world.properties.SlimeProperties;
-import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
+import org.bukkit.entity.Player;
 
 import io.netty.util.collection.IntObjectHashMap;
-import lc.eggwars.game.GameMap;
+
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.IntegerUtils;
+
+import net.swofty.swm.api.SlimePlugin;
+import net.swofty.swm.api.exceptions.CorruptedWorldException;
+import net.swofty.swm.api.exceptions.NewerFormatException;
+import net.swofty.swm.api.exceptions.UnknownWorldException;
+import net.swofty.swm.api.exceptions.WorldInUseException;
+import net.swofty.swm.api.loaders.SlimeLoader;
+import net.swofty.swm.api.world.properties.SlimeProperties;
+import net.swofty.swm.api.world.properties.SlimePropertyMap;
 
 public final class MapStorage {
     private static MapStorage mapStorage;
@@ -30,50 +32,55 @@ public final class MapStorage {
 
     static {
         PROPERTIES = new SlimePropertyMap();
-        PROPERTIES.setString(SlimeProperties.DIFFICULTY, "normal");
-        PROPERTIES.setBoolean(SlimeProperties.PVP, true);
-        PROPERTIES.setBoolean(SlimeProperties.ALLOW_MONSTERS, false);
-        PROPERTIES.setBoolean(SlimeProperties.ALLOW_ANIMALS, false);
+        PROPERTIES.setValue(SlimeProperties.DIFFICULTY, "normal");
+        PROPERTIES.setValue(SlimeProperties.PVP, true);
+        PROPERTIES.setValue(SlimeProperties.ALLOW_MONSTERS, false);
+        PROPERTIES.setValue(SlimeProperties.ALLOW_ANIMALS, false);
     }
 
-    // Used for player interaction listeners
     private final Map<World, IntObjectHashMap<ClickableBlock>> clickableBlocks = new HashMap<>();
 
-    private final Map<String, GameMap> mapsPerName;
+    private final Map<String, Set<Player>> worldsCurrentlyLoading = new HashMap<>();
+    private final Set<String> worldsThatNeedUnload = new HashSet<>();
 
+    private final Map<String, MapData> mapsPerName;
+    
     private final SlimePlugin slimePlugin;
     private final SlimeLoader loader;
 
-    MapStorage(SlimePlugin slimePlugin, SlimeLoader loader, Map<String, GameMap> mapsPerName) {
+    MapStorage(SlimePlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName) {
         this.slimePlugin = slimePlugin;
         this.loader = loader;
         this.mapsPerName = mapsPerName;
     }
 
     // Execute this method async
-    public World load(final String worldName) {
+    public Set<Player> load(final String worldName) {
         try {
-            final GameMap map = mapsPerName.get(worldName);
+            final MapData map = mapsPerName.get(worldName);
             if (map == null) {
                 return null;
             }
-
-            final SlimeWorld world = slimePlugin.loadWorld(loader, worldName, false, PROPERTIES);
-            slimePlugin.generateWorld(world);
-            final World bukkitWorld = Bukkit.getWorld(worldName);
-            clickableBlocks.put(bukkitWorld, map.getClickableBlocks());
-            bukkitWorld.getWorldBorder().setSize(map.getBorderSize());
-
-            return bukkitWorld;
+            slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
+            final Set<Player> players = new HashSet<>();
+            worldsCurrentlyLoading.put(worldName, players);
+            return players;
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    public void loadClickableBlocks(final World world) {
+        final MapData map = mapsPerName.get(world.getName());
+        if (map != null) {
+            clickableBlocks.put(world, map.getClickableBlocks());
+        }
+    }
+
     public void unload(final World world) {
         clickableBlocks.remove(world);
-        Bukkit.unloadWorld(world, false);
+        slimePlugin.getSlimeWorlds().get(world.getName()).unloadWorld(false);
     }
 
     public ClickableBlock getClickableBlock(final World world, Location location) {
@@ -84,11 +91,19 @@ public final class MapStorage {
         return clickableBlocksInWorld.get(IntegerUtils.combineCords(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
     }
 
-    public GameMap getMap(final String worldName) {
+    public MapData getMapData(final String worldName) {
         return mapsPerName.get(worldName);
     }
 
-    public Map<String, GameMap> getMaps() {
+    public Map<String, Set<Player>> getWorldsCurrentlyLoading() {
+        return worldsCurrentlyLoading;
+    }
+
+    public Set<String> getWorldsThatNeedUnload() {
+        return worldsThatNeedUnload;
+    }
+
+    public Map<String, MapData> getMaps() {
         return mapsPerName;
     }
 

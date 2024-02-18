@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
+import lc.eggwars.game.managers.EggsManager;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
@@ -25,14 +26,14 @@ public final class GameStorage {
     private final PreGameCountdown.Data preGameData;
     private final EggwarsPlugin plugin;
 
-    private final Map<UUID, GameMap> playersInGame = new HashMap<>();
+    private final Map<UUID, GameInProgress> playersInGame = new HashMap<>();
 
     GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preGameData) {
         this.plugin = plugin;
         this.preGameData = preGameData;
     }
 
-    public void join(final World world, final GameMap map, final Player player) {
+    public void join(final World world, final GameInProgress map, final Player player) {
         if (map.getState() == GameState.IN_GAME || map.getState() == GameState.PREGAME) {
             map.getPlayers().add(player);
             playersInGame.put(player.getUniqueId(), map);
@@ -41,12 +42,12 @@ public final class GameStorage {
 
         // Replace this comentary with a system to add items to vote, select team, and kits (Comming soon)
 
-        map.resetData();
+        new GeneratorManager().setGeneratorSigns(map);
+        new EggsManager().setEggs(map);
+
         map.getPlayers().add(player);
         playersInGame.put(player.getUniqueId(), map);
-
         map.setState(GameState.PREGAME);
-        map.setWorld(world);
 
         final PreGameCountdown countdown = new PreGameCountdown(
             preGameData, 
@@ -65,7 +66,7 @@ public final class GameStorage {
         map.setTaskId(id);
     }
 
-    public void leave(final GameMap map, final Player player, final World world) {
+    public void leave(final GameInProgress map, final Player player, final World world) {
         playersInGame.remove(player.getUniqueId());
         map.getPlayers().remove(player);
         final BaseTeam team = map.getTeamPerPlayer().get(player);
@@ -85,23 +86,19 @@ public final class GameStorage {
         player.getInventory().clear();
     }
 
-    private void unloadGame(final GameMap map, final World world) {
+    private void unloadGame(final GameInProgress map, final World world) {
         new GeneratorManager().unload(map);
 
         final Set<Entry<Player, BaseTeam>> playersWithTeams = map.getTeamPerPlayer().entrySet();
         for (final Entry<Player, BaseTeam> playerWithTeam : playersWithTeams) {
             playerWithTeam.getValue().getTeam().removePlayer(playerWithTeam.getKey());
         }
-
-        map.setState(GameState.NONE);
-        map.resetData();
-        map.setWorld(null);
-
+        map.getMapData().setGame(null);
         MapStorage.getStorage().unload(world);
         System.gc();
     }
 
-    public void finalKill(final GameMap map, final BaseTeam team, final Player player) {
+    public void finalKill(final GameInProgress map, final BaseTeam team, final Player player) {
         map.getPlayersLiving().remove(player);
 
         final Set<Player> players = map.getPlayersInTeam().get(team);
@@ -143,7 +140,7 @@ public final class GameStorage {
         }
     }
 
-    private void endGame(final GameMap map) {
+    private void endGame(final GameInProgress map) {
         for (final Player player : map.getPlayers()) {
             player.teleport(SpawnStorage.getStorage().getLocation());
             player.setGameMode(GameMode.ADVENTURE);
@@ -153,7 +150,7 @@ public final class GameStorage {
         unloadGame(map, map.getWorld());
     }
 
-    public GameMap getGame(UUID uuid) {
+    public GameInProgress getGame(UUID uuid) {
         return playersInGame.get(uuid);
     }
 

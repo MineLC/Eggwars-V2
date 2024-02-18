@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.mapsystem.MapCreatorData;
 import net.md_5.bungee.api.ChatColor;
+import net.swofty.swm.api.SlimePlugin;
 
 public final class MapCreatorCommand implements TabExecutor {
 
@@ -25,7 +26,7 @@ public final class MapCreatorCommand implements TabExecutor {
     private final RemoveShoopkeperSubCommand removeshopkeeper;
     private final SaveSubCommand save;
 
-    public MapCreatorCommand(EggwarsPlugin plugin, MapCreatorData data) {
+    public MapCreatorCommand(SlimePlugin slimePlugin, EggwarsPlugin plugin, MapCreatorData data) {
         this.editor = new EditorSubCommand(data);
         this.addGenerator = new AddGeneratorSubCommand(data);
         this.removeGenerator = new RemoveGeneratorSubCommand(data);
@@ -36,7 +37,7 @@ public final class MapCreatorCommand implements TabExecutor {
         this.maxPersons = new SetMaxPersonsSubCommand(data);
         this.addshopkeeper = new AddShopkeeperSubCommand(data);
         this.removeshopkeeper = new RemoveShoopkeperSubCommand(data);
-        this.save = new SaveSubCommand(plugin, data);
+        this.save = new SaveSubCommand(slimePlugin, plugin, data);
     }
 
     @Override

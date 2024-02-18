@@ -4,9 +4,10 @@ import java.util.Set;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.utils.Chat;
+import lc.eggwars.messages.Messages;
 
 public final class StartDeaths {
     
@@ -23,15 +24,15 @@ public final class StartDeaths {
         for (final String cause : deathCauses) {
             final DamageCause damageCause = DamageCause.valueOf(cause);
             if (damageCause == null) {
-                plugin.getLogger().warning("The damage cause " + cause + " don't exist");
+                Logger.warn("The damage cause " + cause + " don't exist");
                 continue;
             } 
-            deathMessages[damageCause.ordinal()] = Chat.color(config.getString(cause));
+            deathMessages[damageCause.ordinal()] = Messages.color(config.getString(cause));
         }
         return deathMessages;
     }
 
     public String get(final String key) {
-        return Chat.color(config.getString(key));
+        return Messages.color(config.getString(key));
     }
 }

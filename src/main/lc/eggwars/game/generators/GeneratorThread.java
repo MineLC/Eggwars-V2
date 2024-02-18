@@ -2,29 +2,30 @@ package lc.eggwars.game.generators;
 
 import java.util.List;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.managers.GeneratorManager;
+import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.InventoryUtils;
 
-import net.minecraft.server.Chunk;
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.PacketPlayOutEntityDestroy;
-import net.minecraft.server.PacketPlayOutEntityMetadata;
-import net.minecraft.server.PacketPlayOutNamedSoundEffect;
-import net.minecraft.server.PacketPlayOutSpawnEntity;
+import net.minecraft.server.v1_8_R3.Chunk;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 
 public class GeneratorThread extends Thread {
 
     private static GeneratorThread currentThread;
 
-    private final GameMap[] maps;
+    private final MapData[] maps;
     private boolean run = true;
 
-    public GeneratorThread(GameMap[] maps) {
+    public GeneratorThread(MapData[] maps) {
         this.maps = maps;
     }
 
@@ -33,8 +34,10 @@ public class GeneratorThread extends Thread {
         while (run) {
             try {
                 Thread.sleep(1000);
-                for (final GameMap generator : maps) {
-                    generateItems(generator);
+                for (final MapData map : maps) {
+                    if (map.getGameInProgress() != null) {
+                        generateItems(map.getGameInProgress());
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -42,7 +45,7 @@ public class GeneratorThread extends Thread {
         }
     }
 
-    private void generateItems(final GameMap map) {
+    private void generateItems(final GameInProgress map) {
         if (map.getState() != GameState.IN_GAME) {
             return;
         }
@@ -52,10 +55,10 @@ public class GeneratorThread extends Thread {
             map.setGeneratorsNeedUpdate(false);
         }
 
-        final ClickableSignGenerator[] generators = map.getGenerators();
+        final ClickableSignGenerator[] generators = map.getMapData().getGenerators();
 
-        for (final ClickableSignGenerator data : generators) {
-            final TemporaryGenerator generator = data.getGenerator();
+        for (final ClickableSignGenerator signGenerator : generators) {
+            final TemporaryGenerator generator = signGenerator.getGenerator();
             if (generator.getBase().levels()[generator.getLevel()].itemsToGenerate() == 0) {
                 continue;
             }

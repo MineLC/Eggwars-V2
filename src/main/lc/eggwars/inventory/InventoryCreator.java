@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import lc.eggwars.utils.Chat;
+import lc.eggwars.messages.Messages;
 
 public final class InventoryCreator {
     private final FileConfiguration config;
@@ -23,7 +23,7 @@ public final class InventoryCreator {
         return Bukkit.createInventory(
             new CustomInventoryHolder(name.hashCode()),
             config.getInt(finalPath + "rows") * 9,
-            Chat.color(config.getString(finalPath + "title")));
+            Messages.color(config.getString(finalPath + "title")));
     }
 
     public Item create(String path) {
@@ -46,10 +46,10 @@ public final class InventoryCreator {
         final ItemStack itemStack = new ItemStack(id, 1, data);
         final ItemMeta meta = itemStack.getItemMeta();
 
-        meta.setDisplayName(Chat.color(config.getString(finalPath + "name")));
+        meta.setDisplayName(Messages.color(config.getString(finalPath + "name")));
         List<String> lore = config.getStringList(finalPath + "lore");
         if (!lore.isEmpty()) {
-            meta.setLore(lore.stream().map( (string) -> Chat.color(string) ).toList());
+            meta.setLore(lore.stream().map( (string) -> Messages.color(string) ).toList());
         }
         itemStack.setItemMeta(meta);
 

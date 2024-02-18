@@ -1,44 +1,44 @@
 package lc.eggwars.game.managers;
 
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
-import lc.eggwars.game.GameMap;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
 import lc.eggwars.utils.BlockLocation;
-import net.minecraft.server.Chunk;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_8_R3.Chunk;
+import net.minecraft.server.v1_8_R3.World;
 
 public final class GeneratorManager {
 
-    public void setGeneratorSigns(final GameMap map) {
-        final ClickableSignGenerator[] generators = map.getGenerators();
+    public void setGeneratorSigns(final GameInProgress game) {
+        final ClickableSignGenerator[] generators = game.getMapData().getGenerators();
 
         for(final ClickableSignGenerator generator : generators) {
             final BlockLocation loc = generator.getLocation();
             GeneratorStorage.getStorage().setLines(
-                map.getWorld().getBlockAt(loc.x(), loc.y(), loc.z()),
+                game.getWorld().getBlockAt(loc.x(), loc.y(), loc.z()),
                 generator.getBase(),
                 generator.getDefaultLevel());
         }
     }
 
-    public void load(final GameMap map) {
-        final ClickableSignGenerator[] generators = map.getGenerators();
+    public void load(final GameInProgress game) {
+        final ClickableSignGenerator[] generators = game.getMapData().getGenerators();
     
         for(final ClickableSignGenerator generator : generators) {
-            generator.setGenerator(map.getWorld());
-            final World world = ((CraftWorld)map.getWorld()).getHandle();
+            generator.setGenerator(game.getWorld());
+            final World world = ((CraftWorld)game.getWorld()).getHandle();
 
-            generator.getGenerator().update(world, getNearbyChunk(
+            generator.getGenerator().update(getNearbyChunk(
                 world,
                 world.getChunkAt(generator.getLocation().x() >> 4, generator.getLocation().z() >> 4)
             ));
         }
     }
 
-    public void unload(final GameMap map) {
-        final ClickableSignGenerator[] generators = map.getGenerators();
+    public void unload(final GameInProgress game) {
+        final ClickableSignGenerator[] generators = game.getMapData().getGenerators();
     
         for(final ClickableSignGenerator generator : generators) {
             generator.cleanData();

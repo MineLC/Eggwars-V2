@@ -4,19 +4,20 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.inventory.Inventory;
+import org.tinylog.Logger;
 
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.inventory.InventoryCreator;
 import lc.eggwars.inventory.InventoryCreator.Item;
-import lc.eggwars.utils.Chat;
+import lc.eggwars.messages.Messages;
 
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityTypes;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.EntityTypes;
+import net.minecraft.server.v1_8_R3.World;
 
 public final class StartShopkeepers {
 
@@ -33,12 +34,12 @@ public final class StartShopkeepers {
 
         for (final String mob : mobs) {
             if (!(EntityTypes.createEntityByName(mob, world) instanceof EntityLiving entity)) {
-                plugin.getLogger().warning("A entity with the name " + mob + " don't exist.");
+                Logger.warn("A entity with the name " + mob + " don't exist.");
                 inventoryItems.put(config.getInt(mob + ".slot"),  new ShopkeepersData.Skin(120, "null message on click", -1));
                 continue;
             }
             final String mobPath = mob + '.';
-            final String message = Chat.color(config.getString(mobPath + "click-send"));
+            final String message = Messages.color(config.getString(mobPath + "click-send"));
             final Item item = creator.create(mob);
             final ShopkeepersData.Skin skin = new ShopkeepersData.Skin(EntityTypes.a(entity), message, config.getInt(mobPath + "addHeight"));
 
@@ -48,7 +49,7 @@ public final class StartShopkeepers {
         }
 
         ShopKeepersStorage.update(new ShopKeepersStorage(
-            Chat.color(plugin.getConfig().getString("shopkeepers.name")),
+            Messages.color(plugin.getConfig().getString("shopkeepers.name")),
             skinsPerID,
             new ShopkeepersData(inventory, inventoryItems)
         ));

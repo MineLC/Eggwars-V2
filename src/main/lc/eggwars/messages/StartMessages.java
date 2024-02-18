@@ -6,7 +6,6 @@ import java.util.Set;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.utils.Chat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class StartMessages {
                 final String path = key + "." + message;
                 final Object object = config.get(path);
                 if (object instanceof String) {
-                    parsedMessages.put(path, Chat.color(object.toString()));
+                    parsedMessages.put(path, Messages.color(object.toString()));
                     continue;
                 }
                 if (!(object instanceof List<?> list)) {
@@ -35,7 +34,7 @@ public class StartMessages {
                 }
                 final StringBuilder builder = new StringBuilder();
                 for (final Object objectList : list) {
-                    builder.append(Chat.color(objectList.toString()));
+                    builder.append(Messages.color(objectList.toString()));
                 }
                 parsedMessages.put(path, builder.toString());
             }

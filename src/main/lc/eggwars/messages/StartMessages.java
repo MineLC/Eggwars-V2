@@ -33,8 +33,12 @@ public class StartMessages {
                     continue;
                 }
                 final StringBuilder builder = new StringBuilder();
+                int index = 0;
                 for (final Object objectList : list) {
                     builder.append(Messages.color(objectList.toString()));
+                    if (++index != list.size()) {
+                        builder.append('\n');
+                    }
                 }
                 parsedMessages.put(path, builder.toString());
             }

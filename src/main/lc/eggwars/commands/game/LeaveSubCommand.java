@@ -4,19 +4,21 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.bukkit.GameMode;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.BasicSubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.spawn.SpawnStorage;
 
-final class LeaveSubCommand implements BasicSubCommand {
+final class LeaveSubCommand implements Command {
 
     @Override
-    public void execute(Player player, String[] args) {
-        final Set<Entry<String, Set<Player>>> playersWaitingToJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().entrySet();
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender; 
+       final Set<Entry<String, Set<Player>>> playersWaitingToJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().entrySet();
 
         for (final Entry<String, Set<Player>> entry : playersWaitingToJoin) {
             final Set<Player> players = entry.getValue();

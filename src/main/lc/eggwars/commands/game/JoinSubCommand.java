@@ -1,6 +1,5 @@
 package lc.eggwars.commands.game;
 
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.GameMode;
@@ -8,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.commands.SubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
@@ -18,7 +17,7 @@ import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.players.PlayerStorage;
 
-final class JoinSubCommand implements SubCommand {
+final class JoinSubCommand implements Command {
 
     private final EggwarsPlugin plugin;
 
@@ -27,7 +26,8 @@ final class JoinSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         if (args.length != 2) {
             send(player, "&cFormat: /join &7(worldname)");
             return;
@@ -70,7 +70,7 @@ final class JoinSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return (args.length == 2) ? List.copyOf(MapStorage.getStorage().getMaps().keySet()) : List.of();
+    public String[] tab(CommandSender sender, String[] args) {
+        return (args.length == 2) ? (String[])MapStorage.getStorage().getMaps().keySet().toArray() : none();
     }
 }

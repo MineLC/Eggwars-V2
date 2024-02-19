@@ -1,13 +1,14 @@
 package lc.eggwars.commands.map;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.BasicSubCommand;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.IntegerUtils;
+import lc.lcspigot.commands.Command;
 
-final class SetMaxPersonsSubCommand implements BasicSubCommand {
+final class SetMaxPersonsSubCommand implements Command {
 
     private final MapCreatorData data;
 
@@ -16,8 +17,9 @@ final class SetMaxPersonsSubCommand implements BasicSubCommand {
     }
 
     @Override
-    public void execute(Player sender, String[] args) {
-        final CreatorData creatorData = data.getData(sender.getUniqueId());
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
+        final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
             send(sender, "&cTo use this command enable the editor mode");

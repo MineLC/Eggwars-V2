@@ -3,6 +3,7 @@ package lc.eggwars.listeners.pvp;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -106,7 +107,8 @@ public final class PlayerRespawnListener implements EventListener {
                 Bukkit.getScheduler().cancelTask(id);
                 return;
             }
-            player.sendTitle(title.replace("%seconds%", String.valueOf(seconds)), subtitle);
+            final Title titleOptions = new Title(title.replace("%seconds%", String.valueOf(seconds)));
+            player.sendTitle(titleOptions, subtitle);
             --seconds;
         }
 

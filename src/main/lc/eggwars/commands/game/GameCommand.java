@@ -1,16 +1,15 @@
 package lc.eggwars.commands.game;
 
-import java.util.List;
-
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.lcspigot.commands.Command;
+
 import net.md_5.bungee.api.ChatColor;
 
-public final class GameCommand implements TabExecutor {
+public final class GameCommand implements Command {
 
     private final JoinSubCommand join;
     private final TeamJoinSubCommand team;
@@ -23,37 +22,32 @@ public final class GameCommand implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {   
+    public void handle(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("You need be a player to use map creator");
-            return true;
+            return;
         } 
         if (args.length < 1) {
             sender.sendMessage(format());
-            return true;
+            return;
         }
     
         switch (args[0].toLowerCase()) {
             case "join":
-                join.execute(player, args);
+                join.handle(player, args);
                 break;
             case "teamjoin":
-                team.execute(player, args);
+                team.handle(player, args);
                 break;
             case "leave":
-                leave.execute(player, args);
+                leave.handle(player, args);
                 break;
             default:
                 sender.sendMessage(format());
                 break;
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return List.of();
-    }
+        return;
+    }   
 
     private String format() {
         return """
@@ -64,5 +58,5 @@ public final class GameCommand implements TabExecutor {
                 &eteamjoin &7(team) - &fJoin in a team
                 &r
                 """.replace('&', ChatColor.COLOR_CHAR);
-    }   
+    }
 }

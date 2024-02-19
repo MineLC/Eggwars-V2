@@ -1,13 +1,12 @@
 package lc.eggwars.commands.game;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
@@ -15,10 +14,12 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 
-final class TeamJoinSubCommand implements SubCommand {
+final class TeamJoinSubCommand implements Command
+ {
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         if (args.length < 2) {
             send(player, "&cFormat: /game teamjoin (teamname)");
             return;
@@ -68,14 +69,14 @@ final class TeamJoinSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
+    public String[] tab(CommandSender sender, String[] args) {
         if (args.length != 2) {
-            return List.of();
+            return none();
         }
         if (!(sender instanceof Player player)) {
-            return List.of();
+            return none();
         }
         final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
-        return (map == null) ? List.of() : map.getMapData().getSpawns().keySet().stream().map(BaseTeam::getKey).toList();
+        return (map == null) ? none() : (String[])map.getMapData().getSpawns().keySet().stream().map(BaseTeam::getKey).toArray();
     }
 }

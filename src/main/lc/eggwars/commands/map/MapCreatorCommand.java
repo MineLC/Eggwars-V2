@@ -1,18 +1,17 @@
 package lc.eggwars.commands.map;
 
-import java.util.List;
-
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.mapsystem.MapCreatorData;
+
+import lc.lcspigot.commands.Command;
+
 import net.md_5.bungee.api.ChatColor;
 import net.swofty.swm.api.SlimePlugin;
 
-public final class MapCreatorCommand implements TabExecutor {
+public final class MapCreatorCommand implements Command {
 
     private final EditorSubCommand editor;
     private final AddGeneratorSubCommand addGenerator;
@@ -41,70 +40,70 @@ public final class MapCreatorCommand implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("You need be a player to use map creator");
-            return true;
+            send(sender, "You need be a player to use map creator");
+            return;
         } 
 
         if (args.length < 1) {
             sender.sendMessage(format());
-            return true;
+            return;
         }
     
         switch (args[0].toLowerCase()) {
             case "editor":
-                editor.execute(player, args);
+                editor.handle(player, args);
                 break;
             case "addgenerator":
-                addGenerator.execute(player, args);
+                addGenerator.handle(player, args);
                 break;
             case "removegenerator":
-                removeGenerator.execute(player, args);
+                removeGenerator.handle(player, args);
                 break;
             case "setspawn":
-                setspawn.execute(player, args);
+                setspawn.handle(player, args);
                 break;
             case "removespawn":
-                removeSpawn.execute(player, args);
+                removeSpawn.handle(player, args);
                 break;
             case "setegg":
-                setEgg.execute(player, args);
+                setEgg.handle(player, args);
                 break;
             case "removeegg":
-                removeEgg.execute(player, args);
+                removeEgg.handle(player, args);
                 break;
             case "setmax":
-                maxPersons.execute(player, args);
+                maxPersons.handle(player, args);
                 break;
             case "addshopspawn":
-                addshopkeeper.execute(player, args);
+                addshopkeeper.handle(player, args);
                 break;
             case "removeshopspawn":
-                removeshopkeeper.execute(player, args);
+                removeshopkeeper.handle(player, args);
                 break;
             case "save":
-                save.execute(player, args);
+                save.handle(player, args);
                 break;
             default:
                 break;
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public String[] tab(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return List.of("editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "addshopspawn", "removeshopspawn", "save");
+            return new String[] { "editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "addshop", "removeshopspawn", "save", "setmax"};
         }
         switch (args[0].toLowerCase()) {
-            case "editor": return editor.onTab(sender, args);
-            case "addgenerator": return addGenerator.onTab(sender, args);
-            case "removegenerator": return removeGenerator.onTab(sender, args);
-            case "setspawn": return setspawn.onTab(sender, args);
-            case "setegg": return setEgg.onTab(sender, args);
+            case "editor": return editor.tab(sender, args);
+            case "addgenerator": return addGenerator.tab(sender, args);
+            case "removegenerator": return removeGenerator.tab(sender, args);
+            case "setspawn": return setspawn.tab(sender, args);
+            case "setegg": return setEgg.tab(sender, args);
+            default: return none();
         }
-        return List.of();
     }
 
     private String format() {
@@ -123,8 +122,10 @@ public final class MapCreatorCommand implements TabExecutor {
                 &6setegg &7(team) - &fSet egg for a team
                 &6removeegg &7(team) - &fRemove egg of the team
                 &r
-                &6addshopspawn - &fAdd a shopkeeper spawn
+                &6addshopspawn &7- &fAdd a shopkeeper spawn
                 &6removeshopspawn &7(team) - &fRemove a shopkeeper spawn
+                &r
+                &6setmax &7(amount)- &fSet max players in game
                 &r
                 &6save &7- &fSave all settings in the world
             """.replace('&', ChatColor.COLOR_CHAR);

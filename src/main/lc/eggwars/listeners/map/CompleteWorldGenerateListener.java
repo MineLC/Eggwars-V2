@@ -26,6 +26,9 @@ public final class CompleteWorldGenerateListener implements EventListener {
         priority = EventPriority.HIGHEST
     )
     public void handle(Event defaultEvent) {
+        if (MapStorage.getStorage() == null) {
+            return;
+        }
         final PostGenerateWorldEvent event = (PostGenerateWorldEvent)defaultEvent;
         final String worldName = event.getSlimeWorld().getName();
         final Set<Player> players = MapStorage.getStorage().getWorldsCurrentlyLoading().get(worldName);

@@ -1,15 +1,13 @@
 package lc.eggwars.commands.map;
 
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 
-final class EditorSubCommand implements SubCommand {
+final class EditorSubCommand implements Command {
 
     private final MapCreatorData data;
 
@@ -18,7 +16,8 @@ final class EditorSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         if (args.length != 2) {
             send(player, format());
             return;
@@ -48,8 +47,8 @@ final class EditorSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return (args.length == 2) ? List.of("on", "off") : List.of();
+    public String[] tab(CommandSender sender, String[] args) {
+        return (args.length == 2) ? new String[] {"on", "off"} : none();
     }
 
     private String format() {

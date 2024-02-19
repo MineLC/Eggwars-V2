@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -37,6 +36,7 @@ import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
+import lc.lcspigot.commands.CommandStorage;
 import lc.lcspigot.listeners.ListenerRegister;
 import net.swofty.swm.api.SlimePlugin;
 
@@ -55,10 +55,7 @@ public class EggwarsPlugin extends JavaPlugin {
             return;
         }
 
-        if (!loadCommands(slimePlugin)) {
-            Logger.error("Error on load commands. ¿Invalid plugin.yml?");
-            return;
-        }
+        loadCommands(slimePlugin);
 
         new StartMessages().load(this);
         new StartShopkeepers().load(this);
@@ -125,22 +122,9 @@ public class EggwarsPlugin extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    private boolean loadCommands(SlimePlugin slimePlugin) {
-        final PluginCommand pluginMapCommand = getCommand("map");
-        final PluginCommand pluginGameCommand = getCommand("game");
-
-        if (pluginMapCommand == null || pluginGameCommand == null) {
-            return false;
-        }
-
-        final MapCreatorCommand mapCommand = new MapCreatorCommand(slimePlugin, this, new MapCreatorData());
-        pluginMapCommand.setExecutor(mapCommand);       
-        pluginMapCommand.setTabCompleter(mapCommand);    
-
-        final GameCommand gameCommand = new GameCommand(this);
-        pluginGameCommand.setExecutor(gameCommand);
-        pluginGameCommand.setTabCompleter(gameCommand);
-        return true;
+    private void loadCommands(SlimePlugin slimePlugin) {
+        CommandStorage.register(new MapCreatorCommand(slimePlugin, this, new MapCreatorData()), "map");
+        CommandStorage.register(new GameCommand(this), "game");
     }
 
     public static EggwarsPlugin getInstance() {

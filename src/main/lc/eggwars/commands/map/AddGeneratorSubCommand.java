@@ -1,7 +1,5 @@
 package lc.eggwars.commands.map;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -9,7 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
@@ -18,7 +16,7 @@ import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.IntegerUtils;
 
-final class AddGeneratorSubCommand implements SubCommand {
+final class AddGeneratorSubCommand implements Command {
 
     private MapCreatorData data;
 
@@ -27,7 +25,8 @@ final class AddGeneratorSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -79,22 +78,22 @@ final class AddGeneratorSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
+    public String[] tab(CommandSender sender, String[] args) {
         if (args.length == 2) {
-            return List.copyOf(GeneratorStorage.getStorage().getGeneratorsName());
+            return (String[])GeneratorStorage.getStorage().getGeneratorsName().toArray();
         }
         if (args.length != 3) {
-            return List.of();
+            return none();
         }
         final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(args[1]);
 
         if (baseGenerator == null) {
-            return List.of();
+            return none();
         }
 
-        final List<String> levels = new ArrayList<>(baseGenerator.maxlevel());
-        for (int i = 1; i <= baseGenerator.maxlevel(); i++) {
-            levels.add(String.valueOf(i));
+        final String[] levels = new String[baseGenerator.maxlevel()];
+        for (int i = 0; i <= baseGenerator.maxlevel(); i++) {
+            levels[i] = String.valueOf(i);
         }
         return levels;
     }

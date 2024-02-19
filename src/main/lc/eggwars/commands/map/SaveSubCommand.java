@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.commands.BasicSubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
@@ -29,7 +29,7 @@ import lc.eggwars.utils.EntityLocation;
 import net.swofty.swm.api.SlimePlugin;
 import net.swofty.swm.api.world.SlimeWorld;
 
-final class SaveSubCommand implements BasicSubCommand {
+final class SaveSubCommand implements Command {
 
     private final SlimePlugin slimePlugin;
     private final EggwarsPlugin plugin;
@@ -42,7 +42,8 @@ final class SaveSubCommand implements BasicSubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {

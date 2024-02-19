@@ -1,6 +1,5 @@
 package lc.eggwars.commands.map;
 
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -8,14 +7,14 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.SubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 
-final class SetEggSubCommand implements SubCommand {
+final class SetEggSubCommand implements Command {
 
     private MapCreatorData data;
 
@@ -24,7 +23,8 @@ final class SetEggSubCommand implements SubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
@@ -55,7 +55,7 @@ final class SetEggSubCommand implements SubCommand {
     }
 
     @Override
-    public List<String> onTab(CommandSender sender, String[] args) {
-        return (args.length == 2) ? List.copyOf(TeamStorage.getStorage().getTeamsName()) : List.of();
+    public String[] tab(CommandSender sender, String[] args) {
+        return (args.length == 2) ? (String[]) TeamStorage.getStorage().getTeamsName().toArray() : none();
     }
 }

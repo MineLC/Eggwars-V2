@@ -5,15 +5,16 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.commands.BasicSubCommand;
+import lc.lcspigot.commands.Command;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-final class RemoveEggSubCommand implements BasicSubCommand {
+final class RemoveEggSubCommand implements Command {
     private final MapCreatorData data;
 
     RemoveEggSubCommand(MapCreatorData data) {
@@ -21,7 +22,8 @@ final class RemoveEggSubCommand implements BasicSubCommand {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void handle(CommandSender sender, String[] args) {
+        final Player player = (Player)sender;
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {

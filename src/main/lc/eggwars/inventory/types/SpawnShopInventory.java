@@ -26,7 +26,7 @@ public final class SpawnShopInventory implements CustomInventory {
 
         if (slot == skinShopItem.slot()) {
             event.setCancelled(true);
-            event.getWhoClicked().openInventory(ShopKeepersStorage.getStorage().data().inventory());
+            event.getWhoClicked().openInventory(ShopKeepersStorage.getStorage().data().skinShopInventory());
             return;
         }
     

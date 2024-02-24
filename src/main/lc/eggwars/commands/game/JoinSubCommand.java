@@ -6,8 +6,9 @@ import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.EggwarsPlugin;
 import lc.lcspigot.commands.Command;
+
+import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
@@ -16,7 +17,6 @@ import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.pregameitems.PregameItemsStorage;
-import lc.eggwars.players.PlayerStorage;
 
 final class JoinSubCommand implements Command {
 
@@ -77,7 +77,7 @@ final class JoinSubCommand implements Command {
         }
 
         GameStorage.getStorage().join(game.getWorld(), game, player);
-        new ShopKeeperManager().send(player, PlayerStorage.getStorage().get(player.getUniqueId()), game);
+        new ShopKeeperManager().send(player, game);
     }
 
     @Override

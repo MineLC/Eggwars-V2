@@ -1,13 +1,16 @@
 package lc.eggwars.listeners;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
-import lc.eggwars.players.PlayerData;
-import lc.eggwars.players.PlayerStorage;
+import obed.me.minecore.database.servers.CoreEggwarsAPI;
+import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 import lc.eggwars.spawn.SpawnStorage;
 
 public final class PlayerJoinListener implements EventListener {
@@ -22,11 +25,15 @@ public final class PlayerJoinListener implements EventListener {
         final PlayerJoinEvent event = (PlayerJoinEvent)defaultEvent;
         event.getPlayer().teleport(SpawnStorage.getStorage().location());
 
-        // TODO Connect with database and get playerData
-        PlayerStorage.getStorage().addPlayer(
-            event.getPlayer().getUniqueId(),
-            new PlayerData(VILLAGER_SKIN));
-        
+        CompletableFuture.runAsync( () -> {
+            final Jugador jugador = Jugador.getJugador(event.getPlayer().getName());
+            CoreEggwarsAPI.loadStats(jugador);
+            final StatsEggWars statsEggWars = jugador.getServerStats().getStatsEggWars();
+
+            if (statsEggWars.getShopKeeperSkinSelected() == 0) {
+                statsEggWars.setShopKeeperSkinSelected(VILLAGER_SKIN);
+            }
+        });
         SpawnStorage.getStorage().setItems(event.getPlayer());
     }
 }

@@ -34,6 +34,13 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/lcspigot.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>lc.minecore</groupId>
+            <artifactId>minecore</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/MineCore-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
         <dependency>  
             <groupId>net.swofty</groupId>  
             <artifactId>swoftyworldmanager-api</artifactId>  

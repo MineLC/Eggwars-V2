@@ -57,7 +57,7 @@ public class PlayerInventoryClickListener implements EventListener {
             return;
         }
 
-        if (inventory == InventoryUtils.getId(ShopKeepersStorage.getStorage().data().inventory())) {
+        if (inventory == InventoryUtils.getId(ShopKeepersStorage.getStorage().data().skinShopInventory())) {
             shopSkinInventory.handle(event);
             return;
         }

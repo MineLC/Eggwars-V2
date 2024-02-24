@@ -5,7 +5,8 @@ import org.bukkit.inventory.Inventory;
 import io.netty.util.collection.IntObjectHashMap;
 
 public final record ShopkeepersData(
-    Inventory inventory,
+    Inventory skinShopInventory,
+    Inventory itemsShop,
     IntObjectHashMap<Skin> items
 ) {
 

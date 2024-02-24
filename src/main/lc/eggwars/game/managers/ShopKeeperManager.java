@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
-import lc.eggwars.players.PlayerData;
-import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.utils.EntityLocation;
 
 import net.minecraft.server.v1_8_R3.Entity;
@@ -19,25 +17,27 @@ import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+import obed.me.minecore.objects.Jugador;
 
 public final class ShopKeeperManager {
 
     public void send(final Collection<Player> players, final World world, final GameInProgress game) {
         for (final Player player : players) {
-            send(player, PlayerStorage.getStorage().get(player.getUniqueId()), game);
+            send(player, game);
         }
     }
 
-    public void send(final Player player, final PlayerData data, final GameInProgress game) {
+    public void send(final Player player, final GameInProgress game) {
         int index = 0;
         for (final EntityLocation location : game.getMapData().getShopSpawns()) {
+            final int shopID = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().getShopKeeperSkinSelected();
             spawn(
                 player,
                 player.getWorld(),
-                data.getShopSkinID(),
+                shopID,
                 game.getMapData().getShopIDs()[index++],
                 location.x(),
-                location.y() + ShopKeepersStorage.getStorage().skins().get(data.getShopSkinID()).addHeight(),
+                location.y() + ShopKeepersStorage.getStorage().skins().get(shopID).addHeight(),
                 location.z(),
                 location.yaw());
         }

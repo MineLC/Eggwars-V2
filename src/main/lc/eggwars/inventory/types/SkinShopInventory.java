@@ -11,8 +11,7 @@ import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
 import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
-import lc.eggwars.players.PlayerData;
-import lc.eggwars.players.PlayerStorage;
+import obed.me.minecore.objects.Jugador;
 
 public final class SkinShopInventory implements CustomInventory {
 
@@ -36,8 +35,7 @@ public final class SkinShopInventory implements CustomInventory {
         final Player player = (Player)event.getWhoClicked();
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
-            final PlayerData playerData = PlayerStorage.getStorage().get(player.getUniqueId());
-            playerData.setShopSkinID(skinClicked.id());
+            Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().setSelectedKit(skinClicked.id());
             Messages.send(player, "shopkeepers.skin-change");
             return;
         }

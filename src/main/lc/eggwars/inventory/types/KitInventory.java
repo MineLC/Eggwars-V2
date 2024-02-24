@@ -8,7 +8,7 @@ import lc.eggwars.inventory.CustomInventory;
 
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.Kit;
-import lc.eggwars.players.PlayerStorage;
+import obed.me.minecore.objects.Jugador;
 
 public class KitInventory implements CustomInventory {
 
@@ -29,7 +29,7 @@ public class KitInventory implements CustomInventory {
             return;
         }
 
-        PlayerStorage.getStorage().get(event.getWhoClicked().getUniqueId()).setKit(clickedKit);
+        Jugador.getJugador(event.getWhoClicked().getName()).getServerStats().getStatsEggWars().setSelectedKit(clickedKit.name().hashCode());
         event.getWhoClicked().sendMessage(Messages.get("kit.selected").replace("%name%", clickedKit.name()));
     }
 

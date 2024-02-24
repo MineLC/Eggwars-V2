@@ -2,6 +2,7 @@ package lc.eggwars;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -48,6 +49,7 @@ import lc.lcspigot.commands.CommandStorage;
 import lc.lcspigot.listeners.ListenerRegister;
 
 import net.swofty.swm.api.SlimePlugin;
+import obed.me.minecore.database.servers.CoreEggwarsAPI;
 
 public class EggwarsPlugin extends JavaPlugin {
 
@@ -63,6 +65,12 @@ public class EggwarsPlugin extends JavaPlugin {
             Logger.error("EggwarsCore need slimeworld manager to work");
             return;
         }
+        if (Bukkit.getPluginManager().getPlugin("MineCore") == null) {
+            Logger.error("EggwarsCore need MineCore to work");
+            return;
+        }
+
+        CompletableFuture.runAsync(() -> CoreEggwarsAPI.createPlayerEggwarsTable());
 
         loadCommands(slimePlugin);
 

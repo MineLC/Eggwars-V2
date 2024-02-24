@@ -52,7 +52,7 @@ public final class StartShopkeepers {
         ShopKeepersStorage.update(new ShopKeepersStorage(
             Messages.color(plugin.getConfig().getString("shopkeepers.name")),
             skinsPerID,
-            new ShopkeepersData(shops.values().iterator().next().inventory(), inventoryItems)
+            new ShopkeepersData(inventory, shops.values().iterator().next().inventory(), inventoryItems)
         ));
     }
 }

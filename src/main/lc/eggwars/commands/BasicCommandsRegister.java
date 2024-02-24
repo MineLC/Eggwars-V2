@@ -16,7 +16,7 @@ public final class BasicCommandsRegister {
             }
         }, "level");
 
-        CommandStorage.register((sender, args) -> Messages.send(sender, "help"), "help", "ayuda");
-        CommandStorage.register((sender, args) -> sender.sendMessage("verhentai.top - 9/10 (Ofrece preview y una detallada sinopsis) \n hentaila.com (Comunidad activa, pero muy rara) - 7/10 \n nhentai.com (God pero ingles) 9-10 \n hentaird.com 7-10 (Muchos hentais viejos, con buena historia) \n muchohentai.com 8-10 (Ofrece episodios RAW y en otros idiomas) \n chochox.com 10-10 (De hecho, hay un comic en chochox que lo explica) \n De parte de ChocoMilk-senpai"), "hentai");
+        CommandStorage.register((sender, args) -> Messages.send(sender, "commands.help"), "help", "ayuda");
+        CommandStorage.register((sender, args) -> sender.sendMessage(" verhentai.top §e9/10 §7(Ofrece preview y una detallada sinopsis) \n §fhentaila.com §e7/10 §7(Comunidad activa, pero muy rara) \n §fnhentai.com §e9-10 §7(God pero ingles) \n §fhentaird.com §e7-10 §7(Muchos hentais viejos, con buena historia) \n §fmuchohentai.com §e8-10 §7(Ofrece episodios RAW y en otros idiomas) \n §fchochox.com §e10-10 §7(De hecho, hay un comic en chochox que lo explica) \n \n §8by iChocoMilk (Lector de la biblia)"), "hentai");
     }
 }

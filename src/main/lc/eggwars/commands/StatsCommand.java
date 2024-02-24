@@ -20,7 +20,7 @@ public final class StatsCommand implements Command {
             return;
         } 
 
-        final String format = Messages.get("stats");
+        final String format = Messages.get("commands.stats");
         final StatsEggWars stats = Jugador.getJugador(sender.getName()).getServerStats().getStatsEggWars();
         final Kit kit = KitStorage.getStorage().kitsPerId().get(stats.getSelectedKit());
         String kitName = (kit == null) ? "Ninguno" : kit.name();

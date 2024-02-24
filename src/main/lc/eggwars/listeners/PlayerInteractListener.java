@@ -6,9 +6,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 
-import lc.eggwars.inventory.PrincipalInventory;
+import lc.eggwars.game.GameInProgress;
+import lc.eggwars.game.GameState;
+import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.others.pregameitems.PregameItemsStorage;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
 import lc.lcspigot.listeners.EventListener;
@@ -27,17 +31,8 @@ public final class PlayerInteractListener implements EventListener {
             return;
         }
 
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)
-            && event.getPlayer().getWorld().equals(SpawnStorage.getStorage().getLocation().getWorld())
-        ) {
-            event.setCancelled(true);
-            if (event.getItem() == null) {
-                return;
-            }
-            final PrincipalInventory inventory = SpawnStorage.getStorage().getItems().get(event.getItem().getType());
-            if (inventory != null) {
-                event.getPlayer().openInventory(inventory.getInventory());
-            }
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
+            handleInteractWithItems(event);
             return;
         }
 
@@ -52,6 +47,31 @@ public final class PlayerInteractListener implements EventListener {
         
         if (clickableBlock != null) {
             clickableBlock.onClick(event.getPlayer(), event.getAction());
+            event.setCancelled(true);
+        }
+    }
+
+    private void handleInteractWithItems(final PlayerInteractEvent event) {
+        if (event.getItem() == null) {
+            return;
+        }
+        final GameInProgress game = GameStorage.getStorage().getGame(event.getPlayer().getUniqueId());
+
+        if (game != null) {
+            if (game.getState() != GameState.PREGAME) {
+                return;
+            }
+            final Inventory inventory = PregameItemsStorage.getStorage().getInventory(event.getItem().getType());
+            if (inventory != null) {
+                event.getPlayer().openInventory(inventory);
+                event.setCancelled(true);
+            }
+            return;
+        }
+
+        final Inventory inventory = SpawnStorage.getStorage().items().get(event.getItem().getType());
+        if (inventory != null) {
+            event.getPlayer().openInventory(inventory);
             event.setCancelled(true);
         }
     }

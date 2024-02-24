@@ -2,7 +2,6 @@ package lc.eggwars.game;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.Map.Entry;
 
@@ -20,27 +19,15 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 
-public final class GameStorage {
+public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data pregameData, Map<UUID, GameInProgress> playersInGame) {
     private static GameStorage storage;
 
-    private final PreGameCountdown.Data preGameData;
-    private final EggwarsPlugin plugin;
-
-    private final Map<UUID, GameInProgress> playersInGame = new HashMap<>();
-
-    GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preGameData) {
-        this.plugin = plugin;
-        this.preGameData = preGameData;
-    }
-
     public void join(final World world, final GameInProgress map, final Player player) {
-        if (map.getState() == GameState.IN_GAME || map.getState() == GameState.PREGAME) {
+        if (map.getState() != GameState.NONE) {
             map.getPlayers().add(player);
             playersInGame.put(player.getUniqueId(), map);
             return;
         }
-
-        // Replace this comentary with a system to add items to vote, select team, and kits (Comming soon)
 
         new GeneratorManager().setGeneratorSigns(map);
         new EggsManager().setEggs(map);
@@ -50,7 +37,7 @@ public final class GameStorage {
         map.setState(GameState.PREGAME);
 
         final PreGameCountdown countdown = new PreGameCountdown(
-            preGameData, 
+            pregameData, 
             map.getPlayers(),
             () -> { // Countdown complete
                 map.setState(GameState.IN_GAME);
@@ -142,7 +129,7 @@ public final class GameStorage {
 
     private void endGame(final GameInProgress map) {
         for (final Player player : map.getPlayers()) {
-            player.teleport(SpawnStorage.getStorage().getLocation());
+            player.teleport(SpawnStorage.getStorage().location());
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
             SpawnStorage.getStorage().setItems(player);

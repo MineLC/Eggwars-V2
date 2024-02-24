@@ -1,4 +1,4 @@
-package lc.eggwars.game.shopkeepers;
+package lc.eggwars.game.shop.shopkeepers;
 
 import org.bukkit.inventory.Inventory;
 

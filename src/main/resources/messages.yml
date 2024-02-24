@@ -14,6 +14,12 @@ team:
     - "&aEl equipo ganador es %team%"
     - " "
 
+kit:
+  selected: "&aHas selecionado el kit %name%"
+
+map:
+  currently-loading: "&cEste mapa se está generando, espera un poco para unirte"
+
 eggs:
   break-it-egg: "&cNo puedes romper tu propio huevo"
   break-other: "&bSe ha roto el huevo del equipo %team%"

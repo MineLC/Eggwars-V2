@@ -14,6 +14,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.others.pregameitems.PregameItemsStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
@@ -48,14 +49,16 @@ public final class CompleteWorldGenerateListener implements EventListener {
         final MapData map = MapStorage.getStorage().getMapData(worldName);
         final GameInProgress gameInProgress = new GameInProgress(map, bukkitWorld);
 
+        MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
+        MapStorage.getStorage().loadClickableBlocks(bukkitWorld);
+
         map.setGame(gameInProgress);
 
         for (final Player player : players) {    
             GameStorage.getStorage().join(bukkitWorld, gameInProgress, player);
+            PregameItemsStorage.getStorage().send(player);
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(gameInProgress.getWorld().getSpawnLocation());
         }
-        MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
-        MapStorage.getStorage().loadClickableBlocks(bukkitWorld);
     }
 }

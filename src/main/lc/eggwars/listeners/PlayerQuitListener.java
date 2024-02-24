@@ -25,14 +25,14 @@ public final class PlayerQuitListener implements EventListener {
 
         // TODO Before of delete player data, save in database
 
-        PlayerStorage.getInstance().removePlayer(event.getPlayer().getUniqueId());
+        PlayerStorage.getStorage().removePlayer(event.getPlayer().getUniqueId());
         player.getInventory().clear();
 
         if (map == null) {
             return;
         }
 
-        player.teleport(SpawnStorage.getStorage().getLocation());
+        player.teleport(SpawnStorage.getStorage().location());
         GameStorage.getStorage().leave(map, player, map.getWorld());
     }
 }

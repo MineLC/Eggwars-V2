@@ -79,7 +79,7 @@ final class SaveSubCommand implements Command {
             final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
 
-            player.teleport(SpawnStorage.getStorage().getLocation());
+            player.teleport(SpawnStorage.getStorage().location());
             plugin.getServer().getScheduler().runTask(plugin, () -> slimeWorld.unloadWorld(true));
         } catch (IOException e) {
             send(player, "&cError on create the map");

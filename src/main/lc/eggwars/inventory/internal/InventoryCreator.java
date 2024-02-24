@@ -1,4 +1,4 @@
-package lc.eggwars.inventory;
+package lc.eggwars.inventory.internal;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import lc.eggwars.messages.Messages;
 
+
 public final class InventoryCreator {
     private final FileConfiguration config;
 
@@ -21,15 +22,27 @@ public final class InventoryCreator {
     public Inventory create(final String name, final String path) {
         final String finalPath = path + '.';
         return Bukkit.createInventory(
-            new CustomInventoryHolder(name.hashCode()),
+            new CustomInventoryHolder(name),
             config.getInt(finalPath + "rows") * 9,
             Messages.color(config.getString(finalPath + "title")));
     }
 
-    public Item create(String path) {
+
+    public Item create(final String path) {
+        final String finalPath = path + '.';
+        final int slot = config.getInt(finalPath + "slot");
+    
+        return new Item(slot, getItem(path));
+    }
+
+    public ItemStack getItem(final String path) {
         final String finalPath = path + '.';
         final String material = config.getString(finalPath + "item");
-        final int slot = config.getInt(finalPath + "slot");
+        int amount = config.getInt(finalPath + "amount");
+        if (amount == 0) {
+            amount = 1;
+        }
+
         int id = 0;
         short data = 0;
         if (material == null) {
@@ -43,7 +56,7 @@ public final class InventoryCreator {
                 data = Short.parseShort(idAndData[1]);
             }
         }
-        final ItemStack itemStack = new ItemStack(id, 1, data);
+        final ItemStack itemStack = new ItemStack(id, amount, data);
         final ItemMeta meta = itemStack.getItemMeta();
 
         meta.setDisplayName(Messages.color(config.getString(finalPath + "name")));
@@ -52,8 +65,7 @@ public final class InventoryCreator {
             meta.setLore(lore.stream().map( (string) -> Messages.color(string) ).toList());
         }
         itemStack.setItemMeta(meta);
-
-        return new Item(slot, itemStack);
+        return itemStack;
     }
 
     public static final record Item(int slot, ItemStack item) {}

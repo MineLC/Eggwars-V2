@@ -1,0 +1,8 @@
+header: # Header slots need be 0-9
+  swords:
+    slot: 0
+    item: "267"
+    name: "&eEspadas"
+
+swords:
+  title: "&0Tienda de Espadas"

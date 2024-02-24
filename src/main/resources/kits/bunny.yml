@@ -1,0 +1,27 @@
+name: "conejo"
+
+inventory-item:
+  item: "414"
+  name: "&a&lConejo"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &7Salto 1 (Permanente)"
+    - " &8● &7Pata de conejo (Filo 2)"
+    - " &8● &7Botas de cuero"
+    - ""
+    - " &7Coste: &6500 LCOINS"
+
+cost: 500
+effects:
+  - "JUMP:1:100000" # EFFECT:LEVEL:DURATIOn
+
+armor:
+  #heltmet: ""
+  #chestplate: ""
+  #leggings: ""
+  boots: "301"
+
+items:
+  - "414:1:DAMAGE_ALL:2" # ID:AMOUNT:ENCHANTMENT:LEVEL

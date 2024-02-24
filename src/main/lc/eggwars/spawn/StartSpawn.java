@@ -5,15 +5,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.Inventory;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.inventory.InventoryCreator;
-import lc.eggwars.inventory.InventoryStorage;
-import lc.eggwars.inventory.PrincipalInventory;
-import lc.eggwars.inventory.InventoryCreator.Item;
+import lc.eggwars.inventory.internal.InventoryCreator;
+import lc.eggwars.inventory.internal.InventoryCreator.Item;
+import lc.eggwars.inventory.types.SpawnShopInventory;
 
 import java.util.Map;
-import java.util.HashMap;
 
 public class StartSpawn {
     private final EggwarsPlugin plugin;
@@ -22,16 +21,24 @@ public class StartSpawn {
         this.plugin = plugin;
     }
 
-    public Location load() {
-        final Location spawn = getSpawn(plugin.getConfig());
-        final FileConfiguration config = plugin.loadConfig("spawnitems");
+    public void loadItems() {
+        final FileConfiguration config = plugin.loadConfig("items/spawn");
         final InventoryCreator creator = new InventoryCreator(config);
 
-        final Map<Material, PrincipalInventory> items = new HashMap<>();
         final Item shopItem = creator.create("shop-item");
-        items.put(shopItem.item().getType(), InventoryStorage.getStorage().getInventories().get("spawnshop")); 
-        
-        SpawnStorage.update(new SpawnStorage(spawn, shopItem, items));
+        final SpawnShopInventory spawnShopInventory = getSpawnShopInventory();
+
+        final Map<Material, Inventory> items = Map.of(
+            shopItem.item().getType(), spawnShopInventory.getInventory()
+        );
+        SpawnStorage.update(new SpawnStorage(null, shopItem, items, spawnShopInventory));
+    }
+
+    public Location loadSpawn() {
+        final Location spawn = getSpawn(plugin.getConfig());
+
+        final SpawnStorage oldStorage = SpawnStorage.getStorage();
+        SpawnStorage.update(new SpawnStorage(spawn, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
         return spawn;
     }
 
@@ -55,5 +62,18 @@ public class StartSpawn {
 
         world.getWorldBorder().setSize(config.getInt("spawn.border"));
         return spawnLocation;
+    }
+
+    private SpawnShopInventory getSpawnShopInventory() {
+        final FileConfiguration config = EggwarsPlugin.getInstance().loadConfig("inventories/spawnshop");
+        final InventoryCreator creator = new InventoryCreator(config);
+        final Inventory inventory = creator.create("spawnshop", "inventory");
+        
+        final Item skinSelector = creator.create("skin-selector");
+        final Item kitSelector = creator.create("kit-selector");
+        inventory.setItem(skinSelector.slot(), skinSelector.item());
+        inventory.setItem(kitSelector.slot(), kitSelector.item());
+
+        return new SpawnShopInventory(skinSelector, kitSelector, inventory);
     }
 }

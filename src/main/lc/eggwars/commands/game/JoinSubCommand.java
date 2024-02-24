@@ -15,6 +15,7 @@ import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.pregameitems.PregameItemsStorage;
 import lc.eggwars.players.PlayerStorage;
 
 final class JoinSubCommand implements Command {
@@ -42,6 +43,11 @@ final class JoinSubCommand implements Command {
         final GameInProgress game = map.getGameInProgress();
 
         if (game == null) {
+            if (MapStorage.getStorage().getWorldsCurrentlyLoading().containsKey(args[1])) {
+                Messages.send(sender, "map.currently-loading");
+                return;
+            }
+
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                 final Set<Player> playersWaitingToJoin = MapStorage.getStorage().load(args[1]);
                 if (playersWaitingToJoin == null) {
@@ -53,24 +59,29 @@ final class JoinSubCommand implements Command {
             return;
         }
 
+        player.getInventory().clear();
+
         if (game.getState() == GameState.PREGAME) {
-            if (game.getPlayers().size() >= map.getMaxPersonsPerTeam()) {
+            if (game.getPlayers().size() >= (map.getMaxPersonsPerTeam() * map.getSpawns().size())) {
                 Messages.send(player, "pregame.full");
                 return;
             }
+            player.setGameMode(GameMode.ADVENTURE);
+            player.teleport(game.getWorld().getSpawnLocation());
+
+            PregameItemsStorage.getStorage().send(player);
+
+        } else {
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(game.getWorld().getSpawnLocation());  
         }
 
-        player.getInventory().clear();
-
         GameStorage.getStorage().join(game.getWorld(), game, player);
-        player.setGameMode(GameMode.ADVENTURE);
-        player.teleport(game.getWorld().getSpawnLocation());
-
-        new ShopKeeperManager().send(player, PlayerStorage.getInstance().get(player.getUniqueId()), game);
+        new ShopKeeperManager().send(player, PlayerStorage.getStorage().get(player.getUniqueId()), game);
     }
 
     @Override
     public String[] tab(CommandSender sender, String[] args) {
-        return (args.length == 2) ? (String[])MapStorage.getStorage().getMaps().keySet().toArray() : none();
+        return (args.length == 1) ? (String[])MapStorage.getStorage().getMaps().keySet().toArray() : none();
     }
 }

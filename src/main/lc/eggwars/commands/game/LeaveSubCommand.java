@@ -18,7 +18,7 @@ final class LeaveSubCommand implements Command {
     @Override
     public void handle(CommandSender sender, String[] args) {
         final Player player = (Player)sender; 
-       final Set<Entry<String, Set<Player>>> playersWaitingToJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().entrySet();
+        final Set<Entry<String, Set<Player>>> playersWaitingToJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().entrySet();
 
         for (final Entry<String, Set<Player>> entry : playersWaitingToJoin) {
             final Set<Player> players = entry.getValue();
@@ -26,7 +26,7 @@ final class LeaveSubCommand implements Command {
                 continue;
             }
             players.remove(player);
-            if (players.size() <= 0) {
+            if (players.isEmpty()) {
                 final String worldName = entry.getKey();
                 MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
                 MapStorage.getStorage().getWorldsThatNeedUnload().add(worldName);
@@ -40,7 +40,7 @@ final class LeaveSubCommand implements Command {
             return;
         }
 
-        player.teleport(SpawnStorage.getStorage().getLocation());
+        player.teleport(SpawnStorage.getStorage().location());
         player.setGameMode(GameMode.ADVENTURE);
 
         GameStorage.getStorage().leave(map, player, map.getWorld());

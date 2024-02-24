@@ -7,14 +7,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.managers.ShopKeeperManager;
-import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
-import lc.eggwars.game.shopkeepers.ShopkeepersData;
-import lc.eggwars.inventory.SecundaryInventory;
+import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
+import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
+import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 
-public final class SkinShopInventory implements SecundaryInventory {
+public final class SkinShopInventory implements CustomInventory {
 
     private final int removeEntityDelay;
 
@@ -24,7 +24,7 @@ public final class SkinShopInventory implements SecundaryInventory {
 
     @Override
     public void handle(InventoryClickEvent event) {
-        final ShopkeepersData data = ShopKeepersStorage.getInstance().getData();
+        final ShopkeepersData data = ShopKeepersStorage.getStorage().data();
         final ShopkeepersData.Skin skinClicked = data.items().get(event.getSlot());
 
         event.setCancelled(true);
@@ -36,7 +36,7 @@ public final class SkinShopInventory implements SecundaryInventory {
         final Player player = (Player)event.getWhoClicked();
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
-            final PlayerData playerData = PlayerStorage.getInstance().get(player.getUniqueId());
+            final PlayerData playerData = PlayerStorage.getStorage().get(player.getUniqueId());
             playerData.setShopSkinID(skinClicked.id());
             Messages.send(player, "shopkeepers.skin-change");
             return;

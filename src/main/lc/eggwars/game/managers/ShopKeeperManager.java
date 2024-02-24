@@ -8,7 +8,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.game.GameInProgress;
-import lc.eggwars.game.shopkeepers.ShopKeepersStorage;
+import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.players.PlayerData;
 import lc.eggwars.players.PlayerStorage;
 import lc.eggwars.utils.EntityLocation;
@@ -24,7 +24,7 @@ public final class ShopKeeperManager {
 
     public void send(final Collection<Player> players, final World world, final GameInProgress game) {
         for (final Player player : players) {
-            send(player, PlayerStorage.getInstance().get(player.getUniqueId()), game);
+            send(player, PlayerStorage.getStorage().get(player.getUniqueId()), game);
         }
     }
 
@@ -37,7 +37,7 @@ public final class ShopKeeperManager {
                 data.getShopSkinID(),
                 game.getMapData().getShopIDs()[index++],
                 location.x(),
-                location.y() + ShopKeepersStorage.getInstance().getSkin(data.getShopSkinID()).addHeight(),
+                location.y() + ShopKeepersStorage.getStorage().skins().get(data.getShopSkinID()).addHeight(),
                 location.z(),
                 location.yaw());
         }
@@ -50,7 +50,7 @@ public final class ShopKeeperManager {
             return -1;
         }
         entity.d(entityID);
-        entity.setCustomName(ShopKeepersStorage.getInstance().getName());
+        entity.setCustomName(ShopKeepersStorage.getStorage().customName());
         entity.setCustomNameVisible(true);
 
         livingEntity.locX = x + 0.5D;

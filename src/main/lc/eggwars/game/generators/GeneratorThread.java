@@ -35,7 +35,7 @@ public class GeneratorThread extends Thread {
             try {
                 Thread.sleep(1000);
                 for (final MapData map : maps) {
-                    if (map.getGameInProgress() != null) {
+                    if (map != null && map.getGameInProgress() != null) {
                         generateItems(map.getGameInProgress());
                     }
                 }

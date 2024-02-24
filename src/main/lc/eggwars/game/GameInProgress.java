@@ -26,7 +26,7 @@ public final class GameInProgress {
     private Set<Player> players = new HashSet<>();
     private Set<Player> playersLiving = new HashSet<>();
 
-    private GameState state = GameState.PREGAME;
+    private GameState state = GameState.NONE;
     private int currentTaskId = -1;
 
     public GameInProgress(MapData data, World world) {

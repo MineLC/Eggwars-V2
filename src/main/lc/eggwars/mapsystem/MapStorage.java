@@ -60,10 +60,11 @@ public final class MapStorage {
             if (map == null) {
                 return null;
             }
+            final Set<Player> playersWaitingToJoin = new HashSet<>();
+            worldsCurrentlyLoading.put(worldName, playersWaitingToJoin);
+    
             slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
-            final Set<Player> players = new HashSet<>();
-            worldsCurrentlyLoading.put(worldName, players);
-            return players;
+            return playersWaitingToJoin;
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
             e.printStackTrace();
             return null;

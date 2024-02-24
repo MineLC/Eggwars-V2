@@ -1,5 +1,5 @@
 package lc.eggwars.game;
 
 public enum GameState {
-    PREGAME, IN_GAME;
+    NONE, PREGAME, IN_GAME;
 }

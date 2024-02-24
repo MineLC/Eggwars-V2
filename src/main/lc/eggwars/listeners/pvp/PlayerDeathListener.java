@@ -14,6 +14,9 @@ public final class PlayerDeathListener implements EventListener {
         event = PlayerDeathEvent.class
     )
     public void handle(Event defaultEvent) {
+        if (!(defaultEvent instanceof PlayerDeathEvent)) {
+            return;
+        }
         final PlayerDeathEvent event = ((PlayerDeathEvent)defaultEvent);
         event.getEntity().spigot().respawn();
         event.setDeathMessage(null);

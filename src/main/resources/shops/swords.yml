@@ -1,0 +1,35 @@
+wood-sword:
+  slot: 0
+  item: "268"
+  lore:
+    - "&75x &fHierro"
+  need-item:
+    amount: 5
+    item: "265"
+
+stone-sword:
+  slot: 1
+  item: "272"
+  lore:
+    - "&716x &fHierro"
+  need-item:
+    amount: 16
+    item: "265"
+
+iron-sword:
+  slot: 2
+  item: "267"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+diamond-sword:
+  slot: 3
+  item: "276"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"

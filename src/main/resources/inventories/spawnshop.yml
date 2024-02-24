@@ -8,4 +8,10 @@ skin-selector:
   name: "&aSkins para tu aldeano"
   lore:
     - "&7(Clic para entrar)"
-  
+
+kit-selector:
+  slot: 1
+  item: "267"
+  name: "&6Kits"
+  lore:
+    - "&7(Clic para entrar)"

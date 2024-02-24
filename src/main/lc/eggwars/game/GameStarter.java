@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
@@ -20,6 +21,11 @@ final class GameStarter {
 
     void start(final World world, final GameInProgress map) {
         setTeams(world, map);
+
+        for (final Player player : map.getPlayers()) {
+            KitStorage.getStorage().setKit(player, true);
+        }
+
         new ShopKeeperManager().send(map.getPlayers(), world, map);
     }
 

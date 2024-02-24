@@ -20,10 +20,10 @@ public final class PlayerJoinListener implements EventListener {
     )
     public void handle(Event defaultEvent) {
         final PlayerJoinEvent event = (PlayerJoinEvent)defaultEvent;
-        event.getPlayer().teleport(SpawnStorage.getStorage().getLocation());
+        event.getPlayer().teleport(SpawnStorage.getStorage().location());
 
         // TODO Connect with database and get playerData
-        PlayerStorage.getInstance().addPlayer(
+        PlayerStorage.getStorage().addPlayer(
             event.getPlayer().getUniqueId(),
             new PlayerData(VILLAGER_SKIN));
         

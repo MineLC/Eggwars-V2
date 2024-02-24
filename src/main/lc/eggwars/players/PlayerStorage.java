@@ -21,7 +21,7 @@ public final class PlayerStorage {
         return data.get(uuid);
     }
 
-    public static PlayerStorage getInstance() {
+    public static PlayerStorage getStorage() {
         return INSTANCE;
     }
 }

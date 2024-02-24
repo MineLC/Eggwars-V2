@@ -7,7 +7,6 @@ import org.bukkit.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import lc.eggwars.EggwarsPlugin;
@@ -17,6 +16,7 @@ import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.StartDeaths;
+import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
@@ -57,31 +57,34 @@ public final class PlayerRespawnListener implements EventListener {
             return;
         }
 
-        final DamageCause cause = player.getLastDamageCause().getCause();
-        String finalMessage = "";
 
         if (map.getTeamsWithEgg().contains(team)) {
             final BlockLocation spawn = map.getMapData().getSpawns().get(team);
             final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
             final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
             cinematic.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, cinematic, 0, 20).getTaskId());
-        } else {
-            finalMessage = finalKillPrefix;
-            player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(map.getWorld().getSpawnLocation());
-            GameStorage.getStorage().finalKill(map, team, player);
+            sendDeathMessage(map, player, false);
+            return;
         }
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(map.getWorld().getSpawnLocation());
+        GameStorage.getStorage().finalKill(map, team, player);
+        sendDeathMessage(map, player, true);
+    }
 
-        final String deathMessage = deathMessages[cause.ordinal()];
+    private void sendDeathMessage(final GameInProgress game, final Player player, boolean finalKill) {
+        final String deathMessage = deathMessages[player.getLastDamageCause().getCause().ordinal()];
         if (deathMessage == null) {
             return;
         }
+        String finalMessage = (finalKill) ? finalKillPrefix : "";
 
         finalMessage += deathMessage.replace("%v%", player.getName());
         if (player.getKiller() != null) {
             finalMessage = finalMessage.replace("%d%", player.getKiller().getName()) + suffixIfPlayerKill;
         }
-        Messages.sendNoGet(map.getPlayers(), finalMessage);
+
+        Messages.sendNoGet(game.getPlayers(), finalMessage);
     }
 
     private static final class DeathCinematic implements Runnable {
@@ -104,6 +107,7 @@ public final class PlayerRespawnListener implements EventListener {
             if (seconds == 0) {
                 player.teleport(spawn);
                 player.setGameMode(GameMode.SURVIVAL);
+                KitStorage.getStorage().setKit(player, false);
                 Bukkit.getScheduler().cancelTask(id);
                 return;
             }

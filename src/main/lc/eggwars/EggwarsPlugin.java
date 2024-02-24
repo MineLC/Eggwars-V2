@@ -16,7 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.tinylog.Logger;
 
 import io.netty.util.collection.IntObjectHashMap;
-
+import lc.eggwars.commands.BasicCommandsRegister;
+import lc.eggwars.commands.StatsCommand;
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.game.StartGameData;
@@ -146,6 +147,8 @@ public class EggwarsPlugin extends JavaPlugin {
     private void loadCommands(SlimePlugin slimePlugin) {
         CommandStorage.register(new MapCreatorCommand(slimePlugin, this, new MapCreatorData()), "map");
         CommandStorage.register(new GameCommand(this), "game");
+        CommandStorage.register(new StatsCommand(), "stats");
+        new BasicCommandsRegister().registerBasicCommands();
     }
 
     public static EggwarsPlugin getInstance() {

@@ -11,6 +11,8 @@ import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
+import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class ClickableDragonEgg implements ClickableBlock  {
     private final BaseTeam team;
@@ -36,8 +38,11 @@ public final class ClickableDragonEgg implements ClickableBlock  {
 
         game.getTeamsWithEgg().remove(team);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
-     
+
         final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName());
         Messages.sendNoGet(game.getPlayers(), eggBreaked);
+
+        final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+        stats.setDestroyedEggs(stats.getDestroyedEggs() + 1);
     }
 }

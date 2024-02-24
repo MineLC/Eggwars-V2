@@ -18,6 +18,8 @@ import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
+import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data pregameData, Map<UUID, GameInProgress> playersInGame) {
     private static GameStorage storage;
@@ -61,7 +63,7 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
         if (team != null) {
             team.getTeam().removePlayer(player);
             map.getTeamPerPlayer().remove(player);
-            finalKill(map, team, player);
+            finalKill(map, team, player, true);
         }
 
         if (map.getPlayers().size() <= 0) {
@@ -85,11 +87,17 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
         System.gc();
     }
 
-    public void finalKill(final GameInProgress map, final BaseTeam team, final Player player) {
+    public void finalKill(final GameInProgress map, final BaseTeam team, final Player player, final boolean quit) {
         map.getPlayersLiving().remove(player);
-
         final Set<Player> players = map.getPlayersInTeam().get(team);
-        players.remove(player);
+
+        if (quit) {
+            final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+            stats.setLoose(stats.getLoose() + 1);
+            stats.setDeaths(stats.getDeaths() + 1);
+            stats.setLastDeath(stats.getLastDeath() + 1);
+            players.remove(player);
+        }
 
         if (players.size() >= 1) {
             return;
@@ -115,16 +123,23 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
             }
         }
 
-        if (!anotherTeamLive) {
-            Messages.sendNoGet(map.getPlayers(), Messages.get("team.win").replace("%team%", finalTeam.getName()));        
-            for (final Player livingPlayer : map.getPlayersLiving()) {
-                livingPlayer.setGameMode(GameMode.SPECTATOR);
-            }
-            map.setTaskId(plugin.getServer().getScheduler().runTaskLater(
-                plugin,
-                () -> endGame(map),
-                plugin.getConfig().getInt("win-celebration-duration-in-seconds") * 20).getTaskId());
+        if (anotherTeamLive) {
+            return;
         }
+        Messages.sendNoGet(map.getPlayers(), Messages.get("team.win").replace("%team%", finalTeam.getName()));        
+        for (final Player livingPlayer : map.getPlayersLiving()) {
+            livingPlayer.setGameMode(GameMode.SPECTATOR);
+        }
+        final Set<Player> winners = map.getPlayersInTeam().get(finalTeam);
+        for (final Player winner : winners) {
+            final StatsEggWars winnerStats = Jugador.getJugador(winner.getName()).getServerStats().getStatsEggWars();
+            winnerStats.setWins(winnerStats.getWins() + 1);
+        }
+
+        map.setTaskId(plugin.getServer().getScheduler().runTaskLater(
+            plugin,
+            () -> endGame(map),
+            plugin.getConfig().getInt("win-celebration-duration-in-seconds") * 20).getTaskId());
     }
 
     private void endGame(final GameInProgress map) {

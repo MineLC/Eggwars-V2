@@ -10,6 +10,6 @@ public final record ShopkeepersData(
     IntObjectHashMap<Skin> items
 ) {
 
-    public final record Skin(int id, String message, int addHeight) {
+    public final record Skin(String name, int id, String message, int addHeight) {
     }
 }

@@ -14,6 +14,8 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
+import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.kits.KitStorage;
@@ -50,13 +52,10 @@ public final class PlayerRespawnListener implements EventListener {
         if (map == null) {
             return;
         }
-
         final BaseTeam team = map.getTeamPerPlayer().get(player);
-
         if (team == null) {
             return;
         }
-
 
         if (map.getTeamsWithEgg().contains(team)) {
             final BlockLocation spawn = map.getMapData().getSpawns().get(team);
@@ -64,12 +63,14 @@ public final class PlayerRespawnListener implements EventListener {
             final DeathCinematic cinematic = new DeathCinematic(player, title, subtitle, spawnLocation, waitTime);
             cinematic.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, cinematic, 0, 20).getTaskId());
             sendDeathMessage(map, player, false);
+            updateStats(player, false);
             return;
         }
         player.setGameMode(GameMode.SPECTATOR);
         player.teleport(map.getWorld().getSpawnLocation());
-        GameStorage.getStorage().finalKill(map, team, player);
+        GameStorage.getStorage().finalKill(map, team, player, false);
         sendDeathMessage(map, player, true);
+        updateStats(player, true);
     }
 
     private void sendDeathMessage(final GameInProgress game, final Player player, boolean finalKill) {
@@ -85,6 +86,20 @@ public final class PlayerRespawnListener implements EventListener {
         }
 
         Messages.sendNoGet(game.getPlayers(), finalMessage);
+    }
+
+    private void updateStats(final Player player, final boolean finalKill) {
+        final StatsEggWars victim = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+        victim.setDeaths(victim.getDeaths() + 1);
+        if (player.getKiller() == null) {
+            return;
+        }
+        final StatsEggWars killer = Jugador.getJugador(player.getKiller().getName()).getServerStats().getStatsEggWars();
+        killer.setKills(killer.getKills() + 1);
+        if (finalKill) {
+            killer.setLastKill(killer.getLastKill() + 1);
+            victim.setLastDeath(victim.getLastDeath() + 1);
+        }
     }
 
     private static final class DeathCinematic implements Runnable {

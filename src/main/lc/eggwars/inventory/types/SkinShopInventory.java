@@ -11,7 +11,9 @@ import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
 import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
+
 import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class SkinShopInventory implements CustomInventory {
 
@@ -35,7 +37,19 @@ public final class SkinShopInventory implements CustomInventory {
         final Player player = (Player)event.getWhoClicked();
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
-            Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().setSelectedKit(skinClicked.id());
+            final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+            if (stats.getShopKeeperSkinList().contains(String.valueOf(skinClicked.id()))) {
+                stats.setShopKeeperSkinSelected(skinClicked.id());
+                Messages.send(player, "shopkeepers.skin-change");
+                return;
+            }
+            if (stats.getLCoins() < skinClicked.cost()) {
+                Messages.send(player, "shopkeepers.no-money");
+                return;
+            }
+            stats.setLCoins(stats.getLCoins() - skinClicked.cost());
+            stats.setShopKeeperSkinSelected(skinClicked.id());
+            stats.getShopKeeperSkinList().add(String.valueOf(skinClicked.id()));
             Messages.send(player, "shopkeepers.skin-change");
             return;
         }

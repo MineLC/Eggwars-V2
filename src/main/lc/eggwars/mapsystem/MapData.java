@@ -17,6 +17,7 @@ public final class MapData {
     private final ClickableSignGenerator[] generators;
     private final EntityLocation[] shopSpawns;
     private final int[] shopkeepersID;
+    private final int maxPlayers;
     private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
@@ -42,6 +43,7 @@ public final class MapData {
         this.shopkeepersID = shopkeepersID;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
+        this.maxPlayers = maxPersonsPerTeam * spawns.keySet().size();
         this.id = id;
     }
 
@@ -83,6 +85,10 @@ public final class MapData {
 
     public int getBorderSize() {
         return borderSize;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
     @Override

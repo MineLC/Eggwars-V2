@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.KitStorage;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
@@ -27,6 +29,7 @@ final class GameStarter {
         }
 
         new ShopKeeperManager().send(map.getPlayers(), world, map);
+        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(map.getPlayers());
     }
 
     private void setTeams(final World world, final GameInProgress game) {

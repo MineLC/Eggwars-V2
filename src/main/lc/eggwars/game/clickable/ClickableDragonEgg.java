@@ -8,6 +8,8 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
@@ -31,6 +33,9 @@ public final class ClickableDragonEgg implements ClickableBlock  {
         }
 
         final BaseTeam playerTeam = game.getTeamPerPlayer().get(player);
+        if (playerTeam == null) {
+            return;
+        }
         if (team.equals(playerTeam)) {
             Messages.send(player, "eggs.break-it-egg");
             return;
@@ -39,10 +44,11 @@ public final class ClickableDragonEgg implements ClickableBlock  {
         game.getTeamsWithEgg().remove(team);
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
 
-        final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName());
+        final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName()).replace("%player%", player.getName());
         Messages.sendNoGet(game.getPlayers(), eggBreaked);
 
         final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
         stats.setDestroyedEggs(stats.getDestroyedEggs() + 1);
+        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
     }
 }

@@ -7,18 +7,20 @@ import org.bukkit.entity.Player;
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.sidebar.EggwarsSidebar;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 
 import java.util.Set;
 
-public class PreGameCountdown implements GameCountdown {
+public class PreGameCountdown extends GameCountdown {
 
     private int countdown = 0;
     private int waitingCountdown = 0;
+
     private final Set<Player> players;
     private final Data data;
     private final CountdownCallback complete, cancel;
-
-    private int id;
 
     public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown, CountdownCallback cancelGame) {
         this.data = data;
@@ -33,9 +35,12 @@ public class PreGameCountdown implements GameCountdown {
     public void run() {
         if (players.size() == 0) {
             cancel.execute();
-            Bukkit.getScheduler().cancelTask(id);
+            Bukkit.getScheduler().cancelTask(getId());
             return;
         }
+
+        final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
+        sidebar.send(players);
 
         if (players.size() < data.minPlayers) {
             if (waitingCountdown % data.waitingTime == 0) {
@@ -52,7 +57,7 @@ public class PreGameCountdown implements GameCountdown {
         if (countdown <= 0) {
             complete.execute();
             Messages.sendNoGet(players, Messages.get("pregame.start-game"));
-            Bukkit.getScheduler().cancelTask(id);
+            Bukkit.getScheduler().cancelTask(getId());
             return;
         }
 
@@ -76,8 +81,8 @@ public class PreGameCountdown implements GameCountdown {
         countdown--;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getCountdown() {
+        return parseTime(countdown);
     }
 
     public static record Data(

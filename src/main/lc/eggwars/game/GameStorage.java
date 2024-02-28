@@ -11,13 +11,17 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
 import lc.eggwars.game.managers.EggsManager;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
+
 import obed.me.minecore.objects.Jugador;
 import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
@@ -52,7 +56,7 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
 
         final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, countdown, 0, 20).getTaskId();
         countdown.setId(id);
-        map.setTaskId(id);
+        map.setCountdown(countdown);
     }
 
     public void leave(final GameInProgress map, final Player player, final World world) {
@@ -67,8 +71,8 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
         }
 
         if (map.getPlayers().size() <= 0) {
-            if (map.getTaskId() != -1) {
-                Bukkit.getScheduler().cancelTask(map.getTaskId());
+            if (map.getCountdown() != null) {
+                Bukkit.getScheduler().cancelTask(map.getCountdown().getId());
             }
             unloadGame(map, map.getWorld());
         }
@@ -77,14 +81,12 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
 
     private void unloadGame(final GameInProgress map, final World world) {
         new GeneratorManager().unload(map);
-
         final Set<Entry<Player, BaseTeam>> playersWithTeams = map.getTeamPerPlayer().entrySet();
         for (final Entry<Player, BaseTeam> playerWithTeam : playersWithTeams) {
             playerWithTeam.getValue().getTeam().removePlayer(playerWithTeam.getKey());
         }
         map.getMapData().setGame(null);
         MapStorage.getStorage().unload(world);
-        System.gc();
     }
 
     public void finalKill(final GameInProgress map, final BaseTeam team, final Player player, final boolean quit) {
@@ -100,10 +102,14 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
         }
 
         if (players.size() >= 1) {
+            if (!map.getTeamsWithEgg().contains(team)) {
+                SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(map.getPlayers());
+            }
             return;
         }
 
         Messages.sendNoGet(map.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
+        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(map.getPlayers());
 
         if (map.getTeamsWithEgg().size() > 1) {
             return;
@@ -136,10 +142,20 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
             winnerStats.setWins(winnerStats.getWins() + 1);
         }
 
-        map.setTaskId(plugin.getServer().getScheduler().runTaskLater(
+        final GameCountdown countdown = new GameCountdown() {
+            @Override
+            public void run() {
+                endGame(map);                
+            }
+        };
+
+        int id = plugin.getServer().getScheduler().runTaskLater(
             plugin,
-            () -> endGame(map),
-            plugin.getConfig().getInt("win-celebration-duration-in-seconds") * 20).getTaskId());
+            countdown,
+            plugin.getConfig().getInt("win-celebration-duration-in-seconds") * 20).getTaskId();
+
+        countdown.setId(id);
+        map.setCountdown(countdown);
     }
 
     private void endGame(final GameInProgress map) {

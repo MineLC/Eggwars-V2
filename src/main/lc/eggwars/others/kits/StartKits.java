@@ -51,13 +51,15 @@ public final class StartKits {
 
     private Kit createKit(final FileConfiguration config) {
         final InventoryCreator creator = new InventoryCreator(config);
-
+        final String name = config.getString("name");
         return new Kit(
-            config.getString("name"),
+            name.hashCode(),
+            name,
             creator.create("inventory-item"),
             createArmor(config, creator),
             createItems(config),
-            createPotionEffects(config));
+            createPotionEffects(config),
+            config.getInt("cost"));
     }
 
     private ItemStack[] createArmor(final FileConfiguration config, InventoryCreator creator) {

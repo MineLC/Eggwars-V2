@@ -11,7 +11,7 @@ import lc.lcspigot.commands.Command;
 import obed.me.minecore.objects.Jugador;
 import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
-public final class StatsCommand implements Command {
+public final class InfoCommand implements Command {
 
     @Override
     public void handle(CommandSender sender, String[] args) {
@@ -20,7 +20,7 @@ public final class StatsCommand implements Command {
             return;
         } 
 
-        final String format = Messages.get("commands.stats");
+        final String format = Messages.get("commands.info");
         final StatsEggWars stats = Jugador.getJugador(sender.getName()).getServerStats().getStatsEggWars();
         final Kit kit = KitStorage.getStorage().kitsPerId().get(stats.getSelectedKit());
         String kitName = (kit == null) ? "Ninguno" : kit.name();
@@ -34,7 +34,7 @@ public final class StatsCommand implements Command {
             .replace("%level%", String.valueOf(stats.getLevel()))
             .replace("%kit%", kitName
             .replace("%shopskin%", ShopKeepersStorage.getStorage().skins().get(stats.getShopKeeperSkinSelected()).name())
-            .replace("%kdr%", String.valueOf((float)(stats.getKills() / stats.getDeaths())))
+            .replace("%kdr%", (stats.getDeaths() == 0) ? String.valueOf(stats.getKills()) : String.valueOf((float)(stats.getKills() / stats.getDeaths())))
             .replace("%coins%", String.valueOf(stats.getLCoins()))
             .replace("%games%", String.valueOf(stats.getPlayed()))
         ));

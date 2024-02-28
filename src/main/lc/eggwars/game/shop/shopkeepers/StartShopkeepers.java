@@ -36,13 +36,18 @@ public final class StartShopkeepers {
         for (final String mob : mobs) {
             if (!(EntityTypes.createEntityByName(mob, world) instanceof EntityLiving entity)) {
                 Logger.warn("A entity with the name " + mob + " don't exist.");
-                inventoryItems.put(config.getInt(mob + ".slot"),  new ShopkeepersData.Skin("Villager", 120, "null message on click", -1));
+                inventoryItems.put(config.getInt(mob + ".slot"),  new ShopkeepersData.Skin("Villager", 120, "null message on click", -1, 0));
                 continue;
             }
             final String mobPath = mob + '.';
             final String message = Messages.color(config.getString(mobPath + "click-send"));
             final Item item = creator.create(mob);
-            final ShopkeepersData.Skin skin = new ShopkeepersData.Skin(mob, EntityTypes.a(entity), message, config.getInt(mobPath + "addHeight"));
+            final ShopkeepersData.Skin skin = new ShopkeepersData.Skin(
+                mob,
+                EntityTypes.a(entity),
+                message,
+                config.getInt(mobPath + "addHeight"),
+                config.getInt(mobPath + "cost"));
 
             inventory.setItem(item.slot(), item.item());
             inventoryItems.put(item.slot(), skin);

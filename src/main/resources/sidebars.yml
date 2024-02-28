@@ -1,0 +1,29 @@
+spawn:
+  title: "&5&lEggWars"
+  lines:
+    - ""
+    - "&fNivel: &a%level%"
+    - "&fLCoins: &6%coin%"
+    - ""
+    - "&fPartidas ganadas: &6%wins%"
+    - "&fAsesinatos: &c%kills%"
+    - "&fKDR: &a%kdr%"
+    - ""
+    - "&bplay.mine.lc"
+
+pregame:
+  title: "&5&lEggWars"
+  lines:
+    - ""
+    - "&fLCoins: &6%coin%"
+    - ""
+    - "&fJugadores: &6%players%/&a%max%"
+    - "&fIniciando en: &6%timer%"
+    - ""
+    - "&bplay.mine.lc"
+
+ingame:
+  title: "&5&lEggWars"
+  footer:
+    - ""
+    - "&bplay.mine.lc"

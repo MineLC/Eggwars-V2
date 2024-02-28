@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.teams.BaseTeam;
 
@@ -27,7 +28,7 @@ public final class GameInProgress {
     private Set<Player> playersLiving = new HashSet<>();
 
     private GameState state = GameState.NONE;
-    private int currentTaskId = -1;
+    private GameCountdown getCountdown;
 
     public GameInProgress(MapData data, World world) {
         this.data = data;
@@ -38,8 +39,8 @@ public final class GameInProgress {
         this.state = state;
     }
 
-    public void setTaskId(int id) {
-        this.currentTaskId = id;
+    public void setCountdown(GameCountdown countdown) {
+        this.getCountdown = countdown;
     }
 
     public MapData getMapData() {
@@ -66,8 +67,8 @@ public final class GameInProgress {
         return state;
     }
 
-    public int getTaskId() {
-        return currentTaskId;
+    public GameCountdown getCountdown() {
+        return getCountdown;
     }
 
     public boolean generatorsNeedUpdate() {

@@ -9,6 +9,7 @@ import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.Kit;
 import obed.me.minecore.objects.Jugador;
+import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public class KitInventory implements CustomInventory {
 
@@ -28,8 +29,19 @@ public class KitInventory implements CustomInventory {
         if (clickedKit == null) {
             return;
         }
-
-        Jugador.getJugador(event.getWhoClicked().getName()).getServerStats().getStatsEggWars().setSelectedKit(clickedKit.name().hashCode());
+        final StatsEggWars stats = Jugador.getJugador(event.getWhoClicked().getName()).getServerStats().getStatsEggWars();
+        if (stats.getKitList().contains(String.valueOf(clickedKit.id()))) {
+            stats.setSelectedKit(clickedKit.id());
+            event.getWhoClicked().sendMessage(Messages.get("kit.selected").replace("%name%", clickedKit.name()));
+            return;
+        }
+        if (stats.getLCoins() < clickedKit.cost()) {
+            Messages.send(event.getWhoClicked(), "kit.no-money");
+            return;
+        }
+        stats.getKitList().add(String.valueOf(clickedKit.id()));
+        stats.setSelectedKit(clickedKit.id());
+        stats.setLCoins(stats.getLCoins() - clickedKit.cost());
         event.getWhoClicked().sendMessage(Messages.get("kit.selected").replace("%name%", clickedKit.name()));
     }
 

@@ -1,6 +1,7 @@
 Creeper:
   click-send: "&aLa batalla ya ha empezado..."
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 0
@@ -17,6 +18,7 @@ Creeper:
 Skeleton:
   click-send: "&fVengo con aimbot integrado papu"
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 1
@@ -33,6 +35,7 @@ Skeleton:
 Spider:
   click-send: "&bItsy Bitsy araña otra vez subió. Ella es caprichosa y desobediente."
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 2
@@ -49,6 +52,7 @@ Spider:
 Zombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 3
@@ -65,6 +69,7 @@ Zombie:
 Rabbit:
   click-send: "&fHola nena, *procede a comerse 50 hectareas de cesped*"
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 4
@@ -81,6 +86,7 @@ Rabbit:
 Villager:
   click-send: "&e&lLegends never die..."
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 5
@@ -97,6 +103,7 @@ Villager:
 Silverfish:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 6
@@ -114,6 +121,7 @@ Silverfish:
 Bat:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 7
@@ -130,6 +138,7 @@ Bat:
 Witch:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 8
@@ -146,6 +155,7 @@ Witch:
 Pig:
   click-send: "&dNo estados unidos... no me hagas tocino de vuelta"
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 9
@@ -162,6 +172,7 @@ Pig:
 Sheep:
   click-send: "&fLa ropa de lana está bien cara"
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 10
@@ -178,6 +189,7 @@ Sheep:
 Cow:
   click-send: "&6Directito para el McDonals"
   addHeight: -1
+  cost: 500
 
   # Inventory Settings
   slot: 11
@@ -194,6 +206,7 @@ Cow:
 Chicken:
   click-send: "&f¡No KFC!, no lo hagas"
   addHeight: 0
+  cost: 500
 
   # Inventory Settings
   slot: 12
@@ -210,6 +223,7 @@ Chicken:
 Squid:
   click-send: "&3Que me ves oe &7*le tira tinta en la cara*"
   addHeight: 0
+  cost: 750
 
   # Inventory Settings
   slot: 13
@@ -226,6 +240,7 @@ Squid:
 Endermite:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 750
 
   # Inventory Settings
   slot: 14
@@ -242,6 +257,7 @@ Endermite:
 Slime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 1
+  cost: 750
 
   # Inventory Settings
   slot: 15
@@ -258,6 +274,7 @@ Slime:
 PigZombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
+  cost: 750
 
   # Inventory Settings
   slot: 16
@@ -274,6 +291,7 @@ PigZombie:
 Wolf:
   click-send: "&fSiempre fiel, amo"
   addHeight: 0
+  cost: 750
 
   # Inventory Settings
   slot: 16
@@ -290,6 +308,7 @@ Wolf:
 Ozelot:
   click-send: "&fMiau... miau"
   addHeight: 0
+  cost: 750
 
   # Inventory Settings
   slot: 17
@@ -306,6 +325,7 @@ Ozelot:
 MushroomCow:
   click-send: "&cTu tranqui, con estas setas si vas a volar"
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 18
@@ -322,6 +342,7 @@ MushroomCow:
 SnowMan:
   click-send: "&fNi el yeti puede contra mi"
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 19
@@ -338,6 +359,7 @@ SnowMan:
 Blaze:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 20
@@ -354,6 +376,7 @@ Blaze:
 Enderman:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 21
@@ -370,6 +393,7 @@ Enderman:
 CaveSpider:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 1500
 
   # Inventory Settings
   slot: 22
@@ -386,6 +410,7 @@ CaveSpider:
 LavaSlime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 1500
 
   # Inventory Settings
   slot: 23
@@ -402,6 +427,7 @@ LavaSlime:
 VillagerGolem:
   click-send: "&7&lEstoy mamadísimo"
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 24
@@ -418,6 +444,7 @@ VillagerGolem:
 EntityHorse:
   click-send: "&e¡Corre como el viento tiro al blanco!"
   addHeight: -1
+  cost: 1500
 
   # Inventory Settings
   slot: 25
@@ -433,6 +460,7 @@ EntityHorse:
 
 WitherBoss:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
+  cost: 2000
 
   # Inventory Settings
   slot: 26
@@ -451,6 +479,7 @@ WitherBoss:
 EnderDragon:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 1
+  cost: 2000
 
   # Inventory Settings
   slot: 27
@@ -470,6 +499,7 @@ EnderDragon:
 Guardian:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
+  cost: 2000
 
   # Inventory Settings
   slot: 28
@@ -486,6 +516,7 @@ Guardian:
 Giant:
   click-send: "&aGigante tengo la..."
   addHeight: -1
+  cost: 2000
 
   # Inventory Settings
   slot: 29

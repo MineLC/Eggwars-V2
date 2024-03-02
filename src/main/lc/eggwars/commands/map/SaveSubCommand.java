@@ -47,11 +47,11 @@ final class SaveSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
         if (args.length != 2) {
-            send(player, "&cFormat: /map save &7(mapname)");
+            sendWithColor(player, "&cFormat: /map save &7(mapname)");
             return;
         }
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
@@ -60,13 +60,13 @@ final class SaveSubCommand implements Command {
         }
         final File mapFile = new File(mapFolder, args[1] + ".json");
         if (mapFile.exists()) {
-            send(player, "&cAlready exist a map with this name. Try other");
+            sendWithColor(player, "&cAlready exist a map with this name. Try other");
             return;
         }
         final SlimeWorld slimeWorld = slimePlugin.getSlimeWorlds().get(player.getWorld().getName());
 
         if (slimeWorld == null) {
-            send(player, "The world need be a slime world manager world");
+            sendWithColor(player, "The world need be a slime world manager world");
             return;
         }
 
@@ -74,7 +74,7 @@ final class SaveSubCommand implements Command {
             mapFile.createNewFile();
 
             data.remove(player.getUniqueId());
-            send(player, "&aMap saved in: " + mapFile.getPath());
+            sendWithColor(player, "&aMap saved in: " + mapFile.getPath());
 
             final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
@@ -82,7 +82,7 @@ final class SaveSubCommand implements Command {
             player.teleport(SpawnStorage.getStorage().location());
             plugin.getServer().getScheduler().runTask(plugin, () -> slimeWorld.unloadWorld(true));
         } catch (IOException e) {
-            send(player, "&cError on create the map");
+            sendWithColor(player, "&cError on create the map");
             e.printStackTrace();
             return;
         }
@@ -91,7 +91,7 @@ final class SaveSubCommand implements Command {
     private JsonMapData saveMapInfo(final CreatorData data, final World world) {
         return new JsonMapData(
             world.getName(),
-            4,
+            data.getMaxPersonsPerTeam(),
             (int)world.getWorldBorder().getSize(),
             saveSpawns(data),
             saveGenerators(data),

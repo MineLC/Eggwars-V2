@@ -71,6 +71,17 @@ public final class MapStorage {
         }
     }
 
+    // Execute this method async
+    public boolean loadNoGameMap(final String worldName) {
+        try {
+            slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
+            return true;
+        } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void loadClickableBlocks(final World world) {
         final MapData map = mapsPerName.get(world.getName());
         if (map != null) {

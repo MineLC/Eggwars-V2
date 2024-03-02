@@ -27,7 +27,7 @@ final class RemoveSpawnSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
 
@@ -35,7 +35,7 @@ final class RemoveSpawnSubCommand implements Command {
         final Block targetBlock = player.getTargetBlock(airBlocksStorage, 3);
 
         if (targetBlock.getType() != Material.DIAMOND_BLOCK) {
-            send(player, "&cTo remove a spawn, you need view a diamond block");
+            sendWithColor(player, "&cTo remove a spawn, you need view a diamond block");
             return;
         };
 
@@ -45,12 +45,12 @@ final class RemoveSpawnSubCommand implements Command {
         for (Entry<BaseTeam, BlockLocation> entry : entries) {
             if (entry.getValue().equals(location)) {
                 targetBlock.setType(Material.AIR);
-                send(player, "&aSpawn removed for the team " + entry.getKey().getKey());
+                sendWithColor(player, "&aSpawn removed for the team " + entry.getKey().getKey());
                 creatorData.getSpawnsMap().remove(entry.getKey());
                 return;
             }
         }
 
-        send(player, "&cThis isn't a spawn for any team");
+        sendWithColor(player, "&cThis isn't a spawn for any team");
     }
 }

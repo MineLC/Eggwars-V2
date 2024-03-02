@@ -30,28 +30,28 @@ final class AddGeneratorSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
 
         if (args.length != 3) {
-            send(player, "&cFormat: /map addgenerator &7(name) (level)");
+            sendWithColor(player, "&cFormat: /map addgenerator &7(name) (level)");
             return;
         }
 
         final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(args[1]);
         if (baseGenerator == null) {
-            send(player, "&cThis generator don't exist. List of generators: &e" + GeneratorStorage.getStorage().getGeneratorsName().toString());
+            sendWithColor(player, "&cThis generator don't exist. List of generators: &e" + GeneratorStorage.getStorage().getGeneratorsName().toString());
             return;
         }
 
         final int level = IntegerUtils.parsePositive(args[2]);
         if (level == -1) {
-            send(player, "&cThe level need be positive");
+            sendWithColor(player, "&cThe level need be positive");
             return;
         }
         if (level > baseGenerator.maxlevel()) {
-            send(player, "&cThe maximun level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxlevel());
+            sendWithColor(player, "&cThe max level for the generator &e" + args[1] + " &cis &e" + baseGenerator.maxlevel());
             return;
         }
 
@@ -61,12 +61,12 @@ final class AddGeneratorSubCommand implements Command {
         final Material material = targetBlock.getType();
 
         if (material != Material.WALL_SIGN && material != Material.SIGN_POST) {
-            send(player, "&cTo set a generator, you need view a sign");
+            sendWithColor(player, "&cTo set a generator, you need view a sign");
             return;
         }
         final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
         if (creatorData.alreadyExistGenerator(location)) {
-            send(player, "&cIn this site already exist a generator. &7Use /map removegenerator");
+            sendWithColor(player, "&cIn this site already exist a generator. &7Use /map removegenerator");
             return;
         }
 
@@ -74,7 +74,7 @@ final class AddGeneratorSubCommand implements Command {
         creatorData.addGenerator(generator);
         GeneratorStorage.getStorage().setLines(targetBlock, baseGenerator, level);
 
-        send(player, "&aGenerator set!");
+        sendWithColor(player, "&aGenerator set!");
     }
 
     @Override

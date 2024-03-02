@@ -38,7 +38,7 @@ public final class SkinShopInventory implements CustomInventory {
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
             final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
-            if (stats.getShopKeeperSkinList().contains(String.valueOf(skinClicked.id()))) {
+            if (stats.getShopKeeperSkinList() != null && stats.getShopKeeperSkinList().contains(String.valueOf(skinClicked.id()))) {
                 stats.setShopKeeperSkinSelected(skinClicked.id());
                 Messages.send(player, "shopkeepers.skin-change");
                 return;

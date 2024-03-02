@@ -28,30 +28,30 @@ final class SetEggSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
 
         if (args.length != 2) {
-            send(player, "&cFormat: /map setegg &7(team)");
+            sendWithColor(player, "&cFormat: /map setegg &7(team)");
             return;
         }
 
         final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
 
         if (team == null) {
-            send(player, "The team " + args[1] + " dont exist. List: " + TeamStorage.getStorage().getTeamsName());
+            sendWithColor(player, "The team " + args[1] + " dont exist. List: " + TeamStorage.getStorage().getTeamsName());
             return;
         }
         final Set<Material> airBlocksStorage = null;
         final Block targetBlock = player.getTargetBlock(airBlocksStorage, 3);
 
         if (targetBlock.getType() != Material.DRAGON_EGG) {
-            send(player, "&cTo set a team egg, you need view a dragon egg");
+            sendWithColor(player, "&cTo set a team egg, you need view a dragon egg");
             return;
         };
         creatorData.setEgg(team, BlockLocation.toBlockLocation(targetBlock.getLocation()));
-        send(player, "&aEgg added for the team " + args[1]);
+        sendWithColor(player, "&aEgg added for the team " + args[1]);
     }
 
     @Override

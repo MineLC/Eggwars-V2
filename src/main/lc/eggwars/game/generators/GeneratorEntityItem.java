@@ -8,7 +8,6 @@ public final class GeneratorEntityItem extends Entity {
 
     public GeneratorEntityItem() {
         super(null);
-        random = null;
     }
 
     public void setItemStack(ItemStack itemstack) {

@@ -23,13 +23,16 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 
 public final class StartKits {
 
-    public void load(final EggwarsPlugin plugin) {
+    final EggwarsPlugin plugin;
+
+    public StartKits(EggwarsPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void load() {
         final File kitsFolder = new File(plugin.getDataFolder(), "kits");
-    
-        if (!kitsFolder.exists()) {
-            kitsFolder.mkdirs();
-            plugin.saveResource("kits/bunny.yml", false);
-        }
+        tryCreateDefaultKits(kitsFolder);
+
         final FileConfiguration kitsInventory = plugin.loadConfig("inventories/kits");
 
         final InventoryCreator creator = new InventoryCreator(kitsInventory);
@@ -47,6 +50,13 @@ public final class StartKits {
             kits.put(index++, kit);
         }
         KitStorage.update(new KitStorage(new KitInventory(kits, inventory), kitsPerId));
+    }
+
+    private void tryCreateDefaultKits(File kitsFolder) {
+        if (kitsFolder.exists()) {
+            return;
+        }
+        plugin.tryCreateFiles("kits/bunny.yml");
     }
 
     private Kit createKit(final FileConfiguration config) {

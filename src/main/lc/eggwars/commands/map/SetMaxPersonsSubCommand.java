@@ -22,21 +22,21 @@ final class SetMaxPersonsSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(sender, "&cTo use this command enable the editor mode");
+            sendWithColor(sender, "&cTo use this command enable the editor mode");
             return;
         }
         if (args.length != 2) {
-            send(sender, "&cFormat: /map setmax &7(number)");
+            sendWithColor(sender, "&cFormat: /map setmax &7(number)");
             return;
         }
 
         final int max = IntegerUtils.parsePositive(args[1]);
         if (max == -1) {
-            send(sender, "Max persons per team can't be negative");
+            sendWithColor(sender, "Max persons per team can't be negative");
             return;
         }
 
         creatorData.setMaxPersonsPerTeam(max);
-        send(sender, "Max persons per team set in " + max);
+        sendWithColor(sender, "Max persons per team set in " + max);
     }
 }

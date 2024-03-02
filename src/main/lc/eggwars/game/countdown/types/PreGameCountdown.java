@@ -44,7 +44,7 @@ public class PreGameCountdown extends GameCountdown {
 
         if (players.size() < data.minPlayers) {
             if (waitingCountdown % data.waitingTime == 0) {
-                Messages.sendNoGet(players, Messages.get("pregame.waiting-players"));
+                Messages.sendNoGet(players, "Esperando por más jugadores");
             }
             countdown = data.waitingTime;
             --waitingCountdown;
@@ -56,20 +56,20 @@ public class PreGameCountdown extends GameCountdown {
 
         if (countdown <= 0) {
             complete.execute();
-            Messages.sendNoGet(players, Messages.get("pregame.start-game"));
+            Messages.sendNoGet(players, "Iniciando el juego");
             Bukkit.getScheduler().cancelTask(getId());
             return;
         }
 
         // Send the message every x seconds
         if (countdown % data.messageTime == 0) {
-            Messages.sendNoGet(players, Messages.get("pregame.start-in").replace("%time%", parseTime(countdown)));
+            Messages.sendNoGet(players, "Iniciando el juego en: " + parseTime(countdown));
             countdown--;
             return;
         }
 
         if (countdown <= data.spamMessage) {
-            Messages.sendNoGet(players, Messages.get("pregame.start-in").replace("%time%", parseTime(countdown)));
+            Messages.sendNoGet(players, "Iniciando el juego en: " + parseTime(countdown));
         }
 
         if (countdown <= data.secondsToMakeSound) {

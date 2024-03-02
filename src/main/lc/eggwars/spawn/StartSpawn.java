@@ -6,11 +6,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
+import lc.eggwars.mapsystem.MapStorage;
 
 import java.util.Map;
 
@@ -43,24 +45,27 @@ public class StartSpawn {
     }
 
     private Location getSpawn(final FileConfiguration config) {
-        final World world = Bukkit.getWorld(config.getString("spawn.world"));
+        final String world = config.getString("spawn.world");
         if (world == null) {
             System.out.println("The spawn world don't exist");
             return null;
         }
         final String spawn = config.getString("spawn.cords");
-
         if (spawn == null) {
             return null;
         }
+        MapStorage.getStorage().loadNoGameMap(world);
+
+        final World bukkitWorld = Bukkit.getWorld(world);
+        Logger.info("IS NULL (?) + " + (bukkitWorld == null));
         final String[] split = spawn.split(",");
         final Location spawnLocation = new Location(
-            world,
+            bukkitWorld,
             Integer.parseInt(split[0]),
             Integer.parseInt(split[1]),
             Integer.parseInt(split[2]));
 
-        world.getWorldBorder().setSize(config.getInt("spawn.border"));
+        bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
         return spawnLocation;
     }
 

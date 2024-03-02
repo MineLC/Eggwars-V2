@@ -1,0 +1,107 @@
+leather-helmet:
+  slot: 0
+  item: "298"
+  lore:
+    - "&72x &fHierro"
+  need-item:
+    amount: 2
+    item: "265"
+
+leather-chestplate:
+  slot: 1
+  item: "299"
+  lore:
+    - "&72x &fHierro"
+  need-item:
+    amount: 2
+    item: "265"
+
+leather-leggings:
+  slot: 2
+  item: "300"
+  lore:
+    - "&72x &fHierro"
+  need-item:
+    amount: 2
+    item: "265"
+
+leather-boots:
+  slot: 3
+  item: "301"
+  lore:
+    - "&72x &fHierro"
+  need-item:
+    amount: 2
+    item: "265"
+
+chainmail-helmet:
+  slot: 4
+  item: "302"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+chainmail-chestplate:
+  slot: 5
+  item: "303"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+chainmail-leggings:
+  slot: 6
+  item: "304"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+chainmail-boots:
+  slot: 7
+  item: "305"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+iron-helmet:
+  slot: 8
+  item: "306"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+iron-chestplate:
+  slot: 9
+  item: "307"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+iron-leggings:
+  slot: 10
+  item: "308"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+iron-boots:
+  slot: 11
+  item: "309"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"

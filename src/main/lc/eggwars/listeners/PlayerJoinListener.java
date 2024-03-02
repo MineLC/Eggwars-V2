@@ -14,7 +14,6 @@ import obed.me.minecore.database.servers.CoreEggwarsAPI;
 import obed.me.minecore.objects.Jugador;
 import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
-import lc.eggwars.others.sidebar.EggwarsSidebar;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.spawn.SpawnStorage;
@@ -25,42 +24,32 @@ public final class PlayerJoinListener implements EventListener {
 
     @ListenerData(
         event = PlayerJoinEvent.class,
-        priority = EventPriority.HIGHEST
+        priority = EventPriority.LOWEST
     )
     public void handle(Event defaultEvent) {
         final PlayerJoinEvent event = (PlayerJoinEvent)defaultEvent;
         event.getPlayer().teleport(SpawnStorage.getStorage().location());
 
-        CompletableFuture.runAsync( () -> {
+        SpawnStorage.getStorage().setItems(event.getPlayer());
+
+        CompletableFuture.runAsync(() -> {
             final Jugador jugador = Jugador.getJugador(event.getPlayer().getName());
             jugador.getServerStats().setStatsEggWars(new StatsEggWars());
 
             CoreEggwarsAPI.loadStats(jugador);
-            if (jugador.getServerStats().getStatsEggWars() == null) {
-                jugador.getServerStats().setStatsEggWars(createStats());
-            }
-            final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN);
-            sidebar.send(event.getPlayer());
+            tryCreateStats(jugador.getServerStats().getStatsEggWars());
+            SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(event.getPlayer());
         });
-        SpawnStorage.getStorage().setItems(event.getPlayer());
     }
 
-    private StatsEggWars createStats() {
-        final StatsEggWars stats = new StatsEggWars();
-        stats.setShopKeeperSkinSelected(VILLAGER_SKIN);
-        stats.setKills(0);
-        stats.setDeaths(0);
-        stats.setLCoins(0);
-        stats.setDestroyedEggs(0);
-        stats.setLastDeath(0);
-        stats.setLastKill(0);
-        stats.setLevel(0);
-        stats.setLoose(0);
-        stats.setPlayed(0);
-        stats.setWins(0);
-        stats.setTeamDestroyed(0);
-        stats.setKitList(new ArrayList<>());
-        stats.setShopKeeperSkinList(new ArrayList<>());
-        return stats;
+    private void tryCreateStats(StatsEggWars stats) {
+        if (stats.getSelectedKit() == 0) {
+            stats.setSelectedKit(VILLAGER_SKIN);
+        }
+        if (stats.getShopKeeperSkinList().isEmpty()) {
+            final ArrayList<String> skins = new ArrayList<>();
+            skins.add(String.valueOf(VILLAGER_SKIN));
+            stats.setShopKeeperSkinList(skins);   
+        }
     }
 }

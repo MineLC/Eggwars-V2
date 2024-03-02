@@ -77,6 +77,7 @@ public final record GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data preg
             unloadGame(map, map.getWorld());
         }
         player.getInventory().clear();
+        player.getScoreboard().getTeams().forEach( (scoreTeam) -> scoreTeam.removePlayer(player));
     }
 
     private void unloadGame(final GameInProgress map, final World world) {

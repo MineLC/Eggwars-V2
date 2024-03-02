@@ -39,7 +39,6 @@ final class LeaveSubCommand implements Command {
             send(player, "Actualmente no estás en ningun juego");
             return;
         }
-
         player.teleport(SpawnStorage.getStorage().location());
         player.setGameMode(GameMode.ADVENTURE);
 

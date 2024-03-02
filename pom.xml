@@ -32,7 +32,7 @@
             <artifactId>lcspigot</artifactId>
             <version>1.8.4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/lcspigot.jar</systemPath>
+            <systemPath>${basedir}/libs/lcspigot-0.0.2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>lc.minecore</groupId>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>com.github.ichocomilk</groupId>
             <artifactId>LightSidebar</artifactId>
-            <version>696540edd9</version>
+            <version>0.0.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

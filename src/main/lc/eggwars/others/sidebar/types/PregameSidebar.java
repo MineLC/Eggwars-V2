@@ -40,13 +40,13 @@ public final class PregameSidebar implements EggwarsSidebar {
         final String[] parsedLines = new String[lines.length];
 
         for (int i = 0; i < lines.length; i++) {
-            parsedLines[i] = lines[i]
+            parsedLines[i] = lines[i].isEmpty() ? "" : lines[i]
                 .replace("%timer%", countdown)
                 .replace("%coin%", lcoins)
                 .replace("%players%", amountPlayers)
                 .replace("%max%", maxPlayers);
         }
-        sidebar.setLines(parsedLines);
+        sidebar.setLines(sidebar.createLines(parsedLines));
         sidebar.sendLines(player);
         sidebar.sendTitle(player);
     }

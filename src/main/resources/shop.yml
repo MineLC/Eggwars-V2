@@ -1,8 +1,42 @@
 header: # Header slots need be 0-9
-  swords:
+  blocks:
     slot: 0
-    item: "267"
-    name: "&eEspadas"
+    item: "43:4"
+    name: "&aBloques"
+    lore:
+      - "&7Compra bloques aquí"
+  swords:
+    slot: 1
+    item: "283"
+    name: "&aEspadas"
+    lore:
+      - "&7Compra espadas aquí"
+  armor:
+    slot: 2
+    item: "307"
+    name: "&aArmadura"
+    lore:
+      - "&7Compra armadura aquí"
+  food:
+    slot: 3
+    item: "413"
+    name: "&aComida"
+    lore:
+      - "&7Compra comida aquí"
+  tools:
+    slot: 4
+    item: "285"
+    name: "&aHerramientas"
+    lore:
+      - "&7Compra herramientas aquí"
 
+blocks:
+  title: "&0Tienda de Bloques"
 swords:
   title: "&0Tienda de Espadas"
+armor:
+  title: "&0Tienda de Armadura"
+food:
+  title: "&0Tienda de comida"
+tools:
+  title: "&0Tienda de herramientas"

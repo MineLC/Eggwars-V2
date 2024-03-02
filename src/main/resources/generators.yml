@@ -20,3 +20,47 @@ iron:
       upgrade-item-need: 64
       seconds-to-generate: 2 # 1/0.5s
       amount-generate: 4
+gold:
+  name: "&e&lOro"
+  drop: "GOLD_INGOT"
+  max-level: 3
+  start-level: 0
+  level:
+    0:
+      seconds-to-generate: 0
+      amount-generate: 0
+    1:
+      upgrade-item-need: 5
+      seconds-to-generate: 4
+      amount-generate: 1
+      refresh-every: 2
+    2:
+      upgrade-item-need: 10
+      seconds-to-generate: 3
+      amount-generate: 1
+    3:
+      upgrade-item-need: 20
+      seconds-to-generate: 2
+      amount-generate: 1
+diamond:
+  name: "&b&lDiamond"
+  drop: "DIAMOND"
+  max-level: 3
+  start-level: 0
+  level:
+    0:
+      seconds-to-generate: 0 #1/1
+      amount-generate: 0
+    1:
+      upgrade-item-need: 5
+      seconds-to-generate: 3
+      amount-generate: 1
+      refresh-every: 2
+    2:
+      upgrade-item-need: 10
+      seconds-to-generate: 3
+      amount-generate: 2
+    3:
+      upgrade-item-need: 20
+      seconds-to-generate: 2
+      amount-generate: 2

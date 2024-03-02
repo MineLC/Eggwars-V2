@@ -5,9 +5,9 @@ sign-lines:
   - "%speed% -> %speed_next%"
 
 spawn:
-  world: "spawnegg"
-  cords: "-1,65,8"
-  border: 60
+  world: "spawn"
+  cords: "10,74,1"
+  border: 126
 
 respawn:
   seconds: 3

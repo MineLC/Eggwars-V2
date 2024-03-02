@@ -27,19 +27,19 @@ final class EditorSubCommand implements Command {
             case "on":
                 final CreatorData creatorData = data.getData(player.getUniqueId());
                 if (creatorData != null ){
-                    send(player, "&cYou already have enabled the editor mode");
+                    sendWithColor(player, "&cYou already have enabled the editor mode");
                     return;
                 }
                 data.put(player.getUniqueId(), new CreatorData());
-                send(player, "&aEditor mode is now enable");
+                sendWithColor(player, "&aEditor mode is now enable");
                 return;
         
             case "off":
                 if (data.remove(player.getUniqueId())) {
-                    send(player, "&6Editor mode is now disable");
+                    sendWithColor(player, "&6Editor mode is now disable");
                     return;
                 }
-                send(player, "&cTo disable editor mode, first enable it");
+                sendWithColor(player, "&cTo disable editor mode, first enable it");
                 return;
             default:
                 send(player, format());

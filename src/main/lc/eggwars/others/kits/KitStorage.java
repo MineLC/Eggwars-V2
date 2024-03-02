@@ -19,9 +19,6 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
 
     public void setKit(final Player player, final boolean clearInventory) {
         final Kit selectedKit = kitsPerId.get(Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().getSelectedKit());
-        if (selectedKit == null) {
-            return;
-        }
 
         final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
 
@@ -29,6 +26,10 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
             for (int i = 0; i < inventory.items.length; i++) {
                 inventory.items[i] = null;
             }
+        }
+
+        if (selectedKit == null) {
+            return;
         }
 
         if (selectedKit.items() != null) {

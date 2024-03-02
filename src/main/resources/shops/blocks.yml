@@ -1,0 +1,8 @@
+glass:
+  slot: 0
+  item: "20"
+  lore:
+    - "&71x &fHierro"
+  need-item:
+    amount: 1
+    item: "265"

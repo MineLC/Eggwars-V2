@@ -26,7 +26,7 @@ final class RemoveShoopkeperSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
         final Set<Material> airBlocksStorage = null;
@@ -35,17 +35,17 @@ final class RemoveShoopkeperSubCommand implements Command {
         final Material material = targetBlock.getType();
 
         if (material != Material.BARRIER) {
-            send(player, "&cTo remove a shopkeeper spawn, you need view a invisible block");
+            sendWithColor(player, "&cTo remove a shopkeeper spawn, you need view a invisible block");
             return;
         }
 
         final EntityLocation location = EntityLocation.toEntityLocation(targetBlock.getLocation(), player.getLocation().getYaw());
         if (!creatorData.getShopKeepersSpawns().contains(location)) {
-            send(player, "&cIn this site don't exist a shopkeeper spawn");
+            sendWithColor(player, "&cIn this site don't exist a shopkeeper spawn");
             return;
         }
 
         creatorData.getShopKeepersSpawns().remove(location);
-        send(player, "&aShopkeeper spawn removed!");
+        sendWithColor(player, "&aShopkeeper spawn removed!");
     }
 }

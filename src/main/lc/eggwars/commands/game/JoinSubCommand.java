@@ -30,13 +30,13 @@ final class JoinSubCommand implements Command {
     public void handle(CommandSender sender, String[] args) {
         final Player player = (Player)sender;
         if (args.length != 2) {
-            send(player, "&cFormat: /join &7(worldname)");
+            sendWithColor(player, "&cFormat: /join &7(worldname)");
             return;
         }
 
         final MapData map = MapStorage.getStorage().getMapData(args[1]);
         if (map == null) {
-            send(player, "&cThis map don't exist");
+            sendWithColor(player, "&cThis map don't exist. Available maps: " + MapStorage.getStorage().getMaps().keySet());
             return;
         }
 
@@ -51,7 +51,7 @@ final class JoinSubCommand implements Command {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                 final Set<Player> playersWaitingToJoin = MapStorage.getStorage().load(args[1]);
                 if (playersWaitingToJoin == null) {
-                    send(player, "&cError on load the world");
+                    sendWithColor(player, "&cError on load the world");
                     return;
                 }
                 playersWaitingToJoin.add(player);
@@ -82,6 +82,6 @@ final class JoinSubCommand implements Command {
 
     @Override
     public String[] tab(CommandSender sender, String[] args) {
-        return (args.length == 1) ? (String[])MapStorage.getStorage().getMaps().keySet().toArray() : none();
+        return (args.length == 2) ? (String[])MapStorage.getStorage().getMaps().keySet().toArray() : none();
     }
 }

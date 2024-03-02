@@ -24,11 +24,11 @@ public final class GameCommand implements Command {
     @Override
     public void handle(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("You need be a player to use map creator");
+            send(sender, "You need be a player to use map creator");
             return;
         } 
         if (args.length < 1) {
-            sender.sendMessage(format());
+            send(sender, format());
             return;
         }
     
@@ -43,7 +43,7 @@ public final class GameCommand implements Command {
                 leave.handle(player, args);
                 break;
             default:
-                sender.sendMessage(format());
+                send(sender, format());
                 break;
         }
         return;

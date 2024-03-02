@@ -21,29 +21,29 @@ final class TeamJoinSubCommand implements Command
     public void handle(CommandSender sender, String[] args) {
         final Player player = (Player)sender;
         if (args.length < 2) {
-            send(player, "&cFormat: /game teamjoin (teamname)");
+            sendWithColor(player, "&cFormat: /game teamjoin (teamname)");
             return;
         }
         final BaseTeam team = TeamStorage.getStorage().getTeam(args[1]);
         if (team == null) {
-            send(player, "&cThe team " + args[1] + " don't exist");
+            sendWithColor(player, "&cThe team " + args[1] + " don't exist");
             return;
         }
 
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game == null) {
-            send(player, "&cYou aren't in a game");
+            sendWithColor(player, "&cYou aren't in a game");
             return;
         }
 
         if (game.getState() == GameState.IN_GAME) {
-            send(player, "&cThis game already started");
+            sendWithColor(player, "&cThis game already started");
             return;
         }
 
         if (game.getMapData().getSpawns().get(team) == null) {
-            send(player, "&cThis team don't exist");
+            sendWithColor(player, "&cThis team don't exist");
             return;
         }
 

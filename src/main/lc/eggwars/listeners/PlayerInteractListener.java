@@ -69,6 +69,9 @@ public final class PlayerInteractListener implements EventListener {
             return;
         }
 
+        if (!event.getPlayer().getWorld().equals(SpawnStorage.getStorage().location().getWorld())) {
+            return;
+        }
         final Inventory inventory = SpawnStorage.getStorage().items().get(event.getItem().getType());
         if (inventory != null) {
             event.getPlayer().openInventory(inventory);

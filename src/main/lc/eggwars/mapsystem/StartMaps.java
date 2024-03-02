@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -44,31 +45,43 @@ public final class StartMaps {
         this.plugin = plugin;
     }
 
-    public void load(SlimePlugin slimePlugin) {
+    public CompletableFuture<?> load(SlimePlugin slimePlugin) {
         final SlimeLoader loader = slimePlugin.getLoader("file");
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return;
+            return null;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return;
+            return null;
         }
 
-        final Gson gson = new Gson();
-        final Map<String, MapData> mapsPerName = new HashMap<>();
-        final MapData[] maps = new MapData[mapFiles.length];
+        return CompletableFuture.runAsync( () -> {
+            final Map<String, MapData> mapsPerName = new HashMap<>();
+            final MapData[] maps = new MapData[mapFiles.length];
 
+            if (mapFiles.length != 0) {
+                loadMapData(maps, mapFiles, new HashMap<>());
+            }
+            MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
+
+            final GeneratorThread thread = new GeneratorThread(maps);
+            GeneratorThread.setThread(thread);
+            thread.start();
+        });
+    }
+
+    private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
+        final Gson gson = new Gson();
         int index = 0;
         int id = -1;
-
         int shopsAmount = 0;
-
+        Logger.info("CREATE");
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
                 continue;
@@ -76,12 +89,12 @@ public final class StartMaps {
             try {
                 final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-                final World world = Bukkit.getWorld(data.world());
 
-                if (world == null) {
-                    Logger.warn("The world " + data.world() + " don't exist or is unloaded");
+                if (!MapStorage.getStorage().loadNoGameMap(data.world())) {
                     continue;
                 }
+                final World world = Bukkit.getWorld(data.world());
+    
                 final EntityLocation[] shopSpawns = getShopSpawns(data);
                 final int[] shopkeepersID = new int[shopSpawns.length];
                 for (int i = 0; i < shopSpawns.length; i++) {
@@ -101,18 +114,13 @@ public final class StartMaps {
 
                 maps[index++] = map;
 
-                mapsPerName.put(world.getName(), map);
-                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, true));
+                mapsPerName.put(data.world(), map);
+                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, false));
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 e.printStackTrace();
             }
         }
-        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
-
-        final GeneratorThread thread = new GeneratorThread(maps);
-        GeneratorThread.setThread(thread);
-        thread.start();
     }
 
     private Map<BaseTeam, BlockLocation> getTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {

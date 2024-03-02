@@ -7,6 +7,30 @@ blue:
 yellow:
   name: "&e&lYellow"
   prefix: "&e&lY &e"
-machine:
-  name: "&7&lMáquina"
-  prefix: "&7&lM &7"
+black:
+  name: "&0&lBlack"
+  prefix: "&0&lB &0"
+darkgreen:
+  name: "&2&lDark green"
+  prefix: "&2&lDG &2"
+orange:
+  name: "&6&lOrange"
+  prefix: "&6&lO &6"
+gray:
+  name: "&7&lGray"
+  prefix: "&7&lG &7"
+cyan:
+  name: "&3&lCyan"
+  prefix: "&3&lC &3"
+pink:
+  name: "&d&lPink"
+  prefix: "&d&lP &d"
+lime:
+  name: "&a&lLime"
+  prefix: "&a&lL &a"
+purple:
+  name: "&5&lPurple"
+  prefix: "&5&lP &5"
+aqua:
+  name: "&b&lAqua"
+  prefix: "&b&lA &b"

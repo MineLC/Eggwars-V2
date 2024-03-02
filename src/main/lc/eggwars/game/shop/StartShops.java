@@ -20,9 +20,11 @@ import lc.eggwars.messages.Messages;
 public class StartShops {
     
     public IntObjectHashMap<Shop> load(final EggwarsPlugin plugin) {
+        tryLoadDefaultShops(plugin);
+
         final HeaderShop[] headerItems = createHeader(plugin);
         final IntObjectHashMap<Shop> shopsPerId = new IntObjectHashMap<>(headerItems.length);
-        tryLoadDefaultShops(plugin);
+
         for (final HeaderShop headerShop : headerItems) {
             if (headerShop == null) {
                 continue;
@@ -43,7 +45,6 @@ public class StartShops {
             final Shop shop = new Shop(inventory, items);
             shopsPerId.put(shopID.hashCode(), shop);
         }
-
         return shopsPerId;
     }
 
@@ -100,11 +101,10 @@ public class StartShops {
     }
 
     private void tryLoadDefaultShops(final EggwarsPlugin plugin) {
-        final File file = new File("shops");
-        if (file.exists()) {
+        if (new File("shops").exists()) {
             return;
         }
-        plugin.saveResource("shops/swords.yml", false);
+        plugin.tryCreateFiles("shops/swords.yml", "shops/armor.yml", "shops/blocks.yml", "shops/food.yml", "shops/tools.yml");
     }
 
     private int howManyRows(final int itemsAmount) {

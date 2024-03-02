@@ -27,7 +27,7 @@ final class RemoveGeneratorSubCommand implements Command {
         final CreatorData creatorData = data.getData(player.getUniqueId());
 
         if (creatorData == null) {
-            send(player, "&cTo use this command enable the editor mode");
+            sendWithColor(player, "&cTo use this command enable the editor mode");
             return;
         }
         final Set<Material> airBlocksStorage = null;
@@ -36,13 +36,13 @@ final class RemoveGeneratorSubCommand implements Command {
         final Material material = targetBlock.getType();
 
         if (material != Material.WALL_SIGN && material != Material.SIGN_POST) {
-            send(player, "&cTo remove a generator, you need view a sign");
+            sendWithColor(player, "&cTo remove a generator, you need view a sign");
             return;
         }
 
         final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
         if (!creatorData.removeGenerator(location)) {
-            send(player, "&cThis sign isn't a generator");
+            sendWithColor(player, "&cThis sign isn't a generator");
             return;
         }
         final Sign sign = (Sign)targetBlock.getState();
@@ -52,6 +52,6 @@ final class RemoveGeneratorSubCommand implements Command {
         sign.setLine(3, "");
         sign.update();
 
-        send(player, "&aGenerator removed!");
+        sendWithColor(player, "&aGenerator removed!");
     }
 }

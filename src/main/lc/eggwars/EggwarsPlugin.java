@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.tinylog.Logger;
 
 import io.netty.util.collection.IntObjectHashMap;
+
 import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
 import lc.eggwars.commands.game.GameCommand;
@@ -26,6 +27,7 @@ import lc.eggwars.game.generators.StartGenerators;
 import lc.eggwars.game.shop.Shop;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
+import lc.eggwars.listeners.PlayerBreakListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.gameshop.GameShopInventoryClickListener;
@@ -42,6 +44,7 @@ import lc.eggwars.messages.StartMessages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.pregameitems.StartPreGameItems;
+import lc.eggwars.others.sidebar.StartSidebar;
 import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
@@ -79,21 +82,24 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartGenerators().load(this);
         new StartTeams(this).load();
         new StartGameData().load(this);
-        new StartKits().load(this);
+        new StartKits(this).load();
 
         new StartSpawn(this).loadItems();
         new StartPreGameItems().load(this);
+        new StartSidebar().load(this);
 
         final IntObjectHashMap<Shop> shops = new StartShops().load(this);
         new StartShopkeepers().load(this, shops);
 
         final ListenerRegister listeners = new ListenerRegister(this);
    
-        // This execute 20 ticks later because we need wait that all slime worlds are loaded
+        // This execute 40 ticks later because we need wait that all slime worlds are loaded
         getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
-            new StartSpawn(this).loadSpawn();
-            new StartMaps(this).load(slimePlugin);
-        }, 20);
+            final CompletableFuture<?> loadMapTask = new StartMaps(this).load(slimePlugin);
+            if (loadMapTask != null) {
+                loadMapTask.thenAccept((value) -> new StartSpawn(this).loadSpawn());
+            }
+        }, 40);
 
         registerBasicListeners(listeners);
 
@@ -123,7 +129,7 @@ public class EggwarsPlugin extends JavaPlugin {
         register.register(new CompleteWorldGenerateListener(), true);
 
         register.register(new ShopkeeperListener(), false);
-
+        register.register(new PlayerBreakListener(), false);
         register.register(new PlayerJoinListener(), true);  
 
         register.cancelEvent(BlockPhysicsEvent.class);
@@ -142,6 +148,14 @@ public class EggwarsPlugin extends JavaPlugin {
             saveResource(fileFormat, false);
         }
         return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public void tryCreateFiles(final String... files) {
+        for (final String file : files) {
+            if (!new File(file).exists()) {
+                saveResource(file, false);
+            }
+        }
     }
 
     private void loadCommands(SlimePlugin slimePlugin) {

@@ -23,15 +23,22 @@ public final class SpawnSidebar implements EggwarsSidebar {
     public void send(Player player) {
         final String[] parsedLines = new String[lines.length];
         final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+
+        final String coins = String.valueOf(stats.getLCoins());
+        final String level = String.valueOf(stats.getLevel());
+        final String wins =  String.valueOf(stats.getWins());
+        final String kills = String.valueOf(stats.getKills());
+        final String kdr =  (stats.getDeaths() == 0) ? String.valueOf(stats.getKills()) : String.valueOf((float)(stats.getKills() / stats.getDeaths()));
+
         for (int i = 0; i < lines.length; i++) {
-            parsedLines[i] = lines[i].isEmpty() ? " " : lines[i]
-                .replace("%coins%", String.valueOf(stats.getLCoins()))
-                .replace("%level%", String.valueOf(stats.getLevel()))
-                .replace("%wins%", String.valueOf(stats.getWins()))
-                .replace("%kills%", String.valueOf(stats.getKills()))
-                .replace("%kdr%", (stats.getDeaths() == 0) ? String.valueOf(stats.getKills()) : String.valueOf((float)(stats.getKills() / stats.getDeaths())));
+            parsedLines[i] = lines[i].isEmpty() ? "" : lines[i]
+                .replace("%coin%", coins)
+                .replace("%level%", level)
+                .replace("%wins%", wins)
+                .replace("%kills%", kills)
+                .replace("%kdr%", kdr);
         }
-        sidebar.setLines(sidebar.createLines(lines));
+        sidebar.setLines(sidebar.createLines(parsedLines));
         sidebar.sendLines(player);
         sidebar.sendTitle(player);
     }

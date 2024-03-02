@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.tinylog.Logger;
 
@@ -13,8 +14,10 @@ import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
 import lc.eggwars.mapsystem.MapStorage;
+import lombok.var;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class StartSpawn {
     private final EggwarsPlugin plugin;
@@ -36,37 +39,34 @@ public class StartSpawn {
         SpawnStorage.update(new SpawnStorage(null, shopItem, items, spawnShopInventory));
     }
 
-    public Location loadSpawn() {
-        final Location spawn = getSpawn(plugin.getConfig());
-
-        final SpawnStorage oldStorage = SpawnStorage.getStorage();
-        SpawnStorage.update(new SpawnStorage(spawn, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
-        return spawn;
-    }
-
-    private Location getSpawn(final FileConfiguration config) {
+    public void loadSpawn() {
+        final FileConfiguration config = plugin.getConfig();
         final String world = config.getString("spawn.world");
         if (world == null) {
             System.out.println("The spawn world don't exist");
-            return null;
+            return;
         }
         final String spawn = config.getString("spawn.cords");
         if (spawn == null) {
-            return null;
+            return;
         }
-        MapStorage.getStorage().loadNoGameMap(world);
-
-        final World bukkitWorld = Bukkit.getWorld(world);
-        Logger.info("IS NULL (?) + " + (bukkitWorld == null));
-        final String[] split = spawn.split(",");
-        final Location spawnLocation = new Location(
-            bukkitWorld,
-            Integer.parseInt(split[0]),
-            Integer.parseInt(split[1]),
-            Integer.parseInt(split[2]));
-
-        bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
-        return spawnLocation;
+        final CompletableFuture<Void> mapLoaded = MapStorage.getStorage().loadNoGameMap(world);
+        if (mapLoaded == null) {
+            return;
+        }
+        mapLoaded.thenAccept((none) -> {
+            final World bukkitWorld = Bukkit.getWorld(world);
+            final String[] split = spawn.split(",");
+            final Location spawnLocation = new Location(
+                bukkitWorld,
+                Integer.parseInt(split[0]),
+                Integer.parseInt(split[1]),
+                Integer.parseInt(split[2]));
+    
+            bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
+            final SpawnStorage oldStorage = SpawnStorage.getStorage();
+            SpawnStorage.update(new SpawnStorage(spawnLocation, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
+        });
     }
 
     private SpawnShopInventory getSpawnShopInventory() {

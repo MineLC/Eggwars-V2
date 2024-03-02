@@ -81,7 +81,6 @@ public final class StartMaps {
         int index = 0;
         int id = -1;
         int shopsAmount = 0;
-        Logger.info("CREATE");
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
                 continue;
@@ -90,7 +89,7 @@ public final class StartMaps {
                 final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
 
-                if (!MapStorage.getStorage().loadNoGameMap(data.world())) {
+                if (MapStorage.getStorage().loadNoGameMap(data.world()) == null) {
                     continue;
                 }
                 final World world = Bukkit.getWorld(data.world());

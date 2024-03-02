@@ -32,7 +32,7 @@
             <artifactId>lcspigot</artifactId>
             <version>1.8.4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/lcspigot-0.0.2.jar</systemPath>
+            <systemPath>${basedir}/libs/lcspigot-0.0.3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>lc.minecore</groupId>

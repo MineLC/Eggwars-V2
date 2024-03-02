@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,13 +73,12 @@ public final class MapStorage {
     }
 
     // Execute this method async
-    public boolean loadNoGameMap(final String worldName) {
+    public CompletableFuture<Void> loadNoGameMap(final String worldName) {
         try {
-            slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
-            return true;
+            return slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

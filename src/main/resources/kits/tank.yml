@@ -1,0 +1,22 @@
+name: "tank"
+
+inventory-item:
+  slot: 7
+  item: "299"
+  name: "&7&lTanque"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Casco de malla"
+    - " &8● &71x Peto de cuero"
+    - ""
+    - " &7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+    
+cost: 500
+
+armor:
+  heltmet: "302"
+  chestplate: "299"

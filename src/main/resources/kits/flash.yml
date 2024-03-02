@@ -1,0 +1,19 @@
+name: "flash"
+
+inventory-item:
+  slot: 6
+  item: "373:16418"
+  name: "&e&lFlash"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &7Velocidad 2 (Permanente)"
+    - ""
+    - " &7Coste: &6500 LCOINS"
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+    
+cost: 500
+effects:
+  - "SPEED:2:100000" # EFFECT:LEVEL:DURATION

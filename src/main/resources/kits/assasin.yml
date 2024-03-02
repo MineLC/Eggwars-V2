@@ -1,0 +1,20 @@
+name: "assasin"
+
+inventory-item:
+  slot: 1
+  item: "268"
+  name: "&c&lAsesino"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Espada de madera (Filo 1)"
+    - ""
+    - " &7Coste: &6100 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+cost: 100
+
+items:
+  - "268:1:DAMAGE_ALL:1" # ID:AMOUNT:ENCHANTMENT:LEVEL

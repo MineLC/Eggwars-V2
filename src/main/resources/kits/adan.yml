@@ -1,0 +1,23 @@
+name: "adan"
+
+inventory-item:
+  slot: 3
+  item: "260"
+  name: "&e&lAdan"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &716x Manzanas"
+    - " &8● &7Regeneración 1 (Permanente)"
+    - ""
+    - " &7Coste: &6250 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+cost: 250
+
+effects:
+  - "REGENERATION:1:100000" # EFFECT:LEVEL:DURATIOn
+
+items:
+  - "260:16"

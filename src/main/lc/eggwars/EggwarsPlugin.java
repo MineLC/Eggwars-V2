@@ -92,13 +92,12 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartShopkeepers().load(this, shops);
 
         final ListenerRegister listeners = new ListenerRegister(this);
-   
-        // This execute 40 ticks later because we need wait that all slime worlds are loaded
+
         getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
             final CompletableFuture<?> loadMapTask = new StartMaps(this).load(slimePlugin);
             if (loadMapTask != null) {
-                loadMapTask.thenAccept((value) -> new StartSpawn(this).loadSpawn());
-            }
+                loadMapTask.thenAcceptAsync((value) -> new StartSpawn(this).loadSpawn());
+            };
         }, 40);
 
         registerBasicListeners(listeners);

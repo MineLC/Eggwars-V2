@@ -1,0 +1,28 @@
+name: "onlytank"
+
+inventory-item:
+  slot: 9
+  item: "307"
+  enchantments:
+    - "PROTECTION_ENVIRONMENTAL:2"
+  name: "&b&lTANQUE SUPREMO"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Espada de piedra"
+    - " &8● &7Debilidad 2 (Permanente)"
+    - " &8● &7Resistencia 2 (Permanente)"
+    - ""
+    - " &7Coste: &61000 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"
+
+cost: 1000
+
+effects:
+  - "DAMAGE_RESISTANCE:2:100000" # EFFECT:LEVEL:DURATIOn
+  - "WEAKNESS:2:100000"
+
+items:
+  - "272"

@@ -1,16 +1,16 @@
 inventory:
   title: "Tienda de eggwars"
-  rows: 4
+  rows: 43
 
 skin-selector:
-  slot: 0
+  slot: 11
   item: "334"
   name: "&aSkins para tu aldeano"
   lore:
     - "&7(Clic para entrar)"
 
 kit-selector:
-  slot: 1
+  slot: 15
   item: "267"
   name: "&6Kits"
   lore:

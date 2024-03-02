@@ -1,0 +1,26 @@
+name: "kamikaze"
+
+inventory-item:
+  slot: 8
+  item: "46"
+  name: "&6&lKamikaze"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Espada de piedra (Filo 1)"
+    - " &8● &7Velocidad 2 (Permanente)"
+    - " &8● &7Fatiga 2 (Permanente)"
+    - ""
+    - " &7Coste: &6800 LCOINS"
+    - ""
+    - "&7Rareza: &e&lLEGENDARIO"
+    
+cost: 800
+
+effects:
+  - "SPEED:2:100000" # EFFECT:LEVEL:DURATIOn
+  - "SLOW_DIGGING:2:100000"
+
+items:
+  - "272:1:DAMAGE_ALL:1"

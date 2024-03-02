@@ -1,6 +1,7 @@
-name: "conejo"
+name: "bunny"
 
 inventory-item:
+  slot: 5
   item: "414"
   name: "&a&lConejo"
   lore:
@@ -12,7 +13,9 @@ inventory-item:
     - " &8● &7Botas de cuero"
     - ""
     - " &7Coste: &6500 LCOINS"
-
+    - ""
+    - "&7Rareza: &5&lÉPICO"
+    
 cost: 500
 effects:
   - "JUMP:1:100000" # EFFECT:LEVEL:DURATIOn

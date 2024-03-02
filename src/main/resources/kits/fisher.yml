@@ -1,0 +1,22 @@
+name: "fisher"
+
+inventory-item:
+  slot: 4
+  item: "346"
+  name: "&3&lPescador"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Caña"
+    - " &8● &71x Pescado (Filo 1)"
+    - ""
+    - " &7Coste: &6250 LCOINS"
+    - ""
+    - "&7Rareza: &3&lRARO"
+
+cost: 250
+
+items:
+  - "349:1:DAMAGE_ALL:2" # ID:AMOUNT:ENCHANTMENT:LEVEL
+  - "346"

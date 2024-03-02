@@ -1,0 +1,20 @@
+name: "jungle"
+
+inventory-item:
+  slot: 2
+  item: "17"
+  name: "&6&lJungla"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &71x Palo de madera (Empuje 1)"
+    - ""
+    - " &7Coste: &6150 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+
+cost: 150
+
+items:
+  - "280:1:KNOCKBACK:1" # ID:AMOUNT:ENCHANTMENT:LEVEL

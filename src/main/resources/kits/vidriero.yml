@@ -1,0 +1,22 @@
+name: "vidriero"
+
+inventory-item:
+  slot: 0
+  item: "20"
+  name: "&b&lVidriero"
+  lore:
+    - " "
+    - " &eVentajas:"
+    - " "
+    - " &8● &764x Vidrio"
+    - ""
+    - " &7Coste: &6100 LCOINS"
+    - ""
+    - "&7Rareza: &fNORMAL"
+    
+cost: 100
+effects:
+  - "JUMP:1:100000" # EFFECT:LEVEL:DURATIOn
+
+items:
+  - "20" # ID:AMOUNT:ENCHANTMENT:LEVEL

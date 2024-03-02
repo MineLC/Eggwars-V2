@@ -56,7 +56,10 @@ public final class StartKits {
         if (kitsFolder.exists()) {
             return;
         }
-        plugin.tryCreateFiles("kits/bunny.yml");
+        plugin.tryCreateFiles(
+            "kits/bunny.yml", "kits/adan.yml", "kits/assasin.yml",
+            "kits/fisher.yml", "kits/flash.yml", "kits/jungle.yml", "kits/kamikaze.yml",
+            "kits/onlytank.yml", "kits/tank.yml", "kits/vidriero.yml");
     }
 
     private Kit createKit(final FileConfiguration config) {

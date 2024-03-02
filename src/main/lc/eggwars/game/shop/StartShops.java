@@ -101,7 +101,7 @@ public class StartShops {
     }
 
     private void tryLoadDefaultShops(final EggwarsPlugin plugin) {
-        if (new File("shops").exists()) {
+        if (new File(plugin.getDataFolder(), "shops").exists()) {
             return;
         }
         plugin.tryCreateFiles("shops/swords.yml", "shops/armor.yml", "shops/blocks.yml", "shops/food.yml", "shops/tools.yml");

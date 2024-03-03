@@ -27,11 +27,10 @@ public final class PlayerQuitListener implements EventListener {
         final Player player = event.getPlayer();
         final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        CompletableFuture.runAsync(() -> CoreEggwarsAPI.saveStats(Jugador.getJugador(event.getPlayer().getName())));
-
         if (map != null) {
             GameStorage.getStorage().leave(map, player);
-            return;
         }
+
+        CompletableFuture.runAsync(() -> CoreEggwarsAPI.saveStats(Jugador.getJugador(event.getPlayer().getName())));
     }
 }

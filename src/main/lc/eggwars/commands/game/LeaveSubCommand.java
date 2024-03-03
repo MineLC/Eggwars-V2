@@ -31,7 +31,6 @@ final class LeaveSubCommand implements Command {
             if (players.isEmpty()) {
                 final String worldName = entry.getKey();
                 MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
-                MapStorage.getStorage().getWorldsThatNeedUnload().add(worldName);
             }
             break;
         }

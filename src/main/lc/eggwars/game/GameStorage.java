@@ -50,16 +50,11 @@ public final class GameStorage {
             game,
             game.getTeamPerPlayer().get(player),
             player,
-            true,
-            () -> new GameManager().stop(game));
+            true);
     }
 
     public GameInProgress getGame(UUID uuid) {
         return playersInGame.get(uuid);
-    }
-
-    public void exitGame(final UUID uuid) {
-        playersInGame.remove(uuid);
     }
 
     public static GameStorage getStorage() {

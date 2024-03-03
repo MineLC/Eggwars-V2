@@ -122,7 +122,7 @@ public class EggwarsPlugin extends JavaPlugin {
         register.register(new PlayerDamageByPlayerListener(), true);
         register.register(new PlayerInventoryClickListener(this), true);
         register.register(new PlayerInteractListener(), true);
-        register.register(new CompleteWorldGenerateListener(this), true);
+        register.register(new CompleteWorldGenerateListener(), true);
 
         register.register(new ShopkeeperListener(), false);
         register.register(new PlayerBreakListener(), false);

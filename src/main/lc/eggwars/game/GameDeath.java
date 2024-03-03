@@ -1,13 +1,11 @@
 package lc.eggwars.game;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.countdown.types.CallbackGameCountdown;
 import lc.eggwars.messages.Messages;
@@ -20,7 +18,7 @@ import lc.eggwars.teams.BaseTeam;
 import obed.me.minecore.objects.Jugador;
 import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
-public final class GameDeath {
+final class GameDeath {
 
     private final EggwarsPlugin plugin;
 
@@ -28,9 +26,8 @@ public final class GameDeath {
         this.plugin = plugin;
     }
 
-    public void finalDeath(final GameInProgress game, final BaseTeam team, final Player player, final boolean quit, final CountdownCallback endgameCinematicComplete) {
+    public void finalDeath(final GameInProgress game, final BaseTeam team, final Player player, final boolean quit) {
         game.getPlayersLiving().remove(player);
-        new LevelManager().onDeath(player, true);
 
         if (quit) {
             game.getPlayers().remove(player);
@@ -41,8 +38,11 @@ public final class GameDeath {
         }
 
         if (game.getPlayers().size() == 0) {
+            new GameManager().stop(game);
             return;
         }
+
+        new LevelManager().onDeath(player, true);
 
         DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, true);
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
@@ -67,7 +67,7 @@ public final class GameDeath {
             winnerStats.setWins(winnerStats.getWins() + 1);
         }
 
-        final GameCountdown endgameCountdown = new CallbackGameCountdown(endgameCinematicComplete);
+        final GameCountdown endgameCountdown = new CallbackGameCountdown(() -> new GameManager().stop(game));
 
         int id = plugin.getServer().getScheduler().runTaskLater(
             plugin,

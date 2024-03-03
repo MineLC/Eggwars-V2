@@ -1,6 +1,7 @@
 package lc.eggwars.listeners.map;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -9,24 +10,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 
-import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.pregameitems.PregameItemsStorage;
+
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
 import net.swofty.swm.api.events.PostGenerateWorldEvent;
 
 public final class CompleteWorldGenerateListener implements EventListener {
-
-    private final EggwarsPlugin plugin;
-
-    public CompleteWorldGenerateListener(EggwarsPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @ListenerData(
         event = PostGenerateWorldEvent.class,
@@ -38,15 +33,13 @@ public final class CompleteWorldGenerateListener implements EventListener {
         }
         final PostGenerateWorldEvent event = (PostGenerateWorldEvent)defaultEvent;
         final String worldName = event.getSlimeWorld().getName();
-        final Set<Player> players = MapStorage.getStorage().getWorldsCurrentlyLoading().get(worldName);
+        final Set<Player> playersTryingJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().get(worldName);
 
-        if (players == null) {
-            if (!MapStorage.getStorage().getWorldsThatNeedUnload().contains(worldName)) {
-                return;
-            }
-            plugin.getServer().getScheduler().runTaskAsynchronously(
-                plugin,
-                () -> event.getSlimeWorld().unloadWorld(false));
+        if (playersTryingJoin == null) {
+            return;
+        }
+        if (playersTryingJoin.isEmpty()) {
+            CompletableFuture.runAsync(() -> event.getSlimeWorld().unloadWorld(false));
             MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
             return;
         }
@@ -60,7 +53,7 @@ public final class CompleteWorldGenerateListener implements EventListener {
 
         map.setGame(gameInProgress);
 
-        for (final Player player : players) {    
+        for (final Player player : playersTryingJoin) {    
             GameStorage.getStorage().join(bukkitWorld, gameInProgress, player);
             PregameItemsStorage.getStorage().send(player);
             player.setGameMode(GameMode.ADVENTURE);

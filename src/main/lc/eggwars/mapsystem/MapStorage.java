@@ -41,7 +41,6 @@ public final class MapStorage {
     private final Map<World, IntObjectHashMap<ClickableBlock>> clickableBlocks = new HashMap<>();
 
     private final Map<String, Set<Player>> worldsCurrentlyLoading = new HashMap<>();
-    private final Set<String> worldsThatNeedUnload = new HashSet<>();
 
     private final Map<String, MapData> mapsPerName;
     
@@ -108,10 +107,6 @@ public final class MapStorage {
 
     public Map<String, Set<Player>> getWorldsCurrentlyLoading() {
         return worldsCurrentlyLoading;
-    }
-
-    public Set<String> getWorldsThatNeedUnload() {
-        return worldsThatNeedUnload;
     }
 
     public Map<String, MapData> getMaps() {

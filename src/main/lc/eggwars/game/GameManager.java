@@ -26,6 +26,8 @@ final class GameManager {
 
     void start(final GameInProgress map) {
         map.setState(GameState.IN_GAME);
+        map.setCountdown(null);
+
         setTeams(map);
 
         for (final Player player : map.getPlayers()) {
@@ -35,6 +37,7 @@ final class GameManager {
         new GeneratorManager().load(map);
         new EggsManager().setEggs(map);
         new ShopKeeperManager().send(map.getPlayers(), map.getWorld(), map);
+
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(map.getPlayers());
     }
 

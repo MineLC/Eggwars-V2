@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.spawn.SpawnStorage;
 
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -28,14 +27,11 @@ public final class PlayerQuitListener implements EventListener {
         final Player player = event.getPlayer();
         final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        CompletableFuture.runAsync( () -> CoreEggwarsAPI.saveStats(Jugador.getJugador(event.getPlayer().getName())));
-        player.getInventory().clear();
+        CompletableFuture.runAsync(() -> CoreEggwarsAPI.saveStats(Jugador.getJugador(event.getPlayer().getName())));
 
-        if (map == null) {
+        if (map != null) {
+            GameStorage.getStorage().leave(map, player);
             return;
         }
-
-        player.teleport(SpawnStorage.getStorage().location());
-        GameStorage.getStorage().leave(map, player, map.getWorld());
     }
 }

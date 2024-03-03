@@ -1,7 +1,5 @@
 package lc.eggwars.game;
 
-import java.util.HashMap;
-
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lc.eggwars.EggwarsPlugin;
@@ -18,6 +16,6 @@ public class StartGameData {
             config.getInt("spam-message"),
             config.getInt("minimum-players-to-start"));
 
-        GameStorage.update(new GameStorage(plugin, preGameData, new HashMap<>()));
+        GameStorage.update(new GameStorage(plugin, preGameData));
     }
 }

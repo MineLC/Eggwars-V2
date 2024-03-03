@@ -22,6 +22,12 @@ import net.swofty.swm.api.events.PostGenerateWorldEvent;
 
 public final class CompleteWorldGenerateListener implements EventListener {
 
+    private final EggwarsPlugin plugin;
+
+    public CompleteWorldGenerateListener(EggwarsPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @ListenerData(
         event = PostGenerateWorldEvent.class,
         priority = EventPriority.HIGHEST
@@ -35,13 +41,13 @@ public final class CompleteWorldGenerateListener implements EventListener {
         final Set<Player> players = MapStorage.getStorage().getWorldsCurrentlyLoading().get(worldName);
 
         if (players == null) {
-            if (MapStorage.getStorage().getWorldsThatNeedUnload().contains(worldName)) {
-                EggwarsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(
-                    EggwarsPlugin.getInstance(),
-                    () -> event.getSlimeWorld().unloadWorld(false));
-
-                MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
+            if (!MapStorage.getStorage().getWorldsThatNeedUnload().contains(worldName)) {
+                return;
             }
+            plugin.getServer().getScheduler().runTaskAsynchronously(
+                plugin,
+                () -> event.getSlimeWorld().unloadWorld(false));
+            MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
             return;
         }
 

@@ -5,16 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
-import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
 import lc.eggwars.mapsystem.MapStorage;
-import lombok.var;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -70,7 +67,7 @@ public class StartSpawn {
     }
 
     private SpawnShopInventory getSpawnShopInventory() {
-        final FileConfiguration config = EggwarsPlugin.getInstance().loadConfig("inventories/spawnshop");
+        final FileConfiguration config = plugin.loadConfig("inventories/spawnshop");
         final InventoryCreator creator = new InventoryCreator(config);
         final Inventory inventory = creator.create("spawnshop", "inventory");
         

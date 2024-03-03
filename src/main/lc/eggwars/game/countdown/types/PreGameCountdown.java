@@ -20,25 +20,18 @@ public class PreGameCountdown extends GameCountdown {
 
     private final Set<Player> players;
     private final Data data;
-    private final CountdownCallback complete, cancel;
+    private final CountdownCallback complete;
 
-    public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown, CountdownCallback cancelGame) {
+    public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown) {
         this.data = data;
         this.waitingCountdown = data.waitingTime;
         this.countdown = data.waitingTime;
         this.players = players;
         this.complete = completeCountdown;
-        this.cancel = cancelGame;
     }
 
     @Override
     public void run() {
-        if (players.size() == 0) {
-            cancel.execute();
-            Bukkit.getScheduler().cancelTask(getId());
-            return;
-        }
-
         final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
         sidebar.send(players);
 

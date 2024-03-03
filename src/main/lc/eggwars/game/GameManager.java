@@ -6,12 +6,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import lc.eggwars.game.managers.EggsManager;
+import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
+import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
@@ -19,20 +22,34 @@ import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-final class GameStarter {
+final class GameManager {
 
-    void start(final World world, final GameInProgress map) {
-        setTeams(world, map);
+    void start(final GameInProgress map) {
+        map.setState(GameState.IN_GAME);
+        setTeams(map);
 
         for (final Player player : map.getPlayers()) {
             KitStorage.getStorage().setKit(player, true);
         }
 
-        new ShopKeeperManager().send(map.getPlayers(), world, map);
+        new GeneratorManager().load(map);
+        new EggsManager().setEggs(map);
+        new ShopKeeperManager().send(map.getPlayers(), map.getWorld(), map);
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(map.getPlayers());
     }
 
-    private void setTeams(final World world, final GameInProgress game) {
+    void stop(final GameInProgress game) {       
+        game.setGameFinished(true);
+        if (game.getCountdown() != null) {
+            Bukkit.getScheduler().cancelTask(game.getCountdown().getId());
+        }
+
+        new GeneratorManager().unload(game);
+        MapStorage.getStorage().unload(game.getWorld());
+        game.getMapData().setGame(null);
+    }
+
+    private void setTeams(final GameInProgress game) {
         final int teamsAmount = game.getMapData().getSpawns().keySet().size();
         int maxPersonsPerTeam = game.getPlayers().size() / teamsAmount;
 

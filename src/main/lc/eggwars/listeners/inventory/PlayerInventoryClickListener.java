@@ -4,6 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
@@ -21,8 +22,8 @@ public class PlayerInventoryClickListener implements EventListener {
 
     private final CustomInventory shopSkinInventory;
 
-    public PlayerInventoryClickListener() {
-        this.shopSkinInventory = new SkinShopInventory();
+    public PlayerInventoryClickListener(EggwarsPlugin plugin) {
+        this.shopSkinInventory = new SkinShopInventory(plugin);
     }
 
     @ListenerData(

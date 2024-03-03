@@ -17,10 +17,12 @@ import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class SkinShopInventory implements CustomInventory {
 
+    private final EggwarsPlugin plugin;
     private final int removeEntityDelay;
 
-    public SkinShopInventory() {
-        this.removeEntityDelay = EggwarsPlugin.getInstance().getConfig().getInt("shopkeepers.preview-seconds-duration") * 20;
+    public SkinShopInventory(EggwarsPlugin plugin) {
+        this.plugin = plugin;
+        this.removeEntityDelay = plugin.getConfig().getInt("shopkeepers.preview-seconds-duration") * 20;
     }
 
     @Override
@@ -66,8 +68,8 @@ public final class SkinShopInventory implements CustomInventory {
             loc.getYaw());
 
         player.closeInventory();
-        EggwarsPlugin.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(
-            EggwarsPlugin.getInstance(),
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(
+            plugin,
             () -> new ShopKeeperManager().deleteEntity(entityId, player), removeEntityDelay);
         Messages.send(player, "shopkeepers-preview");
     }

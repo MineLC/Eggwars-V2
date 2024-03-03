@@ -17,8 +17,6 @@ public final class GameInProgress {
     private final MapData data;
     private final World world;
 
-    private boolean generatorsNeedUpdate = true;
-
     private Set<BaseTeam> teamsWithEgg = new HashSet<>();
 
     private Map<Player, BaseTeam> teamPerPlayer = new HashMap<>();
@@ -29,6 +27,8 @@ public final class GameInProgress {
 
     private GameState state = GameState.NONE;
     private GameCountdown getCountdown;
+
+    private boolean gameIsFinished = false;
 
     public GameInProgress(MapData data, World world) {
         this.data = data;
@@ -41,6 +41,14 @@ public final class GameInProgress {
 
     public void setCountdown(GameCountdown countdown) {
         this.getCountdown = countdown;
+    }
+
+    void setGameFinished(final boolean state) {
+        this.gameIsFinished = state;
+    }
+
+    public boolean getGameIsFinished() {
+        return gameIsFinished;
     }
 
     public MapData getMapData() {
@@ -69,14 +77,6 @@ public final class GameInProgress {
 
     public GameCountdown getCountdown() {
         return getCountdown;
-    }
-
-    public boolean generatorsNeedUpdate() {
-        return generatorsNeedUpdate;
-    }
-
-    public void setGeneratorsNeedUpdate(boolean update) {
-        this.generatorsNeedUpdate = update;
     }
 
     public Map<BaseTeam, Set<Player>> getPlayersInTeam() {

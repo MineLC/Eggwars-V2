@@ -5,7 +5,6 @@ import java.util.List;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
-import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.InventoryUtils;
@@ -48,11 +47,6 @@ public class GeneratorThread extends Thread {
     private void generateItems(final GameInProgress map) {
         if (map.getState() != GameState.IN_GAME) {
             return;
-        }
-
-        if (map.generatorsNeedUpdate()) {
-            new GeneratorManager().load(map);
-            map.setGeneratorsNeedUpdate(false);
         }
 
         final ClickableSignGenerator[] generators = map.getMapData().getGenerators();

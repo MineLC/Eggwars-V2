@@ -47,6 +47,14 @@ public final class EntityDamageListener implements EventListener {
             return;
         }
 
+        if (map.getState() == GameState.IN_GAME && map.getGameIsFinished()) {
+            event.setCancelled(true);
+            if (event.getCause() == DamageCause.VOID) {
+                player.teleport(player.getWorld().getSpawnLocation());
+            }
+            return;
+        }
+
         if (event.getCause() == DamageCause.VOID) {
             player.setHealth(0);
             event.setCancelled(true);

@@ -11,6 +11,8 @@ import lc.lcspigot.commands.Command;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.spawn.SpawnStorage;
 
 final class LeaveSubCommand implements Command {
@@ -42,8 +44,9 @@ final class LeaveSubCommand implements Command {
         player.teleport(SpawnStorage.getStorage().location());
         player.setGameMode(GameMode.ADVENTURE);
 
-        GameStorage.getStorage().leave(map, player, map.getWorld());
+        GameStorage.getStorage().leave(map, player);
         SpawnStorage.getStorage().setItems(player);
+        SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
         send(player, "Has salido del juego");
     }
 }

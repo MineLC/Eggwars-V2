@@ -62,7 +62,8 @@ final class JoinSubCommand implements Command {
         player.getInventory().clear();
 
         if (game.getState() == GameState.PREGAME) {
-            if (game.getPlayers().size() >= (map.getMaxPersonsPerTeam() * map.getSpawns().size())) {
+            final int maxPlayers = map.getMaxPersonsPerTeam() * map.getSpawns().size();
+            if (game.getPlayers().size() >= maxPlayers) {
                 Messages.send(player, "pregame.full");
                 return;
             }
@@ -71,7 +72,7 @@ final class JoinSubCommand implements Command {
 
             PregameItemsStorage.getStorage().send(player);
 
-        } else {
+        } else { // Ingame state. You can spectate but no play
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(game.getWorld().getSpawnLocation());  
         }

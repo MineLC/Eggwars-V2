@@ -10,14 +10,27 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.messages.Messages;
 
 public final class StartDeaths {
-    
+
     private final FileConfiguration config;
 
     public StartDeaths(EggwarsPlugin plugin) {
         this.config = plugin.loadConfig("deaths");
     }
 
-    public String[] load(final EggwarsPlugin plugin) {
+    public void load(final EggwarsPlugin plugin) {
+        final String[] deathMessages = getDeathMessages();
+
+        DeathStorage.update(new DeathStorage(
+            plugin,
+            deathMessages,
+            get("final-death-prefix"),
+            get("suffix-if-killer-exist"),
+            get("respawn.title"),
+            get("subtitle.title"),
+            config.getInt("respawn.seconds")));
+    }
+
+    private String[] getDeathMessages() {
         final Set<String> deathCauses = config.getConfigurationSection("deaths").getKeys(false);
         final String[] deathMessages = new String[DamageCause.values().length];
 
@@ -32,7 +45,7 @@ public final class StartDeaths {
         return deathMessages;
     }
 
-    public String get(final String key) {
+    private String get(final String key) {
         return Messages.color(config.getString(key));
     }
 }

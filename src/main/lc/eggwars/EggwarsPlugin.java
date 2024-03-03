@@ -57,11 +57,8 @@ import obed.me.minecore.database.servers.CoreEggwarsAPI;
 
 public class EggwarsPlugin extends JavaPlugin {
 
-    private static EggwarsPlugin plugin;
-
     @Override
     public void onEnable() {
-        plugin = this;
         saveDefaultConfig();
 
         final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SwoftyWorldManager");
@@ -83,7 +80,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartTeams(this).load();
         new StartGameData().load(this);
         new StartKits(this).load();
-
+        new StartDeaths(this).load(this);
         new StartSpawn(this).loadItems();
         new StartPreGameItems().load(this);
         new StartSidebar().load(this);
@@ -120,12 +117,12 @@ public class EggwarsPlugin extends JavaPlugin {
 
     private void registerBasicListeners(final ListenerRegister register) {
         register.register(new PlayerDeathListener(), true);
-        register.register(new PlayerRespawnListener(this, new StartDeaths(this)), true);
+        register.register(new PlayerRespawnListener(), true);
         register.register(new EntityDamageListener(), true);
         register.register(new PlayerDamageByPlayerListener(), true);
-        register.register(new PlayerInventoryClickListener(), true);
+        register.register(new PlayerInventoryClickListener(this), true);
         register.register(new PlayerInteractListener(), true);
-        register.register(new CompleteWorldGenerateListener(), true);
+        register.register(new CompleteWorldGenerateListener(this), true);
 
         register.register(new ShopkeeperListener(), false);
         register.register(new PlayerBreakListener(), false);
@@ -162,9 +159,5 @@ public class EggwarsPlugin extends JavaPlugin {
         CommandStorage.register(new GameCommand(this), "game");
         CommandStorage.register(new InfoCommand(), "info");
         new BasicCommandsRegister().registerBasicCommands();
-    }
-
-    public static EggwarsPlugin getInstance() {
-        return plugin;
     }
 }

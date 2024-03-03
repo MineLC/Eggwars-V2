@@ -23,6 +23,7 @@ public final class MapCreatorCommand implements Command {
     private final SetMaxPersonsSubCommand maxPersons;
     private final AddShopkeeperSubCommand addshopkeeper;
     private final RemoveShoopkeperSubCommand removeshopkeeper;
+    private final InfoSubCommand info;
     private final SaveSubCommand save;
 
     public MapCreatorCommand(SlimePlugin slimePlugin, EggwarsPlugin plugin, MapCreatorData data) {
@@ -36,6 +37,7 @@ public final class MapCreatorCommand implements Command {
         this.maxPersons = new SetMaxPersonsSubCommand(data);
         this.addshopkeeper = new AddShopkeeperSubCommand(data);
         this.removeshopkeeper = new RemoveShoopkeperSubCommand(data);
+        this.info = new InfoSubCommand(data);
         this.save = new SaveSubCommand(slimePlugin, plugin, data);
     }
 
@@ -82,6 +84,9 @@ public final class MapCreatorCommand implements Command {
             case "removeshopspawn":
                 removeshopkeeper.handle(player, args);
                 break;
+            case "info":
+                info.handle(sender, args);
+                break;
             case "save":
                 save.handle(player, args);
                 break;
@@ -94,7 +99,7 @@ public final class MapCreatorCommand implements Command {
     @Override
     public String[] tab(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return new String[] { "editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "addshop", "removeshopspawn", "save", "setmax"};
+            return new String[] { "editor", "addgenerator", "removegenerator", "setspawn", "removespawn", "setegg", "removeegg", "addshop", "removeshopspawn", "save", "setmax", "info"};
         }
         switch (args[0].toLowerCase()) {
             case "editor": return editor.tab(sender, args);
@@ -102,6 +107,7 @@ public final class MapCreatorCommand implements Command {
             case "removegenerator": return removeGenerator.tab(sender, args);
             case "setspawn": return setspawn.tab(sender, args);
             case "setegg": return setEgg.tab(sender, args);
+            case "info": return info.tab(sender, args);
             default: return none();
         }
     }
@@ -125,7 +131,8 @@ public final class MapCreatorCommand implements Command {
                 &6addshopspawn &7- &fAdd a shopkeeper spawn
                 &6removeshopspawn &7(team) - &fRemove a shopkeeper spawn
                 &r
-                &6setmax &7(amount)- &fSet max players in game
+                &6setmax &7(amount)- &fSet max players per team
+                &6info &7(generators/teams) - &fGet information about map
                 &r
                 &6save &7- &fSave all settings in the world
             """.replace('&', ChatColor.COLOR_CHAR);

@@ -21,12 +21,11 @@ public final class GeneratorStorage {
 
     public void setLines(final Block block, final BaseGenerator generator, final int level) {
         if (!(block.getState() instanceof Sign sign)) {
-            System.out.println("ete bloque no e un cartel papu");
             return;
         }
         final BaseGenerator.Level genLevel = generator.levels()[level];
         final String levelString = String.valueOf(level);
-        final String currentProgress = (genLevel.percentage() < 0)
+        final String currentProgress = (genLevel.itemsToGenerate() <= 0)
             ? ChatColor.RED + "X" : String.valueOf(genLevel.percentage());
 
         final String progress = currentProgress + "-" + generator.levels()[generator.maxlevel()].percentage() + "%";

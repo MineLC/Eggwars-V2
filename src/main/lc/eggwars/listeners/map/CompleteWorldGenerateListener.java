@@ -38,9 +38,11 @@ public final class CompleteWorldGenerateListener implements EventListener {
         if (playersTryingJoin == null) {
             return;
         }
+
+        MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
+
         if (playersTryingJoin.isEmpty()) {
             CompletableFuture.runAsync(() -> event.getSlimeWorld().unloadWorld(false));
-            MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
             return;
         }
 
@@ -48,7 +50,6 @@ public final class CompleteWorldGenerateListener implements EventListener {
         final MapData map = MapStorage.getStorage().getMapData(worldName);
         final GameInProgress gameInProgress = new GameInProgress(map, bukkitWorld);
 
-        MapStorage.getStorage().getWorldsCurrentlyLoading().remove(worldName);
         MapStorage.getStorage().loadClickableBlocks(bukkitWorld);
 
         map.setGame(gameInProgress);

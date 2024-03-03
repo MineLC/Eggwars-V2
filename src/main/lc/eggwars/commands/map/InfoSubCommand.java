@@ -68,13 +68,15 @@ final class InfoSubCommand implements Command {
             builder.append('\n');
             ++amountTeams;
         }
-        builder.append("&bAmount Teams: ");
-        builder.append(amountTeams);
-        builder.append('\n');
-        builder.append("&bMax players: ");
-        builder.append(amountTeams * data.getMaxPersonsPerTeam());
-        final String message = builder.toString();
-        return message.isEmpty() ? "&cNo teams found" : message;
+        if (amountTeams != 0) {
+            builder.append("&bAmount Teams: ");
+            builder.append(amountTeams);
+            builder.append('\n');
+            builder.append("&bMax players: ");
+            builder.append(amountTeams * data.getMaxPersonsPerTeam());
+            return builder.toString();
+        }
+        return "&cNo teams found";
     }
 
 

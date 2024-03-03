@@ -16,7 +16,7 @@ import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 
 public final class PlayerJoinListener implements EventListener {
 

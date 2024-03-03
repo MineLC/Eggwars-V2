@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 
 public final class PregameItemsStorage {
     private static PregameItemsStorage storage;

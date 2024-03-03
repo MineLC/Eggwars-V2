@@ -10,13 +10,10 @@ import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.countdown.types.CallbackGameCountdown;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.DeathStorage;
-import lc.eggwars.others.levels.LevelManager;
+import lc.eggwars.others.levels.LevelStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
-
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 final class GameDeath {
 
@@ -42,9 +39,9 @@ final class GameDeath {
             return;
         }
 
-        new LevelManager().onDeath(player, true);
-
+        LevelStorage.getStorage().onDeath(player, true);
         DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, true);
+
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
 
@@ -63,8 +60,7 @@ final class GameDeath {
         }
         final Set<Player> winners = game.getPlayersInTeam().get(finalTeam);
         for (final Player winner : winners) {
-            final StatsEggWars winnerStats = Jugador.getJugador(winner.getName()).getServerStats().getStatsEggWars();
-            winnerStats.setWins(winnerStats.getWins() + 1);
+            LevelStorage.getStorage().win(winner);
         }
 
         final GameCountdown endgameCountdown = new CallbackGameCountdown(() -> new GameManager().stop(game));

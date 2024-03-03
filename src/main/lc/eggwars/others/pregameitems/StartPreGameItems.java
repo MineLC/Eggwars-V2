@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 
 public final class StartPreGameItems {
 

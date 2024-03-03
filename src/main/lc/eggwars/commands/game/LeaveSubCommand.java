@@ -13,7 +13,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 
 final class LeaveSubCommand implements Command {
 

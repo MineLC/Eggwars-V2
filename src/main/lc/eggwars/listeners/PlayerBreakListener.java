@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 

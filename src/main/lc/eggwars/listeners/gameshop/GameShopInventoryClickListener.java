@@ -2,6 +2,7 @@ package lc.eggwars.listeners.gameshop;
 
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -10,10 +11,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.game.shop.Shop;
+import lc.eggwars.game.shop.metadata.ItemMetaData;
+import lc.eggwars.game.shop.metadata.LeatherArmorColorMetadata;
 import lc.eggwars.inventory.internal.CustomInventoryHolder;
 import lc.eggwars.utils.InventoryUtils;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
+import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class GameShopInventoryClickListener implements EventListener {
@@ -63,7 +67,7 @@ public final class GameShopInventoryClickListener implements EventListener {
                 return;
             }
             InventoryUtils.removeAmount(item.needAmount(), item.needItem(), inventory);
-            inventory.items[firstEmpty] = item.buyItem().cloneItemStack();
+            inventory.items[firstEmpty] = getItem(item.meta(), item.buyItem(), player);
             player.sendMessage("Item comprados");
             return;
         }
@@ -87,5 +91,12 @@ public final class GameShopInventoryClickListener implements EventListener {
 
         InventoryUtils.removeAmount(itemsToRemove, item.needItem(), inventory);
         InventoryUtils.addItem(item.buyItem(), itemsToBuy, inventory);
+    }
+
+    private ItemStack getItem(final ItemMetaData meta, final ItemStack fallbackItem, final Player player) {
+        if (meta instanceof LeatherArmorColorMetadata) {
+            return CraftItemStack.asNMSCopy(meta.parse(CraftItemStack.asBukkitCopy(fallbackItem), player));
+        }
+        return fallbackItem.cloneItemStack();
     }
 }

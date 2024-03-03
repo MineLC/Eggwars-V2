@@ -1,19 +1,19 @@
 kills:
-  every: 20
+  every: 10
   level-up: 1
 
 final-kills:
-  every: 10
+  every: 3
   level-up: 1
+
+final-deaths:
+  every: 1
+  level-up: -1
 
 wins:
   every: 1
-  level-up: 1
+  level-up: 2
 
 deaths:
-  every: 10
-  level-up: -1
-
-loose:
-  every: 1
-  level-up: -1
+  every: 5
+  level-up: -2

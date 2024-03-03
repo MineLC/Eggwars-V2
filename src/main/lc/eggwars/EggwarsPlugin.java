@@ -43,10 +43,11 @@ import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.kits.StartKits;
+import lc.eggwars.others.levels.StartLevels;
 import lc.eggwars.others.pregameitems.StartPreGameItems;
 import lc.eggwars.others.sidebar.StartSidebar;
-import lc.eggwars.spawn.SpawnStorage;
-import lc.eggwars.spawn.StartSpawn;
+import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
 import lc.lcspigot.commands.CommandStorage;
@@ -82,6 +83,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartKits(this).load();
         new StartDeaths(this).load(this);
         new StartSpawn(this).loadItems();
+        new StartLevels(this).load();
         new StartPreGameItems().load(this);
         new StartSidebar().load(this);
 

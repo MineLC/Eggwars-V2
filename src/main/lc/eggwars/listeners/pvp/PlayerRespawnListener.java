@@ -13,7 +13,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.kits.KitStorage;
-import lc.eggwars.others.levels.LevelManager;
+import lc.eggwars.others.levels.LevelStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
@@ -40,7 +40,7 @@ public final class PlayerRespawnListener implements EventListener {
             final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
 
             DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {
-                new LevelManager().onDeath(player, false);
+                LevelStorage.getStorage().onDeath(player, false);
                 player.teleport(spawnLocation);
                 player.setGameMode(GameMode.SURVIVAL);
                 KitStorage.getStorage().setKit(player, false);
@@ -52,7 +52,7 @@ public final class PlayerRespawnListener implements EventListener {
         player.teleport(game.getWorld().getSpawnLocation());
 
         DeathStorage.getStorage().onDeath(game.getPlayers(), player, () ->
-            new LevelManager().onDeath(player, true),
+            LevelStorage.getStorage().onDeath(player, true),
             true);
 
         game.getPlayersLiving().remove(player);

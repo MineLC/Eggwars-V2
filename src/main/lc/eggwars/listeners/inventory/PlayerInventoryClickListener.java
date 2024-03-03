@@ -12,10 +12,9 @@ import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.inventory.types.SkinShopInventory;
 import lc.eggwars.others.kits.KitStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
-
-import lc.eggwars.spawn.SpawnStorage;
 import lc.eggwars.utils.InventoryUtils;
 
 public class PlayerInventoryClickListener implements EventListener {

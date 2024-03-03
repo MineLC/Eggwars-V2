@@ -44,12 +44,12 @@ level:
     - " "
     - " &8- &fTu nivel: &a%level%"
     - " "
-    - " &8- &e20 &fAsesinatos &7-> &a+1"
-    - " &8- &e10 &fAsesinatos finales &7-> &a+1"
-    - " &8- &e1 &fVictoria &7-> &a+1"
+    - " &8- &e10 &fAsesinatos &7-> &a+1"
+    - " &8- &e3 &fAsesinatos finales &7-> &a+1"
+    - " &8- &e1 &fVictoria &7-> &a+2"
     - ""
-    - " &8- &e10 &fMuertes &7-> &c-1"
-    - " &8- &e1 &fDerrotas &7-> &c-1"
+    - " &8- &e5 &fMuertes &7-> &c-1"
+    - " &8- &e1 &fMuerte final &7-> &c-1"
     - ""
 
 commands:

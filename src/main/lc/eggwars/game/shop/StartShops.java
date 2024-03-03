@@ -8,10 +8,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.tinylog.Logger;
 
 import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.shop.metadata.ItemMetaData;
+import lc.eggwars.game.shop.metadata.LeatherArmorColorMetadata;
 import lc.eggwars.inventory.internal.CustomInventoryHolder;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
@@ -95,7 +100,7 @@ public class StartShops {
             final net.minecraft.server.v1_8_R3.ItemStack buyItem = CraftItemStack.asNMSCopy(item.item());
             final net.minecraft.server.v1_8_R3.ItemStack needItem = CraftItemStack.asNMSCopy(creator.getItem(shopitem + ".need-item"));
             buyItem.setTag(null);
-            items.put(realSlot, new Shop.Item(buyItem, needItem, needItem.count, config.getBoolean(shopitem + ".stackeable")));
+            items.put(realSlot, new Shop.Item(buyItem, needItem, needItem.count, config.getBoolean(shopitem + ".stackeable"), createMetadata(item.item())));
         }
         return items;
     }
@@ -112,6 +117,16 @@ public class StartShops {
             return 9;
         }
         return 9 * ((int)(itemsAmount / 9) + 1);
+    }
+
+    private ItemMetaData createMetadata(final ItemStack item) {
+        final ItemMeta meta = item.getItemMeta();
+        if (meta instanceof LeatherArmorMeta) {
+            meta.setLore(null);
+            meta.setDisplayName(null);
+            return new LeatherArmorColorMetadata();
+        }
+        return null;
     }
 
     private record HeaderShop(Item item, String shopName, String title) {}

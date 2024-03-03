@@ -4,13 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.messages.Messages;
+import lc.eggwars.utils.IntegerUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class StartTeams {
@@ -43,8 +47,8 @@ public class StartTeams {
             team.setCanSeeFriendlyInvisibles(false);
             team.setNameTagVisibility(NameTagVisibility.ALWAYS);
 
-            String prefix = config.getString(path + "prefix");
-            String name = config.getString(path + "name");
+            String prefix = Messages.color(config.getString(path + "prefix"));
+            String name = Messages.color(config.getString(path + "name"));
 
             if (prefix != null && !prefix.isEmpty()) {
                 team.setPrefix(prefix.replace('&', ChatColor.COLOR_CHAR));
@@ -53,15 +57,18 @@ public class StartTeams {
                 name = teamName;
             }
 
-            final BaseTeam baseTeam = new BaseTeam(
-                teamName,
-                name.replace('&', ChatColor.COLOR_CHAR),
-                teamIndex,
-                team
-            );
+            final BaseTeam baseTeam = new BaseTeam(teamName, name, teamIndex, team, getColor(path + "color"));
             baseTeams[++teamIndex] = baseTeam;
             teamsPerName.put(teamName, baseTeam);
         }
         TeamStorage.update(new TeamStorage(teamsPerName, baseTeams));
+    }
+
+    private Color getColor(final String path) {
+        final String[] rgb = StringUtils.split(path, ':');
+        if (rgb.length != 3) {
+            return Color.AQUA;
+        }
+        return Color.fromBGR(IntegerUtils.parsePositive(rgb[0]), IntegerUtils.parsePositive(rgb[1]), IntegerUtils.parsePositive(rgb[2]));
     }
 }

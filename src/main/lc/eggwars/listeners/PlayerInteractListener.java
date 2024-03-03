@@ -13,7 +13,7 @@ import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.pregameitems.PregameItemsStorage;
-import lc.eggwars.spawn.SpawnStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;

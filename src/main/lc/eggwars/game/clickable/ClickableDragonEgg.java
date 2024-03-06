@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
+import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
@@ -13,8 +14,6 @@ import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class ClickableDragonEgg implements ClickableBlock  {
     private final BaseTeam team;
@@ -47,8 +46,7 @@ public final class ClickableDragonEgg implements ClickableBlock  {
         final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName()).replace("%player%", player.getName());
         Messages.sendNoGet(game.getPlayers(), eggBreaked);
 
-        final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
-        stats.setDestroyedEggs(stats.getDestroyedEggs() + 1);
+        PlayerDataStorage.getStorage().get(player.getUniqueId()).destroyedEggs++;
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
     }
 }

@@ -2,8 +2,8 @@ package lc.eggwars.others.levels;
 
 import org.bukkit.entity.Player;
 
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
+import lc.eggwars.database.PlayerData;
+import lc.eggwars.database.PlayerDataStorage;
 
 public class LevelStorage {
 
@@ -19,42 +19,40 @@ public class LevelStorage {
     }
 
     public void onDeath(final Player player, final boolean finalKill) {
-        final StatsEggWars victim = get(player);
-        final StatsEggWars killer = (player.getKiller() != null) ? get(player) : null;
+        final PlayerData victim = PlayerDataStorage.getStorage().get(player.getUniqueId());
+        final PlayerData killer = (player.getKiller() != null)
+            ? PlayerDataStorage.getStorage().get(player.getKiller().getUniqueId())
+            : null;
 
-        victim.setDeaths(victim.getDeaths() + 1);
-        tryLevelUp(death, victim.getDeaths(), victim);
+        victim.deaths++;
+        tryLevelUp(death, victim.deaths, victim);
 
         if (killer != null) {
-            killer.setKills(victim.getKills() + 1);
-            tryLevelUp(kill, killer.getKills(), killer);
+            killer.kills++;
+            tryLevelUp(kill, killer.kills, killer);
         }
 
         if (finalKill) {
-            victim.setLastDeath(victim.getDeaths() + 1);
-            tryLevelUp(finalDeath, victim.getLastDeath(), victim);
+            victim.deaths++;
+            tryLevelUp(finalDeath, victim.finalKills, victim);
 
             if (killer != null) {
-                killer.setLastKill(victim.getKills() + 1);  
-                tryLevelUp(this.finalKill, killer.getLastKill(), killer);
+                killer.finalKills++;
+                tryLevelUp(this.finalKill, killer.finalKills, killer);
             }
         }
     }
 
     public void win(final Player player) {
-        final StatsEggWars stats = get(player);
-        stats.setWins(stats.getWins() + 1);
-        tryLevelUp(wins, stats.getWins(), stats);
+        final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
+        data.wins++;
+        tryLevelUp(wins, data.wins, data);
     }
 
-    private void tryLevelUp(final LevelStat levelStat, int stats, final StatsEggWars statsEggWars) {
+    private void tryLevelUp(final LevelStat levelStat, int stats, final PlayerData data) {
         if (stats % levelStat.need() == 0) {
-            statsEggWars.setLevel(statsEggWars.getLevel() + levelStat.increaseLevels());
+            data.level += levelStat.increaseLevels();
         }
-    }
-
-    private StatsEggWars get(final Player player) {
-        return Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
     }
 
     public static LevelStorage getStorage() {

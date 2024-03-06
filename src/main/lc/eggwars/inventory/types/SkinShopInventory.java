@@ -6,14 +6,13 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.database.PlayerData;
+import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
 import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
-
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class SkinShopInventory implements CustomInventory {
 
@@ -27,8 +26,8 @@ public final class SkinShopInventory implements CustomInventory {
 
     @Override
     public void handle(InventoryClickEvent event) {
-        final ShopkeepersData data = ShopKeepersStorage.getStorage().data();
-        final ShopkeepersData.Skin skinClicked = data.items().get(event.getSlot());
+        final ShopkeepersData skinData = ShopKeepersStorage.getStorage().data();
+        final ShopkeepersData.Skin skinClicked = skinData.items().get(event.getSlot());
 
         event.setCancelled(true);
 
@@ -39,19 +38,19 @@ public final class SkinShopInventory implements CustomInventory {
         final Player player = (Player)event.getWhoClicked();
 
         if (event.getAction() != InventoryAction.DROP_ONE_SLOT) {
-            final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
-            if (stats.getShopKeeperSkinList() != null && stats.getShopKeeperSkinList().contains(String.valueOf(skinClicked.id()))) {
-                stats.setShopKeeperSkinSelected(skinClicked.id());
+            final PlayerData data = PlayerDataStorage.getStorage().get(event.getWhoClicked().getUniqueId());
+            if (data.skins.contains(skinClicked.id())) {
+                data.skinSelected = skinClicked.id();
                 Messages.send(player, "shopkeepers.skin-change");
                 return;
             }
-            if (stats.getLCoins() < skinClicked.cost()) {
+            if (data.coins < skinClicked.cost()) {
                 Messages.send(player, "shopkeepers.no-money");
                 return;
             }
-            stats.setLCoins(stats.getLCoins() - skinClicked.cost());
-            stats.setShopKeeperSkinSelected(skinClicked.id());
-            stats.getShopKeeperSkinList().add(String.valueOf(skinClicked.id()));
+            data.coins -= skinClicked.cost();
+            data.skinSelected = skinClicked.id();
+            data.skins.add(skinClicked.id());
             Messages.send(player, "shopkeepers.skin-change");
             return;
         }

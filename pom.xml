@@ -24,6 +24,10 @@
             <id>glaremasters</id>
             <url>https://repo.glaremasters.me/repository/concuncan/</url>
         </repository>
+        <repository>
+            <id>sonatype-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -33,13 +37,6 @@
             <version>1.8.4</version>
             <scope>system</scope>
             <systemPath>${basedir}/libs/lcspigot-0.0.3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>lc.minecore</groupId>
-            <artifactId>minecore</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/MineCore-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>  
             <groupId>net.swofty</groupId>  
@@ -51,6 +48,12 @@
             <groupId>com.github.ichocomilk</groupId>
             <artifactId>LightSidebar</artifactId>
             <version>0.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

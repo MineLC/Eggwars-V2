@@ -1,22 +1,22 @@
-package lc.eggwars.others.pregameitems;
-
-import java.util.Map;
+package lc.eggwars.game.pregameitems;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 
+import lc.eggwars.game.GameInProgress;
+import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.others.spawn.SpawnStorage;
 
 public final class PregameItemsStorage {
     private static PregameItemsStorage storage;
     private final boolean addShopSpawnitem;
-    private final Map<Material, Inventory> items;
+    private final Item selectTeam;
 
-    PregameItemsStorage(boolean addShopSpawnitem, Map<Material, Inventory> items) {
+    PregameItemsStorage(boolean addShopSpawnitem, Item selectTeam) {
         this.addShopSpawnitem = addShopSpawnitem;
-        this.items = items;
+        this.selectTeam = selectTeam;
     }
 
     public static PregameItemsStorage getStorage() {
@@ -29,11 +29,9 @@ public final class PregameItemsStorage {
         if (addShopSpawnitem) {
             inventory.setItem(SpawnStorage.getStorage().shopItem().slot(), SpawnStorage.getStorage().shopItem().item());
         }
+        inventory.setItem(selectTeam.slot(), selectTeam.item());
     }
 
-    public Inventory getInventory(final Material material) {
-        return items.get(material);
-    }
 
     static void update(PregameItemsStorage newStorage) {
         storage = newStorage;

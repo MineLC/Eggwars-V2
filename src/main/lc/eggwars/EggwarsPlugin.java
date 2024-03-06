@@ -21,9 +21,11 @@ import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
+import lc.eggwars.database.MongoDBHandler;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.game.generators.GeneratorThread;
 import lc.eggwars.game.generators.StartGenerators;
+import lc.eggwars.game.pregameitems.StartPreGameItems;
 import lc.eggwars.game.shop.Shop;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
@@ -44,7 +46,6 @@ import lc.eggwars.messages.StartMessages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.levels.StartLevels;
-import lc.eggwars.others.pregameitems.StartPreGameItems;
 import lc.eggwars.others.sidebar.StartSidebar;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.others.spawn.StartSpawn;
@@ -54,9 +55,10 @@ import lc.lcspigot.commands.CommandStorage;
 import lc.lcspigot.listeners.ListenerRegister;
 
 import net.swofty.swm.api.SlimePlugin;
-import obed.me.minecore.database.servers.CoreEggwarsAPI;
 
 public class EggwarsPlugin extends JavaPlugin {
+
+    private static MongoDBHandler database;
 
     @Override
     public void onEnable() {
@@ -67,12 +69,11 @@ public class EggwarsPlugin extends JavaPlugin {
             Logger.error("EggwarsCore need slimeworld manager to work");
             return;
         }
-        if (Bukkit.getPluginManager().getPlugin("MineCore") == null) {
-            Logger.error("EggwarsCore need MineCore to work");
-            return;
-        }
 
-        CompletableFuture.runAsync(() -> CoreEggwarsAPI.createPlayerEggwarsTable());
+        CompletableFuture.runAsync(() -> {
+            database = new MongoDBHandler();
+            database.init(this);
+        });
 
         loadCommands(slimePlugin);
 
@@ -107,6 +108,8 @@ public class EggwarsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        database.shutdown();
+
         final List<World> worlds = Bukkit.getWorlds();
 
         for (final World world : worlds) {

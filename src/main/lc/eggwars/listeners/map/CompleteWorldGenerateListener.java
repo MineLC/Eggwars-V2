@@ -12,10 +12,9 @@ import org.bukkit.event.EventPriority;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.pregameitems.PregameItemsStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.others.pregameitems.PregameItemsStorage;
-
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 

@@ -78,7 +78,6 @@ commands:
     - " &8- &fSkin selecionada&7: %shopskin%"
     - " &8- &fKit selecionado&7: %kit%"
     - " "
-    - " &8- &fPartidas&7: %games%"
     - " &8- &fVictorias&7: %wins%"
     - " &8- &fHuevos rotos&7: %eggs%"
     - " "

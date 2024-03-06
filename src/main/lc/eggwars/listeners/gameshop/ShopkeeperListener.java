@@ -9,10 +9,10 @@ import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
+
 import lc.lcspigot.events.PreInteractEntityEvent;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
-import obed.me.minecore.objects.Jugador;
 
 public final class ShopkeeperListener implements EventListener {
 
@@ -29,18 +29,12 @@ public final class ShopkeeperListener implements EventListener {
             return;
         }
 
-        final int[] shopKeepersID = map.getMapData().getShopIDs();
-
-        for (final int id : shopKeepersID) {
-            if (id == event.getEntityID()) {
-                final int skinID = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().getShopKeeperSkinSelected();
-                final ShopkeepersData.Skin skin = ShopKeepersStorage.getStorage().skins().get(skinID);
-
-                if (skin != null) {
-                    player.sendMessage(skin.message());
-                }
-                player.openInventory(ShopKeepersStorage.getStorage().data().itemsShop());
+        if (map.getMapData().getShopIDs().contains(event.getEntityID())) {
+            final ShopkeepersData.Skin skin = ShopKeepersStorage.getStorage().skins().get(event.getEntityID());
+            if (skin != null) {
+                player.sendMessage(skin.message());
             }
+            player.openInventory(ShopKeepersStorage.getStorage().data().itemsShop());
         }
     }
 }

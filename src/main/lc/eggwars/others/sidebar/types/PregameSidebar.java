@@ -5,14 +5,12 @@ import java.util.Collection;
 import org.bukkit.entity.Player;
 
 import io.github.ichocomilk.lightsidebar.Sidebar;
-
+import lc.eggwars.database.PlayerData;
+import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.countdown.types.PreGameCountdown;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
-
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class PregameSidebar implements EggwarsSidebar {
 
@@ -30,10 +28,10 @@ public final class PregameSidebar implements EggwarsSidebar {
         if (game == null || !(game.getCountdown() instanceof PreGameCountdown pregame)) {
             return;
         }
-        final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+        final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
         
         final String amountPlayers = String.valueOf(game.getPlayers().size());
-        final String lcoins = String.valueOf(stats.getLCoins());
+        final String lcoins = String.valueOf(data.coins);
         final String maxPlayers = String.valueOf(game.getMapData().getMaxPlayers());
         final String countdown = pregame.getCountdown();
         

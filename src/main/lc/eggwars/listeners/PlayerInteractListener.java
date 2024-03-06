@@ -12,7 +12,6 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.others.pregameitems.PregameItemsStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
 import lc.lcspigot.listeners.EventListener;
@@ -61,11 +60,7 @@ public final class PlayerInteractListener implements EventListener {
             if (game.getState() != GameState.PREGAME) {
                 return;
             }
-            final Inventory inventory = PregameItemsStorage.getStorage().getInventory(event.getItem().getType());
-            if (inventory != null) {
-                event.getPlayer().openInventory(inventory);
-                event.setCancelled(true);
-            }
+
             return;
         }
 

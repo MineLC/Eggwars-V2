@@ -19,6 +19,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
+import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
@@ -95,9 +96,9 @@ public final class StartMaps {
                 final World world = Bukkit.getWorld(data.world());
     
                 final EntityLocation[] shopSpawns = getShopSpawns(data);
-                final int[] shopkeepersID = new int[shopSpawns.length];
+                final TIntHashSet shopkeepersID = new TIntHashSet(shopSpawns.length);
                 for (int i = 0; i < shopSpawns.length; i++) {
-                    shopkeepersID[i] = Integer.MAX_VALUE - shopsAmount;
+                    shopkeepersID.add(Integer.MAX_VALUE - (shopsAmount++));
                 }
 
                 final MapData map = new MapData(

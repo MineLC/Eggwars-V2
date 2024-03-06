@@ -1,3 +1,17 @@
+mongodb:
+  uri-mode: false
+  normal:
+    host: 127.0.0.1
+    port: '27017'
+    database: Eggwars
+    authentication:
+      enabled: false
+      username: ''
+      password: ''
+  uri:
+    database: Eggwars
+    connection_string: mongodb://127.0.0.1:27017/Eggwars
+
 sign-lines:
   - "%name% &8(%level%)"
   - "&0[&l%progress%&r&0]"

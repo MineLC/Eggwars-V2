@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
 import io.netty.util.collection.IntObjectHashMap;
+import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.inventory.types.KitInventory;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
-import obed.me.minecore.objects.Jugador;
 
 public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kitsPerId) {
 
@@ -18,8 +18,8 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
     }
 
     public void setKit(final Player player, final boolean clearInventory) {
-        final Kit selectedKit = kitsPerId.get(Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars().getSelectedKit());
-
+        final int kitSelected = PlayerDataStorage.getStorage().get(player.getUniqueId()).kitSelected;
+        final Kit selectedKit = kitsPerId.get(kitSelected);
         final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
 
         if (clearInventory) {
@@ -28,7 +28,7 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
             }
         }
 
-        if (selectedKit == null) {
+        if (selectedKit == null || kitSelected == 0) {
             return;
         }
 

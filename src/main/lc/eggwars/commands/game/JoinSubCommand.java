@@ -13,10 +13,10 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
+import lc.eggwars.game.pregameitems.PregameItemsStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
-import lc.eggwars.others.pregameitems.PregameItemsStorage;
 
 final class JoinSubCommand implements Command {
 

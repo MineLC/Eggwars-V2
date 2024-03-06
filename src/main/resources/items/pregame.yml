@@ -1,3 +1,8 @@
 add-shop-spawn-item: true
 
-# TODO - Add votes item
+select-team:
+  slot: 1
+  item: "122"
+  name: "&dSeleciona un equipo"
+  lore:
+    - "&7Clic derecho para selecionar"

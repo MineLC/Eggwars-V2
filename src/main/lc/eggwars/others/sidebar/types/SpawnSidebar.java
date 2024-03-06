@@ -5,9 +5,9 @@ import java.util.Collection;
 import org.bukkit.entity.Player;
 
 import io.github.ichocomilk.lightsidebar.Sidebar;
+import lc.eggwars.database.PlayerData;
+import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
-import obed.me.minecore.objects.Jugador;
-import obed.me.minecore.objects.stats.servers.StatsEggWars;
 
 public final class SpawnSidebar implements EggwarsSidebar {
 
@@ -22,13 +22,13 @@ public final class SpawnSidebar implements EggwarsSidebar {
     @Override
     public void send(Player player) {
         final String[] parsedLines = new String[lines.length];
-        final StatsEggWars stats = Jugador.getJugador(player.getName()).getServerStats().getStatsEggWars();
+        final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
 
-        final String coins = String.valueOf(stats.getLCoins());
-        final String level = String.valueOf(stats.getLevel());
-        final String wins =  String.valueOf(stats.getWins());
-        final String kills = String.valueOf(stats.getKills());
-        final String kdr =  (stats.getDeaths() == 0) ? String.valueOf(stats.getKills()) : String.valueOf((float)(stats.getKills() / stats.getDeaths()));
+        final String coins = String.valueOf(data.coins);
+        final String level = String.valueOf(data.level);
+        final String wins =  String.valueOf(data.wins);
+        final String kills = String.valueOf(data.kills);
+        final String kdr =  (data.deaths == 0) ? String.valueOf(data.kills) : String.valueOf((float)(data.kills / data.deaths));
 
         for (int i = 0; i < lines.length; i++) {
             parsedLines[i] = lines[i].isEmpty() ? "" : lines[i]

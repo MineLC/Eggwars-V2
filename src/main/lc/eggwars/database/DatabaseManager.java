@@ -32,6 +32,7 @@ public final class DatabaseManager {
 
         final PlayerData data = PlayerData.createEmptyData();
 
+        data.coins = document.getInteger("coins", 0);
         data.kills = document.getInteger("kills", 0);
         data.finalKills = document.getInteger("finalKills", 0);
         data.deaths = document.getInteger("deaths", 0);
@@ -39,7 +40,7 @@ public final class DatabaseManager {
         data.wins = document.getInteger("wins", 0);
         data.skinSelected = document.getInteger("skin", data.skinSelected);
         data.kitSelected = document.getInteger("kit", 0);
-        data.kits = createHashSet(document.getList(data, Integer.class), 0);
+        data.kits = createHashSet(document.getList(data, Integer.class), null);
         data.skins = createHashSet(document.getList(data, Integer.class), data.skinSelected);
 
         return data;
@@ -59,6 +60,7 @@ public final class DatabaseManager {
 
     private Document toDocument(final PlayerData data) {
         final Document document = new Document();
+        document.put("coins", data.coins);
         document.put("kills", data.kills);
         document.put("finalKills", data.finalKills);
         document.put("deaths", data.deaths);
@@ -71,10 +73,12 @@ public final class DatabaseManager {
         return document;
     }
 
-    private TIntHashSet createHashSet(final List<Integer> data, final int defaultValue) {
+    private TIntHashSet createHashSet(final List<Integer> data, final Integer defaultValue) {
         if (data == null) {
             final TIntHashSet set = new TIntHashSet();
-            set.add(defaultValue);
+            if (defaultValue != null) {
+                set.add(defaultValue);
+            }
             return set;
         }
         final TIntHashSet values = new TIntHashSet(data.size());

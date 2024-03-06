@@ -30,7 +30,7 @@ public final class DatabaseManager {
             return PlayerData.createEmptyData();
         }
 
-        final PlayerData data = PlayerData.createEmptyData();
+        final PlayerData data = new PlayerData();
 
         data.coins = document.getInteger("coins", 0);
         data.kills = document.getInteger("kills", 0);
@@ -39,6 +39,8 @@ public final class DatabaseManager {
         data.finalDeaths = document.getInteger("finalDeaths", 0);
         data.wins = document.getInteger("wins", 0);
         data.skinSelected = document.getInteger("skin", data.skinSelected);
+        data.destroyedEggs = document.getInteger("eggs", 0);
+        data.level = document.getInteger("level", 0);
         data.kitSelected = document.getInteger("kit", 0);
         data.kits = createHashSet(document.getList(data, Integer.class), null);
         data.skins = createHashSet(document.getList(data, Integer.class), data.skinSelected);
@@ -68,6 +70,8 @@ public final class DatabaseManager {
         document.put("wins", data.wins);
         document.put("skin", data.skinSelected);
         document.put("kit", data.kitSelected);
+        document.put("eggs", data.destroyedEggs);
+        document.put("level", data.level);
         document.put("skins", data.skins);
         document.put("kits", data.kits);
         return document;

@@ -59,7 +59,7 @@ import net.swofty.swm.api.SlimePlugin;
 
 public class EggwarsPlugin extends JavaPlugin {
 
-    private static final MongoDBHandler database = new MongoDBHandler();
+    private static final MongoDBHandler DATABASE = new MongoDBHandler();
 
     @Override
     public void onEnable() {
@@ -73,7 +73,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
         CompletableFuture.runAsync(() -> {
             try {   
-                database.init(this);   
+                DATABASE.init(this);   
             } catch (Exception e) {
                 Logger.error(e);
             }    
@@ -113,7 +113,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        database.shutdown();
+        DATABASE.shutdown();
 
         final List<World> worlds = Bukkit.getWorlds();
 

@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.countdown.endgame.EndgameCountdown;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
@@ -25,15 +26,15 @@ public final class EntityDamageListener implements EventListener {
             return;
         }
 
-        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        if (map == null) {
+        if (game == null) {
             event.setCancelled(true);
             event.setDamage(0);    
             return;
         }
 
-        if (map.getState() == GameState.PREGAME) {           
+        if (game.getState() == GameState.PREGAME) {           
             event.setCancelled(true);
             event.setDamage(0);
 
@@ -47,7 +48,7 @@ public final class EntityDamageListener implements EventListener {
             return;
         }
 
-        if (map.getState() == GameState.IN_GAME && map.getGameIsFinished()) {
+        if (game.getCountdown() instanceof EndgameCountdown) {
             event.setCancelled(true);
             if (event.getCause() == DamageCause.VOID) {
                 player.teleport(player.getWorld().getSpawnLocation());

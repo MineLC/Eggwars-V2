@@ -26,9 +26,7 @@ public final class GameInProgress {
     private Set<Player> playersLiving = new HashSet<>();
 
     private GameState state = GameState.NONE;
-    private GameCountdown getCountdown;
-
-    private boolean gameIsFinished = false;
+    private GameCountdown countdown;
 
     public GameInProgress(MapData data, World world) {
         this.data = data;
@@ -40,15 +38,7 @@ public final class GameInProgress {
     }
 
     public void setCountdown(GameCountdown countdown) {
-        this.getCountdown = countdown;
-    }
-
-    void setGameFinished(final boolean state) {
-        this.gameIsFinished = state;
-    }
-
-    public boolean getGameIsFinished() {
-        return gameIsFinished;
+        this.countdown = countdown;
     }
 
     public MapData getMapData() {
@@ -76,7 +66,7 @@ public final class GameInProgress {
     }
 
     public GameCountdown getCountdown() {
-        return getCountdown;
+        return countdown;
     }
 
     public Map<BaseTeam, Set<Player>> getPlayersInTeam() {

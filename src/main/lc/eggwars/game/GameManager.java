@@ -1,10 +1,8 @@
 package lc.eggwars.game;
 
-import java.util.Map.Entry;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -15,12 +13,12 @@ import lc.eggwars.game.managers.EggsManager;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
+import lc.eggwars.utils.IntegerUtils;
 
 final class GameManager {
 
@@ -42,77 +40,62 @@ final class GameManager {
     }
 
     void stop(final GameInProgress game) {       
-        game.setGameFinished(true);
         if (game.getCountdown() != null) {
             Bukkit.getScheduler().cancelTask(game.getCountdown().getId());
         }
-
-        new GeneratorManager().unload(game);
-        MapStorage.getStorage().unload(game.getWorld());
-        game.getMapData().setGame(null);
+        CompletableFuture.runAsync(() -> {
+            new GeneratorManager().unload(game);
+            MapStorage.getStorage().unload(game.getWorld());
+            game.getMapData().setGame(null);    
+        });
     }
 
     private void setTeams(final GameInProgress game) {
-        final int teamsAmount = game.getMapData().getSpawns().keySet().size();
-        int maxPersonsPerTeam = game.getPlayers().size() / teamsAmount;
+        final Set<BaseTeam> teams = game.getMapData().getSpawns().keySet();
+        final Set<Player> players = game.getPlayers();
 
-        if (maxPersonsPerTeam == 0) {
-            maxPersonsPerTeam = 1;
-        }
+        final int maxPersonsPerTeam = IntegerUtils.aproximate(players.size(), teams.size());
 
-        final Set<Entry<BaseTeam, BlockLocation>> teams = game.getMapData().getSpawns().entrySet();
-        final Map<BaseTeam, Integer> personsPerTeam = new HashMap<>();
-
-        playerLoop : for (final Player player : game.getPlayers()) {
+        for (final Player player : players) {
             final BaseTeam playerTeam = game.getTeamPerPlayer().get(player);
 
-            for (final Entry<BaseTeam, BlockLocation> entry : teams) {
-                final BaseTeam team = entry.getKey();
-                final Integer amountPersons = personsPerTeam.get(team);
+            if (playerTeam != null) {
+                addToTeam(game, player, playerTeam, true);
+                continue;
+            }
 
-                if (amountPersons != null && amountPersons >= maxPersonsPerTeam) {
-                    continue;
+            for (final BaseTeam team : teams) {
+                Set<Player> teamPlayers = game.getPlayersInTeam().get(team);
+
+                if (teamPlayers == null) {
+                    teamPlayers = new HashSet<>();
+                    teamPlayers.add(player);
+                    game.getPlayersInTeam().put(team, teamPlayers);
+                    addToTeam(game, player, team, false);
+                    break;
                 }
 
-                Set<Player> players = game.getPlayersInTeam().get(team);
-
-                if (players == null) {
-                    players = new HashSet<>();
-                    game.getPlayersInTeam().put(team, players);
+                if (teamPlayers.size() <= maxPersonsPerTeam) {
+                    teamPlayers.add(player);
+                    addToTeam(game, player, team, false);
                 }
-        
-                if (players.size() == game.getMapData().getMaxPersonsPerTeam()) {
-                    continue;
-                }
-
-                if (playerTeam == null) {
-                    game.getTeamPerPlayer().put(player, team);
-                    team.getTeam().addPlayer(player);
-                    addToTeam(amountPersons, game, entry.getValue(), playerTeam, player, personsPerTeam);
-                    player.sendMessage(Messages.get("team.join").replace("%team%", team.getName()));
-                    continue playerLoop;
-                }
-
-                if (playerTeam.equals(team)) {
-                    addToTeam(amountPersons, game, entry.getValue(), playerTeam, player, personsPerTeam);
-                    continue playerLoop;
-                }
-
-                continue playerLoop;
+                break;
             }
         }
     }
 
-    private void addToTeam(final Integer amount, final GameInProgress map, final BlockLocation spawnTeam, final BaseTeam team, final Player player, Map<BaseTeam, Integer> personsPerTeam) {
-        player.teleport(new Location(player.getWorld(), spawnTeam.x(), spawnTeam.y(), spawnTeam.z()));
+    private void addToTeam(final GameInProgress game, final Player player, final BaseTeam team, final boolean alreadyInThisTeam) {
+        final BlockLocation spawn = game.getMapData().getSpawns().get(team);
+        player.teleport(new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z()));
         player.setGameMode(GameMode.SURVIVAL);
-        map.getPlayersLiving().add(player);
 
-        if (amount == null) {
-            personsPerTeam.put(team, 1);
-            map.getTeamsWithEgg().add(team);
-            return;
+        if (!alreadyInThisTeam) {
+            game.getTeamPerPlayer().put(player, team);
         }
-        personsPerTeam.replace(team, amount + 1);
+
+        team.getTeam().addPlayer(player);
+
+        game.getTeamsWithEgg().add(team);
+        game.getPlayersLiving().add(player);
     }
 }

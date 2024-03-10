@@ -6,6 +6,8 @@ pregame:
 
 team:
   join: "&aAhora estás en el team %team%"
+  full: "&cEste equipo ya está lleno"
+  already: "&cYa estás en este equipo"
   death: "&cEl equipo %team% ha sido eliminado"
   win:
     - " "

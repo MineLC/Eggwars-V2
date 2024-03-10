@@ -6,8 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.countdown.CallbackGameCountdown;
-import lc.eggwars.game.countdown.GameCountdown;
+import lc.eggwars.game.countdown.endgame.EndgameCountdown;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.levels.LevelStorage;
@@ -15,7 +14,7 @@ import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 
-final class GameDeath {
+public final class GameDeath {
 
     private final EggwarsPlugin plugin;
 
@@ -23,24 +22,23 @@ final class GameDeath {
         this.plugin = plugin;
     }
 
-    public void finalDeath(final GameInProgress game, final BaseTeam team, final Player player, final boolean quit) {
+    public void death(final GameInProgress game, final BaseTeam team, final Player player, final boolean leaveFromGame) {
         game.getPlayersLiving().remove(player);
 
-        if (quit) {
+        if (leaveFromGame) {
             game.getPlayers().remove(player);
-            if (team != null) {
-                game.getTeamPerPlayer().remove(player);
-                game.getPlayersInTeam().get(team).remove(player);
-            }
+            game.getTeamPerPlayer().remove(player);
+            game.getPlayersInTeam().get(team).remove(player);
+            team.getTeam().removePlayer(player);
         }
 
-        if (game.getPlayers().size() == 0) {
+        if (game.getPlayers().isEmpty()) {
             new GameManager().stop(game);
             return;
         }
 
-        LevelStorage.getStorage().onDeath(player, true);
-        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, true);
+        LevelStorage.getStorage().onDeath(player, leaveFromGame);
+        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, leaveFromGame);
 
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
@@ -63,7 +61,7 @@ final class GameDeath {
             LevelStorage.getStorage().win(winner);
         }
 
-        final GameCountdown endgameCountdown = new CallbackGameCountdown(() -> new GameManager().stop(game));
+        final EndgameCountdown endgameCountdown = new EndgameCountdown(() -> new GameManager().stop(game));
 
         int id = plugin.getServer().getScheduler().runTaskLater(
             plugin,

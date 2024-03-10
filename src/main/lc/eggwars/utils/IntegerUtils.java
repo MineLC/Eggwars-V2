@@ -15,6 +15,16 @@ public final class IntegerUtils {
         return hash;  
     }
 
+    public static int aproximate(int value1, int value2) {
+        if (value1 < value2) {
+            return 1;
+        }
+        if (value1 % value2 == 0) {
+            return value1 / value2;
+        }
+        return (value1 / value2) + 1;
+    }
+
     public static int parsePositive(final String text) {
         if (text.isEmpty()) {
             return 0;

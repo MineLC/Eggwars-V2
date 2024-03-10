@@ -29,7 +29,7 @@ public final class PlayerQuitListener implements EventListener {
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game != null) {
-            GameStorage.getStorage().leave(game, player);
+            GameStorage.getStorage().leave(game, player, true);
         }
 
         CompletableFuture.runAsync(() -> {

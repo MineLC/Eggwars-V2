@@ -43,7 +43,7 @@ final class LeaveSubCommand implements Command {
         player.teleport(SpawnStorage.getStorage().location());
         player.setGameMode(GameMode.ADVENTURE);
 
-        GameStorage.getStorage().leave(map, player);
+        GameStorage.getStorage().leave(map, player, false);
         SpawnStorage.getStorage().setItems(player);
         SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
         send(player, "Has salido del juego");

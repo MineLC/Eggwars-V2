@@ -11,10 +11,9 @@ import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
-import lc.eggwars.inventory.CustomInventory;
 import lc.eggwars.messages.Messages;
 
-public final class SkinShopInventory implements CustomInventory {
+public final class SkinShopInventory {
 
     private final EggwarsPlugin plugin;
     private final int removeEntityDelay;
@@ -24,7 +23,6 @@ public final class SkinShopInventory implements CustomInventory {
         this.removeEntityDelay = plugin.getConfig().getInt("shopkeepers.preview-seconds-duration") * 20;
     }
 
-    @Override
     public void handle(InventoryClickEvent event) {
         final ShopkeepersData skinData = ShopKeepersStorage.getStorage().data();
         final ShopkeepersData.Skin skinClicked = skinData.items().get(event.getSlot());

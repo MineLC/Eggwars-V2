@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.tinylog.Logger;
 
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -24,15 +25,18 @@ public final class PlayerJoinListener implements EventListener {
     )
     public void handle(Event defaultEvent) {
         final PlayerJoinEvent event = (PlayerJoinEvent)defaultEvent;
-        event.getPlayer().teleport(SpawnStorage.getStorage().location());
 
+        event.getPlayer().teleport(SpawnStorage.getStorage().location());
         SpawnStorage.getStorage().setItems(event.getPlayer());
 
         CompletableFuture.runAsync(() -> {
-            final PlayerData data = DatabaseManager.getManager().getData(event.getPlayer().getUniqueId());
-            PlayerDataStorage.getStorage().add(event.getPlayer().getUniqueId(), data);
-
-            SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(event.getPlayer());
-        });
+            try {
+                final PlayerData data = DatabaseManager.getManager().getData(event.getPlayer().getUniqueId());
+                PlayerDataStorage.getStorage().add(event.getPlayer().getUniqueId(), data);
+                SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(event.getPlayer());            
+            } catch (Exception e) {
+                Logger.error(e);
+            }
+        });       
     }
 }

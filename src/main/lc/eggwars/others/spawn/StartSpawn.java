@@ -47,7 +47,7 @@ public class StartSpawn {
         if (spawn == null) {
             return;
         }
-        final CompletableFuture<Void> mapLoaded = MapStorage.getStorage().loadNoGameMap(world);
+        final CompletableFuture<Void> mapLoaded = MapStorage.getStorage().load(world);
         if (mapLoaded == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class StartSpawn {
                 Integer.parseInt(split[0]),
                 Integer.parseInt(split[1]),
                 Integer.parseInt(split[2]));
-    
+
             bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
             final SpawnStorage oldStorage = SpawnStorage.getStorage();
             SpawnStorage.update(new SpawnStorage(spawnLocation, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));

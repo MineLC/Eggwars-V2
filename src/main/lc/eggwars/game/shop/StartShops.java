@@ -43,7 +43,7 @@ public class StartShops {
             final Set<String> shopItems = shopConfig.getKeys(false);
             final Inventory inventory = Bukkit.createInventory(
                 new CustomInventoryHolder(shopID),
-                howManyRows(shopItems.size()) + 9,
+                (9 * getManyRows(shopItems.size()) + 9),
                 headerShop.title
             );
             final IntObjectHashMap<Shop.Item> items = createItems(headerItems, shopConfig, shopItems, inventory);
@@ -112,11 +112,13 @@ public class StartShops {
         plugin.tryCreateFiles("shops/swords.yml", "shops/armor.yml", "shops/blocks.yml", "shops/food.yml", "shops/tools.yml");
     }
 
-    private int howManyRows(final int itemsAmount) {
-        if (itemsAmount / 9 < 0) {
-            return 9;
+    private int getManyRows(final int itemsAmount) {
+        if (itemsAmount / 9 <= 0) {
+            return 1;
         }
-        return 9 * ((int)(itemsAmount / 9) + 1);
+        return (itemsAmount % 9) == 0
+            ? (itemsAmount / 9)
+            : (itemsAmount / 9) + 1;
     }
 
     private ItemMetaData createMetadata(final ItemStack item) {

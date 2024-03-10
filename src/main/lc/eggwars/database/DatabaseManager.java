@@ -1,13 +1,18 @@
 package lc.eggwars.database;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.set.hash.TIntHashSet;
 
 public final class DatabaseManager {
@@ -48,33 +53,34 @@ public final class DatabaseManager {
         return data;
     }
 
-    public void saveData(final UUID uuid, final PlayerData newData) {
+    public void saveData(final UUID uuid, final PlayerData data) {
         final Document query = new Document();
         query.put("_id", uuid);
 
-        final Document dataDocument = toDocument(newData);
-        final Document document = profiles.findOneAndUpdate(query, dataDocument);
+        final List<Integer> kits = toIntegerArray(data.kits);
+        final List<Integer> skins = toIntegerArray(data.skins);
 
-        if (document == null) {
-            profiles.insertOne(dataDocument);
-        }
+        final UpdateOptions options = new UpdateOptions().upsert(true);
+        final Bson update = createUpdateQuery(data, kits, skins);
+
+        profiles.updateOne(query, update, options);
     }
 
-    private Document toDocument(final PlayerData data) {
-        final Document document = new Document();
-        document.put("coins", data.coins);
-        document.put("kills", data.kills);
-        document.put("finalKills", data.finalKills);
-        document.put("deaths", data.deaths);
-        document.put("finalDeaths", data.finalDeaths);
-        document.put("wins", data.wins);
-        document.put("skin", data.skinSelected);
-        document.put("kit", data.kitSelected);
-        document.put("eggs", data.destroyedEggs);
-        document.put("level", data.level);
-        document.put("skins", data.skins);
-        document.put("kits", data.kits);
-        return document;
+    private Bson createUpdateQuery(final PlayerData data, final List<Integer> kits, final List<Integer> skins) {
+        return Updates.combine(
+            Updates.set("coins", data.coins),
+            Updates.set("kills", data.kills),
+            Updates.set("finalKills", data.finalKills),
+            Updates.set("deaths", data.deaths),
+            Updates.set("finalDeaths", data.finalDeaths),
+            Updates.set("wins", data.wins),
+            Updates.set("skin", data.skinSelected),
+            Updates.set("kit", data.kitSelected),
+            Updates.set("eggs", data.destroyedEggs),
+            Updates.set("level", data.level),
+            Updates.set("kits", kits),
+            Updates.set("skins", skins)
+        );
     }
 
     private TIntHashSet createHashSet(final List<Integer> data, final Integer defaultValue) {
@@ -92,6 +98,16 @@ public final class DatabaseManager {
             }
         }
         return values;
+    }
+
+    private List<Integer> toIntegerArray(final TIntHashSet set) {
+        final int size = set.size();
+        final List<Integer> list = new ArrayList<>(size);
+        final TIntIterator iterator = set.iterator();
+        for (int i = 0; i < size; i++) {
+            list.add(iterator.next());
+        }
+        return list;
     }
 
     static void update(DatabaseManager manager) {

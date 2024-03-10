@@ -49,7 +49,7 @@ final class JoinSubCommand implements Command {
             }
 
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                final Set<Player> playersWaitingToJoin = MapStorage.getStorage().load(args[1]);
+                final Set<Player> playersWaitingToJoin = MapStorage.getStorage().loadMap(args[1]);
                 if (playersWaitingToJoin == null) {
                     sendWithColor(player, "&cError on load the world");
                     return;

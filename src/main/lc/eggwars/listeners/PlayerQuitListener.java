@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.tinylog.Logger;
 
 import lc.eggwars.database.DatabaseManager;
 import lc.eggwars.database.PlayerData;
@@ -25,15 +26,19 @@ public final class PlayerQuitListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerQuitEvent event = (PlayerQuitEvent)defaultEvent;
         final Player player = event.getPlayer();
-        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        if (map != null) {
-            GameStorage.getStorage().leave(map, player);
+        if (game != null) {
+            GameStorage.getStorage().leave(game, player);
         }
 
         CompletableFuture.runAsync(() -> {
-            final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
-            DatabaseManager.getManager().saveData(player.getUniqueId(), data);
+            try {
+                final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
+                DatabaseManager.getManager().saveData(player.getUniqueId(), data);
+            } catch (Exception e) {
+                Logger.error(e);
+            }
         });
     }
 }

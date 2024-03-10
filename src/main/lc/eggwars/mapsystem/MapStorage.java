@@ -54,7 +54,7 @@ public final class MapStorage {
     }
 
     // Execute this method async
-    public Set<Player> load(final String worldName) {
+    public Set<Player> loadMap(final String worldName) {
         try {
             final MapData map = mapsPerName.get(worldName);
             if (map == null) {
@@ -62,7 +62,7 @@ public final class MapStorage {
             }
             final Set<Player> playersWaitingToJoin = new HashSet<>();
             worldsCurrentlyLoading.put(worldName, playersWaitingToJoin);
-    
+
             slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
             return playersWaitingToJoin;
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
@@ -72,7 +72,7 @@ public final class MapStorage {
     }
 
     // Execute this method async
-    public CompletableFuture<Void> loadNoGameMap(final String worldName) {
+    public CompletableFuture<Void> load(final String worldName) {
         try {
             return slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {

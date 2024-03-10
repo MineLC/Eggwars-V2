@@ -6,8 +6,8 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.countdown.CallbackGameCountdown;
 import lc.eggwars.game.countdown.GameCountdown;
-import lc.eggwars.game.countdown.types.CallbackGameCountdown;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.levels.LevelStorage;

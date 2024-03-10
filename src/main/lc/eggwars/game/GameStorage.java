@@ -8,7 +8,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.countdown.types.PreGameCountdown;
+import lc.eggwars.game.countdown.pregame.PreGameCountdown;
+import lc.eggwars.game.countdown.pregame.PreGameTemporaryData;
+import lc.eggwars.game.pregameitems.teamselector.InventorySelector;
 
 public final class GameStorage {
 
@@ -33,10 +35,17 @@ public final class GameStorage {
 
         map.setState(GameState.PREGAME);
 
+        final InventorySelector.InventoryData selector = new InventorySelector().createBaseInventory(
+            map.getMapData().getSpawns().keySet(),
+            "Seleciona tu equipo",
+            map.getMapData());
+
+        final PreGameTemporaryData temporaryData = new PreGameTemporaryData(selector.inventory(), selector.teamsPerSlot());
         final PreGameCountdown waitToStartCountdown = new PreGameCountdown(
             pregameData,
             map.getPlayers(),
-            () -> new GameManager().start(map)
+            () -> new GameManager().start(map),
+            temporaryData
         );
 
         final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, waitToStartCountdown, 0, 20).getTaskId();
@@ -46,6 +55,12 @@ public final class GameStorage {
 
     public void leave(final GameInProgress game, final Player player) {
         playersInGame.remove(player.getUniqueId());
+
+        if (game.getCountdown() instanceof PreGameCountdown pregame) {
+            pregame.getTemporaryData().leave(player);
+            return;
+        }
+
         new GameDeath(plugin).finalDeath(
             game,
             game.getTeamPerPlayer().get(player),

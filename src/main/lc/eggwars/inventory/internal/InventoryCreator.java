@@ -31,7 +31,6 @@ public final class InventoryCreator {
             Messages.color(config.getString(finalPath + "title")));
     }
 
-
     public Item create(final String path) {
         final String finalPath = path + '.';
         final int slot = config.getInt(finalPath + "slot");

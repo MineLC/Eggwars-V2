@@ -1,4 +1,4 @@
-package lc.eggwars.game.countdown.types;
+package lc.eggwars.game.countdown.pregame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -21,13 +21,15 @@ public class PreGameCountdown extends GameCountdown {
     private final Set<Player> players;
     private final Data data;
     private final CountdownCallback complete;
+    private PreGameTemporaryData temporary;
 
-    public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown) {
+    public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown, PreGameTemporaryData temporary) {
         this.data = data;
         this.waitingCountdown = data.waitingTime;
         this.countdown = data.waitingTime;
         this.players = players;
         this.complete = completeCountdown;
+        this.temporary = temporary;
     }
 
     @Override
@@ -48,6 +50,7 @@ public class PreGameCountdown extends GameCountdown {
         }
 
         if (countdown <= 0) {
+            temporary = null;
             complete.execute();
             Messages.sendNoGet(players, "Iniciando el juego");
             Bukkit.getScheduler().cancelTask(getId());
@@ -76,6 +79,14 @@ public class PreGameCountdown extends GameCountdown {
 
     public String getCountdown() {
         return parseTime(countdown);
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public PreGameTemporaryData getTemporaryData() {
+        return temporary;
     }
 
     public static record Data(

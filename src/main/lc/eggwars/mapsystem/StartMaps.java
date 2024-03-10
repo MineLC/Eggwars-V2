@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
@@ -74,53 +73,56 @@ public final class StartMaps {
             final GeneratorThread thread = new GeneratorThread(maps);
             GeneratorThread.setThread(thread);
             thread.start();
-        });
+       });
     }
 
     private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
         final Gson gson = new Gson();
-        int index = 0;
-        int id = -1;
-        int shopsAmount = 0;
+        final MapStartInfo info = new MapStartInfo();
+
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
                 continue;
             }
             try {
-                final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-
-                if (MapStorage.getStorage().loadNoGameMap(data.world()) == null) {
+                final CompletableFuture<Void> mapLoad = MapStorage.getStorage().load(data.world());
+                if (mapLoad == null) {
                     continue;
                 }
-                final World world = Bukkit.getWorld(data.world());
-    
-                final EntityLocation[] shopSpawns = getShopSpawns(data);
-                final TIntHashSet shopkeepersID = new TIntHashSet(shopSpawns.length);
-                for (int i = 0; i < shopSpawns.length; i++) {
-                    shopkeepersID.add(Integer.MAX_VALUE - (shopsAmount++));
-                }
-
-                final MapData map = new MapData(
-                    worldClickableBlocks,
-                    getSpawns(data),
-                    getTeamEggs(data, worldClickableBlocks),
-                    getGenerators(data, worldClickableBlocks),
-                    shopSpawns,
-                    shopkeepersID,
-                    data.maxPersonsPerTeam(),
-                    data.borderSize(),
-                    ++id);
-
-                maps[index++] = map;
-
-                mapsPerName.put(data.world(), map);
-                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(world, false));
+                mapLoad.thenAccept((none) -> {
+                    loadMapData(data, info, maps, mapsPerName);
+                    Bukkit.unloadWorld(Bukkit.getWorld(data.world()), false);
+                });
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 e.printStackTrace();
             }
         }
+    }
+
+    private void loadMapData(final JsonMapData data, final MapStartInfo info, final MapData[] maps, final Map<String, MapData> mapsPerName) {
+        final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
+        final EntityLocation[] shopSpawns = getShopSpawns(data);
+        final TIntHashSet shopkeepersID = new TIntHashSet(shopSpawns.length);
+
+        for (int i = 0; i < shopSpawns.length; i++) {
+            shopkeepersID.add(Integer.MAX_VALUE - (info.shopsAmount++));
+        }
+    
+        final MapData map = new MapData(
+            worldClickableBlocks,
+            getSpawns(data),
+            getTeamEggs(data, worldClickableBlocks),
+            getGenerators(data, worldClickableBlocks),
+            shopSpawns,
+            shopkeepersID,
+            data.maxPersonsPerTeam(),
+            data.borderSize(),
+            ++info.id);
+    
+        maps[info.index++] = map;
+        mapsPerName.put(data.world(), map);
     }
 
     private Map<BaseTeam, BlockLocation> getTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
@@ -203,5 +205,9 @@ public final class StartMaps {
         }
 
         return generatorsData;
+    }
+
+    private static final class MapStartInfo {
+        private int shopsAmount = 0, id = -1, index = 0;
     }
 }

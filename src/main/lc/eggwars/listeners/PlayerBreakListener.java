@@ -15,9 +15,9 @@ public class PlayerBreakListener implements EventListener {
         priority = EventPriority.LOWEST,
         event = BlockBreakEvent.class
     )
-    public void handle(Event arg0) {
-        final BlockBreakEvent event = (BlockBreakEvent)arg0;
-        if (event.getPlayer().getWorld().equals(SpawnStorage.getStorage().location().getWorld())) {
+    public void handle(Event defaultEvent) {
+        final BlockBreakEvent event = (BlockBreakEvent)defaultEvent;
+        if (!SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
             return;
         }
         final Material material = event.getBlock().getType();

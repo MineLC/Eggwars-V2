@@ -32,6 +32,7 @@ import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
 import lc.eggwars.listeners.PlayerBreakListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
+import lc.eggwars.listeners.PlayerQuitListener;
 import lc.eggwars.listeners.gameshop.GameShopInventoryClickListener;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
@@ -58,7 +59,7 @@ import net.swofty.swm.api.SlimePlugin;
 
 public class EggwarsPlugin extends JavaPlugin {
 
-    private static MongoDBHandler database;
+    private static final MongoDBHandler database = new MongoDBHandler();
 
     @Override
     public void onEnable() {
@@ -71,8 +72,11 @@ public class EggwarsPlugin extends JavaPlugin {
         }
 
         CompletableFuture.runAsync(() -> {
-            database = new MongoDBHandler();
-            database.init(this);
+            try {   
+                database.init(this);   
+            } catch (Exception e) {
+                Logger.error(e);
+            }    
         });
 
         loadCommands(slimePlugin);
@@ -96,13 +100,14 @@ public class EggwarsPlugin extends JavaPlugin {
         getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
             final CompletableFuture<?> loadMapTask = new StartMaps(this).load(slimePlugin);
             if (loadMapTask != null) {
-                loadMapTask.thenAcceptAsync((value) -> new StartSpawn(this).loadSpawn());
+                loadMapTask.thenAcceptAsync((value) -> {
+                    new StartSpawn(this).loadSpawn();
+                    Logger.info("Maps and spawn are now loaded");
+                });
             };
         }, 40);
 
         registerBasicListeners(listeners);
-
-        // Specific listeners
         listeners.register(new GameShopInventoryClickListener(shops), false);
     }
 
@@ -130,13 +135,15 @@ public class EggwarsPlugin extends JavaPlugin {
         register.register(new CompleteWorldGenerateListener(), true);
 
         register.register(new ShopkeeperListener(), false);
-        register.register(new PlayerBreakListener(), false);
+        register.register(new PlayerBreakListener(), true);
         register.register(new PlayerJoinListener(), true);  
+        register.register(new PlayerQuitListener(), true);  
 
         register.cancelEvent(BlockPhysicsEvent.class);
         register.cancelEvent(BlockGrowEvent.class);
         register.fastListener(PlayerDropItemEvent.class, (event) -> {
-            if (((PlayerDropItemEvent)event).getPlayer().getWorld().equals(SpawnStorage.getStorage().location().getWorld())) {
+            ((PlayerDropItemEvent)event).getPlayer().sendMessage("IS IN SPAWN: " + (SpawnStorage.getStorage().isInSpawn(((PlayerDropItemEvent)event).getPlayer())));
+            if (SpawnStorage.getStorage().isInSpawn(((PlayerDropItemEvent)event).getPlayer())) {
                 ((PlayerDropItemEvent)event).setCancelled(true);
             }
         });

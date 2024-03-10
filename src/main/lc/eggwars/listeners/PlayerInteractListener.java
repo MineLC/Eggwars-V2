@@ -1,6 +1,7 @@
 package lc.eggwars.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.countdown.pregame.PreGameCountdown;
+import lc.eggwars.game.pregameitems.PregameItemsStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
@@ -35,6 +38,11 @@ public final class PlayerInteractListener implements EventListener {
             return;
         }
 
+        if (SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
+            event.setCancelled(true);
+            return;
+        }
+
         final Block block = event.getClickedBlock();
 
         if (block == null) {
@@ -51,26 +59,36 @@ public final class PlayerInteractListener implements EventListener {
     }
 
     private void handleInteractWithItems(final PlayerInteractEvent event) {
+        if (SpawnStorage.getStorage().isInSpawn(event.getPlayer()) && event.getItem() == null) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (event.getItem() == null) {
             return;
         }
+
         final GameInProgress game = GameStorage.getStorage().getGame(event.getPlayer().getUniqueId());
+        final Material type = event.getItem().getType();
 
         if (game != null) {
-            if (game.getState() != GameState.PREGAME) {
+            if (game.getState() == GameState.IN_GAME) {
                 return;
             }
-
-            return;
+            if (!(game.getCountdown() instanceof PreGameCountdown pregame)) {
+                return;
+            }
+            if (PregameItemsStorage.getStorage().getSelectTeamItem().item().getType() == type) {
+                event.setCancelled(true);
+                event.getPlayer().openInventory(pregame.getTemporaryData().getTeamSelectorInventory());
+                return;
+            }
         }
 
-        if (!event.getPlayer().getWorld().equals(SpawnStorage.getStorage().location().getWorld())) {
-            return;
-        }
-        final Inventory inventory = SpawnStorage.getStorage().items().get(event.getItem().getType());
+        final Inventory inventory = SpawnStorage.getStorage().items().get(type);
         if (inventory != null) {
-            event.getPlayer().openInventory(inventory);
             event.setCancelled(true);
+            event.getPlayer().openInventory(inventory);
         }
     }
 }

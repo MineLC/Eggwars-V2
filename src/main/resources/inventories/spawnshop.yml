@@ -1,6 +1,6 @@
 inventory:
   title: "Tienda de eggwars"
-  rows: 43
+  rows: 3
 
 skin-selector:
   slot: 11

@@ -1,7 +1,4 @@
-package lc.eggwars.game.countdown.types;
-
-import lc.eggwars.game.countdown.CountdownCallback;
-import lc.eggwars.game.countdown.GameCountdown;
+package lc.eggwars.game.countdown;
 
 public final class CallbackGameCountdown extends GameCountdown {
 

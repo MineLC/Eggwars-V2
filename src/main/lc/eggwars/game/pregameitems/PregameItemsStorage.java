@@ -1,11 +1,8 @@
 package lc.eggwars.game.pregameitems;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 
-import lc.eggwars.game.GameInProgress;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.others.spawn.SpawnStorage;
 
@@ -32,6 +29,9 @@ public final class PregameItemsStorage {
         inventory.setItem(selectTeam.slot(), selectTeam.item());
     }
 
+    public Item getSelectTeamItem() {
+        return selectTeam;
+    }
 
     static void update(PregameItemsStorage newStorage) {
         storage = newStorage;

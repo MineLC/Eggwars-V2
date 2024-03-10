@@ -67,7 +67,7 @@ public final class SkinShopInventory implements CustomInventory {
             loc.getYaw());
 
         player.closeInventory();
-        plugin.getServer().getScheduler().runTaskLaterAsynchronously(
+        plugin.getServer().getScheduler().runTaskLater(
             plugin,
             () -> new ShopKeeperManager().deleteEntity(entityId, player), removeEntityDelay);
         Messages.send(player, "shopkeepers-preview");

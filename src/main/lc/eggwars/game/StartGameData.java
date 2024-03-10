@@ -3,7 +3,7 @@ package lc.eggwars.game;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.countdown.types.PreGameCountdown;
+import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 
 public class StartGameData {
 

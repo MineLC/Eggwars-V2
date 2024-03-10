@@ -9,7 +9,7 @@ import lc.eggwars.database.PlayerData;
 import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.game.countdown.types.PreGameCountdown;
+import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
 
 public final class PregameSidebar implements EggwarsSidebar {

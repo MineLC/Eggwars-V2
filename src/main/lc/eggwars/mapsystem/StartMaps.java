@@ -4,13 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-
-import org.bukkit.Bukkit;
+import java.util.Set;
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
@@ -35,50 +34,59 @@ import lc.eggwars.utils.EntityLocation;
 import lc.eggwars.utils.IntegerUtils;
 
 import net.swofty.swm.api.SlimePlugin;
+import net.swofty.swm.api.exceptions.CorruptedWorldException;
+import net.swofty.swm.api.exceptions.NewerFormatException;
+import net.swofty.swm.api.exceptions.UnknownWorldException;
+import net.swofty.swm.api.exceptions.WorldInUseException;
 import net.swofty.swm.api.loaders.SlimeLoader;
+import net.swofty.swm.api.world.SlimeWorld;
+import net.swofty.swm.api.world.properties.SlimePropertyMap;
 
 public final class StartMaps {
 
     private final EggwarsPlugin plugin;
+    private final SlimeLoader loader;
+    private final SlimePlugin slimePlugin;
 
-    public StartMaps(EggwarsPlugin plugin) {
+    public StartMaps(EggwarsPlugin plugin, SlimePlugin slimePlugin) {
         this.plugin = plugin;
+        this.slimePlugin = slimePlugin;
+        this.loader = slimePlugin.getLoader("file");
     }
 
-    public CompletableFuture<?> load(SlimePlugin slimePlugin) {
+    public void load() {
         final SlimeLoader loader = slimePlugin.getLoader("file");
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return null;
+            return;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return null;
+            return;
         }
 
-        return CompletableFuture.runAsync( () -> {
+        
             final Map<String, MapData> mapsPerName = new HashMap<>();
             final MapData[] maps = new MapData[mapFiles.length];
-
-            if (mapFiles.length != 0) {
-                loadMapData(maps, mapFiles, new HashMap<>());
+            if (mapFiles.length > 0) {
+                loadMapData(maps, mapFiles, mapsPerName);
             }
             MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
 
             final GeneratorThread thread = new GeneratorThread(maps);
             GeneratorThread.setThread(thread);
             thread.start();
-       });
+
     }
 
     private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
         final Gson gson = new Gson();
-        final MapStartInfo info = new MapStartInfo();
+        int index = 0;
 
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
@@ -86,14 +94,22 @@ public final class StartMaps {
             }
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-                final CompletableFuture<Void> mapLoad = MapStorage.getStorage().load(data.world());
-                if (mapLoad == null) {
-                    continue;
+                SlimeWorld mapWorld;
+                try {
+                    mapWorld = slimePlugin.loadWorld(loader, data.world(), false, new SlimePropertyMap());
+                    final CompletableFuture<Void> completable = slimePlugin.generateWorld(mapWorld);
+                    final int newIndex = index;
+                    completable.thenAccept((none) -> {
+                        final MapData map = loadMapData(data, newIndex);
+                        maps[newIndex] = map;
+                        mapsPerName.put(data.world(), map);   
+                        mapWorld.unloadWorld(false);
+                    });
+                    index++;
+                } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
+                    e.printStackTrace();
                 }
-                mapLoad.thenAccept((none) -> {
-                    loadMapData(data, info, maps, mapsPerName);
-                    Bukkit.unloadWorld(Bukkit.getWorld(data.world()), false);
-                });
+
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 e.printStackTrace();
@@ -101,13 +117,14 @@ public final class StartMaps {
         }
     }
 
-    private void loadMapData(final JsonMapData data, final MapStartInfo info, final MapData[] maps, final Map<String, MapData> mapsPerName) {
+    private MapData loadMapData(final JsonMapData data, final int id) {
         final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
         final EntityLocation[] shopSpawns = getShopSpawns(data);
         final TIntHashSet shopkeepersID = new TIntHashSet(shopSpawns.length);
+        int shopsAmount = 0;
 
         for (int i = 0; i < shopSpawns.length; i++) {
-            shopkeepersID.add(Integer.MAX_VALUE - (info.shopsAmount++));
+            shopkeepersID.add(Integer.MAX_VALUE - ++shopsAmount);
         }
     
         final MapData map = new MapData(
@@ -119,10 +136,8 @@ public final class StartMaps {
             shopkeepersID,
             data.maxPersonsPerTeam(),
             data.borderSize(),
-            ++info.id);
-    
-        maps[info.index++] = map;
-        mapsPerName.put(data.world(), map);
+            id);
+        return map;
     }
 
     private Map<BaseTeam, BlockLocation> getTeamEggs(final JsonMapData data, final IntObjectHashMap<ClickableBlock> clickableBlocks) {
@@ -205,9 +220,5 @@ public final class StartMaps {
         }
 
         return generatorsData;
-    }
-
-    private static final class MapStartInfo {
-        private int shopsAmount = 0, id = -1, index = 0;
     }
 }

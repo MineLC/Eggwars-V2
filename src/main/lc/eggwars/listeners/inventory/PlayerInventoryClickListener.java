@@ -40,6 +40,14 @@ public class PlayerInventoryClickListener implements EventListener {
 
         final int inventory = InventoryUtils.getId(event.getClickedInventory());
         if (inventory == -1) {
+            if (SpawnStorage.getStorage().isInSpawn(event.getWhoClicked())) {
+                event.setCancelled(true);
+                return;
+            }
+            final GameInProgress gameInProgress = GameStorage.getStorage().getGame(event.getWhoClicked().getUniqueId());
+            if (gameInProgress.getState() == GameState.PREGAME) {
+                event.setCancelled(true);
+            }
             return;
         }
 
@@ -52,10 +60,14 @@ public class PlayerInventoryClickListener implements EventListener {
                 return;
             }
             final PreGameTemporaryData temporaryData = ((PreGameCountdown)gameInProgress.getCountdown()).getTemporaryData();
-
-            if (InventoryUtils.getId(temporaryData.getTeamSelectorInventory()) == inventory) {
-                new TeamSelectorInventory().handle(event, gameInProgress);
-                return;
+            try {
+                
+                if (InventoryUtils.getId(temporaryData.getTeamSelectorInventory()) == inventory) {
+                    new TeamSelectorInventory().handle(event, gameInProgress, temporaryData);
+                    return;
+                }   
+            } catch (Exception e) {
+                org.tinylog.Logger.error(e);
             }
         }
  

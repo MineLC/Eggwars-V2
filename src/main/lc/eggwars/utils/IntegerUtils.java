@@ -22,7 +22,9 @@ public final class IntegerUtils {
         if (value1 % value2 == 0) {
             return value1 / value2;
         }
-        return (value1 / value2) + 1;
+        return (value1 % value2 == 0)
+            ? value1 / value2
+            : (value1 / value2) + 1;
     }
 
     public static int parsePositive(final String text) {

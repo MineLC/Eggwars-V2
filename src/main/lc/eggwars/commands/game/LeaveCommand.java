@@ -15,7 +15,7 @@ import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.others.spawn.SpawnStorage;
 
-final class LeaveSubCommand implements Command {
+public final class LeaveCommand implements Command {
 
     @Override
     public void handle(CommandSender sender, String[] args) {

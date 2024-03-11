@@ -3,6 +3,7 @@ package lc.eggwars.game.countdown.pregame;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.tinylog.Logger;
 
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.game.countdown.GameCountdown;
@@ -35,8 +36,13 @@ public class PreGameCountdown extends GameCountdown {
     @Override
     public void run() {
         final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
+        try {
+         
         sidebar.send(players);
-
+   
+        } catch (Exception e) {
+            Logger.error(e);
+        }
         if (players.size() < data.minPlayers) {
             if (waitingCountdown % data.waitingTime == 0) {
                 Messages.sendNoGet(players, "Esperando por más jugadores");

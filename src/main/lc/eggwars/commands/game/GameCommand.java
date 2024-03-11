@@ -12,11 +12,9 @@ import net.md_5.bungee.api.ChatColor;
 public final class GameCommand implements Command {
 
     private final JoinSubCommand join;
-    private final LeaveSubCommand leave;
-
+    
     public GameCommand(EggwarsPlugin plugin) {
         this.join = new JoinSubCommand(plugin);
-        this.leave = new LeaveSubCommand();
     }
 
     @Override
@@ -33,9 +31,6 @@ public final class GameCommand implements Command {
         switch (args[0].toLowerCase()) {
             case "join":
                 join.handle(player, args);
-                break;
-            case "leave":
-                leave.handle(player, args);
                 break;
             default:
                 send(sender, format());

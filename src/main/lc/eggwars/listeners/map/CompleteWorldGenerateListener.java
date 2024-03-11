@@ -27,10 +27,10 @@ public final class CompleteWorldGenerateListener implements EventListener {
         priority = EventPriority.HIGHEST
     )
     public void handle(Event defaultEvent) {
+        final PostGenerateWorldEvent event = (PostGenerateWorldEvent)defaultEvent;
         if (MapStorage.getStorage() == null) {
             return;
         }
-        final PostGenerateWorldEvent event = (PostGenerateWorldEvent)defaultEvent;
         final String worldName = event.getSlimeWorld().getName();
         final Set<Player> playersTryingJoin = MapStorage.getStorage().getWorldsCurrentlyLoading().get(worldName);
 

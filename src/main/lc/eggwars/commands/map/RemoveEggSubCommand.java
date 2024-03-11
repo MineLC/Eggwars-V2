@@ -4,49 +4,29 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.lcspigot.commands.Command;
 import lc.eggwars.mapsystem.CreatorData;
-import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 
-final class RemoveEggSubCommand implements Command {
-    private final MapCreatorData data;
-
-    RemoveEggSubCommand(MapCreatorData data) {
-        this.data = data;
-    }
+final class RemoveEggSubCommand implements MapSubCommand {
 
     @Override
-    public void handle(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
-        final CreatorData creatorData = data.getData(player.getUniqueId());
+    public void handle(Player player, String[] args, CreatorData data) {
+        final BlockLocation targetBlock = getBlock(player, Material.DRAGON_EGG);
 
-        if (creatorData == null) {
-            sendWithColor(player, "&cTo use this command enable the editor mode");
-            return;
-        }
-
-        final Set<Material> airBlocksStorage = null;
-        final Block targetBlock = player.getTargetBlock(airBlocksStorage, 3);
-
-        if (targetBlock.getType() != Material.DRAGON_EGG) {
+        if (targetBlock == null) {
             sendWithColor(player, "&cTo remove a team egg, you need view a dragon egg");
             return;
         };
 
-        final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
-        final Set<Entry<BaseTeam, BlockLocation>> entries = creatorData.getEggsMap().entrySet();
+        final Set<Entry<BaseTeam, BlockLocation>> entries = data.getEggsMap().entrySet();
 
         for (Entry<BaseTeam, BlockLocation> entry : entries) {
-            if (entry.getValue().equals(location)) {
-                targetBlock.setType(Material.AIR);
+            if (entry.getValue().equals(targetBlock)) {
                 sendWithColor(player, "&aEgg removed for the team " + entry.getKey().getKey());
-                creatorData.getEggsMap().remove(entry.getKey());
+                data.getEggsMap().remove(entry.getKey());
                 return;
             }
         }

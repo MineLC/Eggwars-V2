@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.MapCreatorData;
 
 import lc.lcspigot.commands.Command;
@@ -26,19 +27,22 @@ public final class MapCreatorCommand implements Command {
     private final InfoSubCommand info;
     private final SaveSubCommand save;
 
+    private final MapCreatorData data;
+
     public MapCreatorCommand(SlimePlugin slimePlugin, EggwarsPlugin plugin, MapCreatorData data) {
         this.editor = new EditorSubCommand(data);
-        this.addGenerator = new AddGeneratorSubCommand(data);
-        this.removeGenerator = new RemoveGeneratorSubCommand(data);
-        this.setspawn = new SetSpawnSubCommand(data);
-        this.removeSpawn = new RemoveSpawnSubCommand(data);
-        this.setEgg = new SetEggSubCommand(data);
-        this.removeEgg = new RemoveEggSubCommand(data);
-        this.maxPersons = new SetMaxPersonsSubCommand(data);
-        this.addshopkeeper = new AddShopkeeperSubCommand(data);
-        this.removeshopkeeper = new RemoveShoopkeperSubCommand(data);
-        this.info = new InfoSubCommand(data);
+        this.addGenerator = new AddGeneratorSubCommand();
+        this.removeGenerator = new RemoveGeneratorSubCommand();
+        this.setspawn = new SetSpawnSubCommand();
+        this.removeSpawn = new RemoveSpawnSubCommand();
+        this.setEgg = new SetEggSubCommand();
+        this.removeEgg = new RemoveEggSubCommand();
+        this.maxPersons = new SetMaxPersonsSubCommand();
+        this.addshopkeeper = new AddShopkeeperSubCommand();
+        this.removeshopkeeper = new RemoveShoopkeperSubCommand();
+        this.info = new InfoSubCommand();
         this.save = new SaveSubCommand(slimePlugin, plugin, data);
+        this.data = data;
     }
 
     @Override
@@ -52,45 +56,57 @@ public final class MapCreatorCommand implements Command {
             sender.sendMessage(format());
             return;
         }
-    
-        switch (args[0].toLowerCase()) {
-            case "editor":
-                editor.handle(player, args);
-                break;
+        final String subcommand = args[0].toLowerCase();
+
+        if (subcommand.equals("editor")) {
+            editor.handle(player, args);
+            return;
+        }
+        if (subcommand.equals("save")) {
+            save.handle(player, args);
+            return;
+        }
+
+        final CreatorData creatorData = data.getData(player.getUniqueId());
+
+        if (creatorData == null) {
+            sendWithColor(sender, "&cTo use this command enable editor mode. /map editor on");
+            return;
+        }
+
+        switch (subcommand) {
             case "addgenerator":
-                addGenerator.handle(player, args);
+                addGenerator.handle(player, args, creatorData);
                 break;
             case "removegenerator":
-                removeGenerator.handle(player, args);
+                removeGenerator.handle(player, args, creatorData);
                 break;
             case "setspawn":
-                setspawn.handle(player, args);
+                setspawn.handle(player, args, creatorData);
                 break;
             case "removespawn":
-                removeSpawn.handle(player, args);
+                removeSpawn.handle(player, args, creatorData);
                 break;
             case "setegg":
-                setEgg.handle(player, args);
+                setEgg.handle(player, args, creatorData);
                 break;
             case "removeegg":
-                removeEgg.handle(player, args);
+                removeEgg.handle(player, args, creatorData);
                 break;
             case "setmax":
-                maxPersons.handle(player, args);
+                maxPersons.handle(player, args, creatorData);
                 break;
             case "addshopspawn":
-                addshopkeeper.handle(player, args);
+                addshopkeeper.handle(player, args, creatorData);
                 break;
             case "removeshopspawn":
-                removeshopkeeper.handle(player, args);
+                removeshopkeeper.handle(player, args, creatorData);
                 break;
             case "info":
-                info.handle(sender, args);
-                break;
-            case "save":
-                save.handle(player, args);
+                info.handle(player, args, creatorData);
                 break;
             default:
+                sendWithColor(sender, format());
                 break;
         }
         return;

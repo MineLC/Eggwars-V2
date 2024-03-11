@@ -7,33 +7,17 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.lcspigot.commands.Command;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
 import lc.eggwars.mapsystem.CreatorData;
-import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.IntegerUtils;
 
-final class AddGeneratorSubCommand implements Command {
-
-    private MapCreatorData data;
-
-    AddGeneratorSubCommand(MapCreatorData data) {
-        this.data = data;
-    }
+final class AddGeneratorSubCommand implements MapSubCommand {
 
     @Override
-    public void handle(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
-        final CreatorData creatorData = data.getData(player.getUniqueId());
-
-        if (creatorData == null) {
-            sendWithColor(player, "&cTo use this command enable the editor mode");
-            return;
-        }
-
+    public void handle(Player player, String[] args, CreatorData data) {
         if (args.length != 3) {
             sendWithColor(player, "&cFormat: /map addgenerator &7(name) (level)");
             return;
@@ -65,13 +49,13 @@ final class AddGeneratorSubCommand implements Command {
             return;
         }
         final BlockLocation location = BlockLocation.toBlockLocation(targetBlock.getLocation());
-        if (creatorData.alreadyExistGenerator(location)) {
+        if (data.alreadyExistGenerator(location)) {
             sendWithColor(player, "&cIn this site already exist a generator. &7Use /map removegenerator");
             return;
         }
 
         final ClickableSignGenerator generator = new ClickableSignGenerator(location, level, baseGenerator);
-        creatorData.addGenerator(generator);
+        data.addGenerator(generator);
         GeneratorStorage.getStorage().setLines(targetBlock, baseGenerator, level);
 
         sendWithColor(player, "&aGenerator set!");

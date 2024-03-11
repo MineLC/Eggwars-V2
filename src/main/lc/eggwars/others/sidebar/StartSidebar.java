@@ -9,6 +9,7 @@ import io.github.ichocomilk.lightsidebar.Sidebar;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.sidebar.types.GameSidebar;
+import lc.eggwars.others.sidebar.types.PregameSidebar;
 import lc.eggwars.others.sidebar.types.SpawnSidebar;
 
 public final class StartSidebar {
@@ -52,6 +53,7 @@ public final class StartSidebar {
     private EggwarsSidebar getSidebar(final Sidebar lightSidebarLib, final SidebarType type, final String[] lines, final String title) {
         switch (type) {
             case SPAWN: return new SpawnSidebar(lightSidebarLib, lines);
+            case PREGAME: return new PregameSidebar(lightSidebarLib, lines);
             case IN_GAME: return new GameSidebar(lightSidebarLib, lines);
             default: return null;
         }

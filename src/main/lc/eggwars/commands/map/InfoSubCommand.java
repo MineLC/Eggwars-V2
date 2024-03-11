@@ -7,41 +7,25 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
-import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
-import lc.lcspigot.commands.Command;
 
-final class InfoSubCommand implements Command {
-
-    private final MapCreatorData data;
-
-    InfoSubCommand(MapCreatorData data) {
-        this.data = data;
-    }
+final class InfoSubCommand implements MapSubCommand {
 
     @Override
-    public void handle(CommandSender sender, String[] args) {
-        final Player player = (Player)sender;
-        final CreatorData creatorData = data.getData(player.getUniqueId());
-
-        if (creatorData == null) {
-            sendWithColor(player, "&cTo use this command enable the editor mode");
-            return;
-        }
-
+    public void handle(Player player, String[] args, CreatorData data) {
         if (args.length < 2) {
             sendWithColor(player, "&cFormat: /map info (generators/teams)");
             return;
         }
- 
+
         switch (args[1].toLowerCase()) {
             case "teams":
-                sendWithColor(sender, buildTeamInfo(creatorData));
+                sendWithColor(player, buildTeamInfo(data));
                 break;
             case "generators":
-                sendWithColor(sender, buildGeneratorsInfo(creatorData));
+                sendWithColor(player, buildGeneratorsInfo(data));
                 break;
             default:
                 break;

@@ -57,7 +57,13 @@ public class StartTeams {
                 name = teamName;
             }
 
-            final BaseTeam baseTeam = new BaseTeam(teamName, name, teamIndex, team, getColor(path + "color"));
+            final BaseTeam baseTeam = new BaseTeam(
+                teamName,
+                name,
+                teamIndex,
+                team,
+                getColor(config.getString(path + "color")));
+
             baseTeams[++teamIndex] = baseTeam;
             teamsPerName.put(teamName, baseTeam);
         }

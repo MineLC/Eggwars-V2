@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.tinylog.Logger;
@@ -20,6 +19,7 @@ import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
 import lc.eggwars.commands.game.GameCommand;
+import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.database.MongoDBHandler;
 import lc.eggwars.game.StartGameData;
@@ -30,6 +30,7 @@ import lc.eggwars.game.shop.Shop;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
 import lc.eggwars.listeners.PlayerBreakListener;
+import lc.eggwars.listeners.PlayerDropitemListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.PlayerQuitListener;
@@ -48,7 +49,6 @@ import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.levels.StartLevels;
 import lc.eggwars.others.sidebar.StartSidebar;
-import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.others.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
 
@@ -97,14 +97,13 @@ public class EggwarsPlugin extends JavaPlugin {
 
         final ListenerRegister listeners = new ListenerRegister(this);
 
-        getServer().getScheduler().runTaskLaterAsynchronously(this, () -> {
-            final CompletableFuture<?> loadMapTask = new StartMaps(this).load(slimePlugin);
-            if (loadMapTask != null) {
-                loadMapTask.thenAcceptAsync((value) -> {
-                    new StartSpawn(this).loadSpawn();
-                    Logger.info("Maps and spawn are now loaded");
-                });
-            };
+        getServer().getScheduler().runTaskLater(this, () -> {
+            try {
+                new StartMaps(this, slimePlugin).load();
+                new StartSpawn(this).loadSpawn();
+            } catch (Exception e) {
+                Logger.error(e);
+            }
         }, 40);
 
         registerBasicListeners(listeners);
@@ -125,28 +124,23 @@ public class EggwarsPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTasks(this);
     }
 
-    private void registerBasicListeners(final ListenerRegister register) {
-        register.register(new PlayerDeathListener(), true);
-        register.register(new PlayerRespawnListener(), true);
-        register.register(new EntityDamageListener(), true);
-        register.register(new PlayerDamageByPlayerListener(), true);
-        register.register(new PlayerInventoryClickListener(this), true);
-        register.register(new PlayerInteractListener(), true);
-        register.register(new CompleteWorldGenerateListener(), true);
+    private void registerBasicListeners(final ListenerRegister listeners) {
+        listeners.register(new PlayerDeathListener(), true);
+        listeners.register(new PlayerRespawnListener(), true);
+        listeners.register(new EntityDamageListener(), true);
+        listeners.register(new PlayerDamageByPlayerListener(), true);
+        listeners.register(new PlayerInventoryClickListener(this), true);
+        listeners.register(new PlayerInteractListener(), true);
 
-        register.register(new ShopkeeperListener(), false);
-        register.register(new PlayerBreakListener(), true);
-        register.register(new PlayerJoinListener(), true);  
-        register.register(new PlayerQuitListener(), true);  
+        listeners.register(new ShopkeeperListener(), false);
+        listeners.register(new PlayerBreakListener(), true);
+        listeners.register(new PlayerJoinListener(), true);  
+        listeners.register(new PlayerQuitListener(), true);  
+        listeners.register(new PlayerDropitemListener(), true);  
+        listeners.register(new CompleteWorldGenerateListener(), true);
 
-        register.cancelEvent(BlockPhysicsEvent.class);
-        register.cancelEvent(BlockGrowEvent.class);
-        register.fastListener(PlayerDropItemEvent.class, (event) -> {
-            ((PlayerDropItemEvent)event).getPlayer().sendMessage("IS IN SPAWN: " + (SpawnStorage.getStorage().isInSpawn(((PlayerDropItemEvent)event).getPlayer())));
-            if (SpawnStorage.getStorage().isInSpawn(((PlayerDropItemEvent)event).getPlayer())) {
-                ((PlayerDropItemEvent)event).setCancelled(true);
-            }
-        });
+        listeners.cancelEvent(BlockPhysicsEvent.class);
+        listeners.cancelEvent(BlockGrowEvent.class);
     }
 
     public FileConfiguration loadConfig(final String name) {
@@ -169,7 +163,9 @@ public class EggwarsPlugin extends JavaPlugin {
     private void loadCommands(SlimePlugin slimePlugin) {
         CommandStorage.register(new MapCreatorCommand(slimePlugin, this, new MapCreatorData()), "map");
         CommandStorage.register(new GameCommand(this), "game");
+        CommandStorage.register(new LeaveCommand(), "leave");
         CommandStorage.register(new InfoCommand(), "info");
+
         new BasicCommandsRegister().registerBasicCommands();
     }
 }

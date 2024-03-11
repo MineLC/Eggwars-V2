@@ -1,6 +1,7 @@
 package lc.eggwars.utils;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public final class BlockLocation {
     private final int x, y, z;
@@ -47,6 +48,10 @@ public final class BlockLocation {
             Integer.parseInt(split[0]),
             Integer.parseInt(split[1]),
             Integer.parseInt(split[2]));
+    }
+
+    public Location toLocation(final World world) {
+        return new Location(null, x, y, z);
     }
 
     public static BlockLocation toBlockLocation(final Location location) {

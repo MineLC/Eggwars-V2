@@ -21,6 +21,7 @@ import lc.eggwars.inventory.internal.CustomInventoryHolder;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.utils.IntegerUtils;
 
 public class StartShops {
     
@@ -41,9 +42,10 @@ public class StartShops {
             }
             final String shopID = ("shop-"+headerShop.shopName);
             final Set<String> shopItems = shopConfig.getKeys(false);
+            final int rows = IntegerUtils.aproximate(shopItems.size(), 9);
             final Inventory inventory = Bukkit.createInventory(
                 new CustomInventoryHolder(shopID),
-                (9 * getManyRows(shopItems.size()) + 9),
+                (9 * rows) + 9,
                 headerShop.title
             );
             final IntObjectHashMap<Shop.Item> items = createItems(headerItems, shopConfig, shopItems, inventory);
@@ -110,15 +112,6 @@ public class StartShops {
             return;
         }
         plugin.tryCreateFiles("shops/swords.yml", "shops/armor.yml", "shops/blocks.yml", "shops/food.yml", "shops/tools.yml");
-    }
-
-    private int getManyRows(final int itemsAmount) {
-        if (itemsAmount / 9 <= 0) {
-            return 1;
-        }
-        return (itemsAmount % 9) == 0
-            ? (itemsAmount / 9)
-            : (itemsAmount / 9) + 1;
     }
 
     private ItemMetaData createMetadata(final ItemStack item) {

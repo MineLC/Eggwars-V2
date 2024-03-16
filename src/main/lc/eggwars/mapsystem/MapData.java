@@ -16,8 +16,8 @@ public final class MapData {
     private final Map<BaseTeam, BlockLocation> spawns;
     private final Map<BaseTeam, BlockLocation> eggs;
     private final ClickableSignGenerator[] generators;
+    private final TIntHashSet shopKeepersID;
     private final EntityLocation[] shopSpawns;
-    private final TIntHashSet shopkeepersID;
     private final int maxPlayers;
     private final int maxPersonsPerTeam;
     private final int borderSize;
@@ -30,8 +30,8 @@ public final class MapData {
         Map<BaseTeam, BlockLocation> spawns,
         Map<BaseTeam, BlockLocation> eggs,
         ClickableSignGenerator[] generators,
+        TIntHashSet shopKeepersID,
         EntityLocation[] shopSpawns,
-        TIntHashSet shopkeepersID,
         int maxPersonsPerTeam,
         int borderSize,
         int id
@@ -41,7 +41,7 @@ public final class MapData {
         this.eggs = eggs;
         this.generators = generators;
         this.shopSpawns = shopSpawns;
-        this.shopkeepersID = shopkeepersID;
+        this.shopKeepersID = shopKeepersID;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
         this.maxPlayers = maxPersonsPerTeam * spawns.keySet().size();
@@ -76,8 +76,8 @@ public final class MapData {
         return shopSpawns;
     }
 
-    public TIntHashSet getShopIDs() {
-        return shopkeepersID;
+    public TIntHashSet getShopsID() {
+        return shopKeepersID;
     }
 
     public int getMaxPersonsPerTeam() {

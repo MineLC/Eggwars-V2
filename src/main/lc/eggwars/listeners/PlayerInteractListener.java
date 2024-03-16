@@ -29,43 +29,53 @@ public final class PlayerInteractListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerInteractEvent event = (PlayerInteractEvent)defaultEvent;
 
-        if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            return;
-        }
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {            handleInteractWithItems(event);
+        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL) {
             return;
         }
 
         if (SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
             event.setCancelled(true);
+            if (event.getItem() == null) {
+                return;
+            }
+            final Inventory inventory = SpawnStorage.getStorage().items().get(event.getItem().getType());
+            if (inventory != null) {
+                event.getPlayer().openInventory(inventory);
+            }
             return;
         }
 
-        final Block block = event.getClickedBlock();
-
-        if (block == null) {
+        if (handleClickableBlocks(event)) {
             return;
         }
 
-        final Location location = block.getLocation();
-        final ClickableBlock clickableBlock = MapStorage.getStorage().getClickableBlock(location.getWorld(), location);
-        
-        if (clickableBlock != null) {
-            clickableBlock.onClick(event.getPlayer(), event.getAction());
-            event.setCancelled(true);
+        if (event.getItem() != null) {
+            handleInteractWithItems(event);
         }
     }
 
+    private boolean handleClickableBlocks(final PlayerInteractEvent event) {
+        final Block block = event.getClickedBlock();
+        if (block == null) {
+            return false;
+        }
+        final Location location = block.getLocation();
+        final ClickableBlock clickableBlock = MapStorage.getStorage().getClickableBlock(location.getWorld(), location);
+
+        if (clickableBlock == null) {
+            return false;
+        }
+        event.setCancelled(true);
+
+        if (!clickableBlock.supportLeftClick() && event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            return true;
+        }
+
+        clickableBlock.onClick(event.getPlayer(), event.getAction());
+        return true;
+    }
+
     private void handleInteractWithItems(final PlayerInteractEvent event) {
-        if (SpawnStorage.getStorage().isInSpawn(event.getPlayer()) && event.getItem() == null) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event.getItem() == null) {
-            return;
-        }
-
         final GameInProgress game = GameStorage.getStorage().getGame(event.getPlayer().getUniqueId());
         final Material type = event.getItem().getType();
 

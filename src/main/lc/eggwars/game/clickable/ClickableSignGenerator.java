@@ -18,48 +18,18 @@ import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class ClickableSignGenerator implements ClickableBlock {
 
-    private final BlockLocation loc;
+    private final BlockLocation loc, min, max;
     private final int defaultLevel;
     private final BaseGenerator base;
 
     private TemporaryGenerator temporaryGenerator;
 
-    public ClickableSignGenerator(BlockLocation loc, int defaultLevel, BaseGenerator base) {
+    public ClickableSignGenerator(BlockLocation loc, BlockLocation min, BlockLocation max, int defaultLevel, BaseGenerator base) {
         this.loc = loc;
+        this.min = min;
+        this.max = max;
         this.defaultLevel = defaultLevel;
         this.base = base;
-    }
-
-    public TemporaryGenerator getGenerator() {
-        return temporaryGenerator;
-    }
-
-    public BlockLocation getLocation() {
-        return loc;
-    }
-
-    public int getDefaultLevel() {
-        return defaultLevel;
-    }
-
-    public BaseGenerator getBase() {
-        return base;
-    }
-
-    public void cleanData() {
-        this.temporaryGenerator = null;
-    }
-
-    public void setGenerator(final World world) {
-        final GeneratorEntityItem item = new GeneratorEntityItem();
-        item.locX = loc.x() + 0.5D;
-        item.locY = loc.y();
-        item.locZ = loc.z() + 0.5D;
-
-        item.setCustomNameVisible(true);
-        item.setItemStack(base.drop());
-
-        this.temporaryGenerator = new TemporaryGenerator(defaultLevel, base, item, loc, world);
     }
 
     @Override
@@ -67,7 +37,6 @@ public final class ClickableSignGenerator implements ClickableBlock {
         if (temporaryGenerator == null || action != Action.RIGHT_CLICK_BLOCK || !player.getWorld().equals(temporaryGenerator.getWorld().getWorld())) {
             return;
         }
-
         if (player.getGameMode() == GameMode.ADVENTURE) {
             return;
         }
@@ -90,5 +59,50 @@ public final class ClickableSignGenerator implements ClickableBlock {
         temporaryGenerator.levelUp();
         GeneratorStorage.getStorage().setLines(temporaryGenerator.getWorld().getWorld().getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
         Messages.send(player, "generator.levelup");
+    }
+
+    public void cleanData() {
+        this.temporaryGenerator = null;
+    }
+
+    public void setGenerator(final World world, final int id) {
+        final GeneratorEntityItem item = new GeneratorEntityItem();
+        item.locX = loc.x() + 0.5D;
+        item.locY = loc.y();
+        item.locZ = loc.z() + 0.5D;
+
+        item.setCustomNameVisible(true);
+        item.setItemStack(base.drop());
+
+        this.temporaryGenerator = new TemporaryGenerator(defaultLevel, base, item, world, id, this);
+    }
+
+    public TemporaryGenerator getGenerator() {
+        return temporaryGenerator;
+    }
+
+    public BlockLocation getLocation() {
+        return loc;
+    }
+
+    public int getDefaultLevel() {
+        return defaultLevel;
+    }
+
+    public BaseGenerator getBase() {
+        return base;
+    }
+
+    @Override
+    public boolean supportLeftClick() {
+        return false;
+    }
+
+    public BlockLocation getMinLocation() {
+        return min;
+    }
+
+    public BlockLocation getMaxLocation() {
+        return max;
     }
 }

@@ -35,15 +35,15 @@ public final class LeaveCommand implements Command {
             break;
         }
 
-        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
-        if (map == null) {
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
+        if (game == null) {
             send(player, "Actualmente no estás en ningun juego");
             return;
         }
         player.teleport(SpawnStorage.getStorage().location());
         player.setGameMode(GameMode.ADVENTURE);
 
-        GameStorage.getStorage().leave(map, player, false);
+        GameStorage.getStorage().leave(game, player, true);
         SpawnStorage.getStorage().setItems(player);
         SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
         send(player, "Has salido del juego");

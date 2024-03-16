@@ -25,6 +25,16 @@ public final class Messages {
         }
     }
 
+    public static final void send(final Collection<Player> senders, final String key) {
+        final String message = instance.parsedMessages.get(key);
+        if (message != null) {
+            final BaseComponent[] components = TextComponent.fromLegacyText(message);
+            for (Player sender : senders) {
+                sender.spigot().sendMessage(components);
+            }
+        }
+    }
+
     public static final void sendNoGet(final Collection<Player> senders, final String message) {
         final BaseComponent[] components = TextComponent.fromLegacyText(message);
         for(final Player sender : senders) {

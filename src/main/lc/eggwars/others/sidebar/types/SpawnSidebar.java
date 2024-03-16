@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.bukkit.entity.Player;
 
+import io.github.ichocomilk.lightsidebar.LightSidebarLib;
 import io.github.ichocomilk.lightsidebar.Sidebar;
 import lc.eggwars.database.PlayerData;
 import lc.eggwars.database.PlayerDataStorage;
@@ -11,16 +12,17 @@ import lc.eggwars.others.sidebar.EggwarsSidebar;
 
 public final class SpawnSidebar implements EggwarsSidebar {
 
-    private final Sidebar sidebar;
     private final String[] lines;
+    private final String title;
 
-    public SpawnSidebar(Sidebar sidebar, String[] lines) {
-        this.sidebar = sidebar;
+    public SpawnSidebar(String[] lines, String title) {
         this.lines = lines;
+        this.title = title;
     }
 
     @Override
     public void send(Player player) {
+        final Sidebar sidebar = new LightSidebarLib().createSidebar();
         final String[] parsedLines = new String[lines.length];
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
 
@@ -38,6 +40,7 @@ public final class SpawnSidebar implements EggwarsSidebar {
                 .replace("%kills%", kills)
                 .replace("%kdr%", kdr);
         }
+        sidebar.setTitle(title);
         sidebar.setLines(sidebar.createLines(parsedLines));
         sidebar.sendLines(player);
         sidebar.sendTitle(player);

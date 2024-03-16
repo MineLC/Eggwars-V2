@@ -25,9 +25,10 @@ public final class GeneratorManager {
 
     public void load(final GameInProgress game) {
         final ClickableSignGenerator[] generators = game.getMapData().getGenerators();
-    
+        int id = Short.MIN_VALUE;
+        
         for(final ClickableSignGenerator generator : generators) {
-            generator.setGenerator(game.getWorld());
+            generator.setGenerator(game.getWorld(), id++);
             final World world = ((CraftWorld)game.getWorld()).getHandle();
 
             generator.getGenerator().update(getNearbyChunk(

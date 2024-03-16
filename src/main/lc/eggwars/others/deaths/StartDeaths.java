@@ -23,6 +23,7 @@ public final class StartDeaths {
         DeathStorage.update(new DeathStorage(
             plugin,
             deathMessages,
+            get("fallback-message"),
             get("final-death-prefix"),
             get("suffix-if-killer-exist"),
             get("respawn.title"),
@@ -40,7 +41,8 @@ public final class StartDeaths {
                 Logger.warn("The damage cause " + cause + " don't exist");
                 continue;
             } 
-            deathMessages[damageCause.ordinal()] = Messages.color(config.getString(cause));
+            deathMessages[damageCause.ordinal()] = Messages.color(config.getString("deaths." + cause));
+            Logger.info(deathMessages[damageCause.ordinal()]);
         }
         return deathMessages;
     }

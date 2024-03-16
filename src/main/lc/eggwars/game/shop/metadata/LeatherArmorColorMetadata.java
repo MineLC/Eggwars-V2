@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 
 public final class LeatherArmorColorMetadata implements ItemMetaData {
 
@@ -16,21 +16,23 @@ public final class LeatherArmorColorMetadata implements ItemMetaData {
     public ItemStack parse(ItemStack item, Player player) {      
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
         if (game == null) {
+            player.sendMessage("Trying parse but none");
             return item;
         }
-        final BaseTeam team = game.getTeamPerPlayer().get(player);
+        final GameTeam team = game.getTeamPerPlayer().get(player);
         if (team != null) {
-            setColor(item, player, team.getLeatherColor());
+            setColor(item, player, team.getBase().getLeatherColor());
         }
+        player.sendMessage("Parse complete");
         return item;
     }
 
     public void setColor(final ItemStack leatherItem, final Player player, final Color color) {
         final ItemMeta meta = leatherItem.getItemMeta();
-        if (!(leatherItem instanceof LeatherArmorMeta leather)) {
+        if (!(meta instanceof LeatherArmorMeta leather)) {
             return;
         }
         leather.setColor(color);
-        leatherItem.setItemMeta(meta);
+        leatherItem.setItemMeta(leather);
     }
 }

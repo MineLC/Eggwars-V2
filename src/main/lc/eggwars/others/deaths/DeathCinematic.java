@@ -5,6 +5,7 @@ import org.bukkit.Title;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.game.countdown.CountdownCallback;
+import net.md_5.bungee.api.chat.TextComponent;
 
 final class DeathCinematic implements Runnable {
 
@@ -30,8 +31,9 @@ final class DeathCinematic implements Runnable {
             Bukkit.getScheduler().cancelTask(id);
             return;
         }
-        final Title titleOptions = new Title(respawnTitle);
-        player.sendTitle(titleOptions, respawnSubtitle.replace("%time%", parseTime(seconds)));
+        final String subtitle = respawnSubtitle.replace("%time%", parseTime(seconds));
+        final Title titleOptions = new Title(TextComponent.fromLegacyText(respawnTitle), TextComponent.fromLegacyText(subtitle), 0, 25, 0);
+        player.sendTitle(titleOptions, subtitle);
         --seconds;
     }
 

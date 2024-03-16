@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.Set;
+
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
@@ -21,11 +22,12 @@ import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.clickable.ClickableDragonEgg;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
-import lc.eggwars.game.generators.GeneratorThread;
+
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
@@ -54,34 +56,31 @@ public final class StartMaps {
         this.loader = slimePlugin.getLoader("file");
     }
 
-    public void load() {
+    public CompletableFuture<Void> load() {
         final SlimeLoader loader = slimePlugin.getLoader("file");
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return;
+            return null;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return;
+            return null;
         }
 
-        
+        return CompletableFuture.runAsync(() -> {
             final Map<String, MapData> mapsPerName = new HashMap<>();
             final MapData[] maps = new MapData[mapFiles.length];
             if (mapFiles.length > 0) {
                 loadMapData(maps, mapFiles, mapsPerName);
             }
             MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
-
-            final GeneratorThread thread = new GeneratorThread(maps);
-            GeneratorThread.setThread(thread);
-            thread.start();
-
+            GameManagerThread.setMaps(maps);
+        });
     }
 
     private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
@@ -94,25 +93,27 @@ public final class StartMaps {
             }
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-                SlimeWorld mapWorld;
-                try {
-                    mapWorld = slimePlugin.loadWorld(loader, data.world(), false, new SlimePropertyMap());
-                    final CompletableFuture<Void> completable = slimePlugin.generateWorld(mapWorld);
-                    final int newIndex = index;
-                    completable.thenAccept((none) -> {
-                        final MapData map = loadMapData(data, newIndex);
-                        maps[newIndex] = map;
-                        mapsPerName.put(data.world(), map);   
-                        mapWorld.unloadWorld(false);
-                    });
-                    index++;
-                } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
-                    e.printStackTrace();
-                }
+                final SlimeWorld mapWorld = slimePlugin.loadWorld(loader, data.world(), false, new SlimePropertyMap());
+                final CompletableFuture<Void> completable = slimePlugin.generateWorld(mapWorld);
+                final int newIndex = index;
 
+                completable.thenAccept((none) -> {
+                    final MapData map = loadMapData(data, newIndex);
+                    maps[newIndex] = map;
+                    mapsPerName.put(data.world(), map);   
+                    mapWorld.unloadWorld(false);
+                });
+                index++;
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-                Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
-                e.printStackTrace();
+                plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
+                    Logger.error(e);
+                });
+            } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e1) {
+                plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    Logger.warn("Error on generate the map: " + mapFile.getName() + ". Maybe corrupt .swofty world ");
+                    Logger.error(e1);
+                });
             }
         }
     }
@@ -120,20 +121,18 @@ public final class StartMaps {
     private MapData loadMapData(final JsonMapData data, final int id) {
         final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
         final EntityLocation[] shopSpawns = getShopSpawns(data);
-        final TIntHashSet shopkeepersID = new TIntHashSet(shopSpawns.length);
-        int shopsAmount = 0;
-
+        final TIntHashSet shopsID = new TIntHashSet(shopSpawns.length);
         for (int i = 0; i < shopSpawns.length; i++) {
-            shopkeepersID.add(Integer.MAX_VALUE - ++shopsAmount);
+            shopsID.add(-i);
         }
-    
+
         final MapData map = new MapData(
             worldClickableBlocks,
             getSpawns(data),
             getTeamEggs(data, worldClickableBlocks),
             getGenerators(data, worldClickableBlocks),
+            shopsID,
             shopSpawns,
-            shopkeepersID,
             data.maxPersonsPerTeam(),
             data.borderSize(),
             id);
@@ -196,7 +195,7 @@ public final class StartMaps {
         for (final Entry<String, String[]> generator : generatorsEntries) {
             size += generator.getValue().length;
         }
-
+        final int pickupDistance = plugin.getConfig().getInt("generators.pickup-distance-blocks");
         final ClickableSignGenerator[] generatorsData = new ClickableSignGenerator[size];
         int index = 0;
 
@@ -212,7 +211,11 @@ public final class StartMaps {
                 final String[] split = generatorString.split(":");
                 final int defaultLevel = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
-                final ClickableSignGenerator generatorData = new ClickableSignGenerator(location, defaultLevel, baseGenerator);
+                
+                final BlockLocation min = new BlockLocation(location.x() - pickupDistance, location.y() - pickupDistance, location.z() - pickupDistance);
+                final BlockLocation max = new BlockLocation(location.x() + pickupDistance, location.y() + pickupDistance, location.z() + pickupDistance);
+
+                final ClickableSignGenerator generatorData = new ClickableSignGenerator(location, min, max, defaultLevel, baseGenerator);
 
                 generatorsData[index++] = generatorData;
                 clickableBlocks.put(location.hashCode(), generatorData);

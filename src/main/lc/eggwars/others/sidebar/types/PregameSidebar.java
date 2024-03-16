@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.bukkit.entity.Player;
 
+import io.github.ichocomilk.lightsidebar.LightSidebarLib;
 import io.github.ichocomilk.lightsidebar.Sidebar;
 import lc.eggwars.database.PlayerData;
 import lc.eggwars.database.PlayerDataStorage;
@@ -14,22 +15,24 @@ import lc.eggwars.others.sidebar.EggwarsSidebar;
 
 public final class PregameSidebar implements EggwarsSidebar {
 
-    private final Sidebar sidebar;
     private final String[] lines;
+    private final String title;
 
-    public PregameSidebar(Sidebar sidebar, String[] lines) {
-        this.sidebar = sidebar;
+    public PregameSidebar(String[] lines, String title) {
         this.lines = lines;
+        this.title = title;
     }
 
     @Override
     public void send(Player player) {
+        final Sidebar sidebar = new LightSidebarLib().createSidebar();
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
         if (game == null || !(game.getCountdown() instanceof PreGameCountdown pregame)) {
             return;
         }
+
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
-        
+
         final String amountPlayers = String.valueOf(game.getPlayers().size());
         final String lcoins = String.valueOf(data.coins);
         final String maxPlayers = String.valueOf(game.getMapData().getMaxPlayers());
@@ -44,7 +47,9 @@ public final class PregameSidebar implements EggwarsSidebar {
                 .replace("%players%", amountPlayers)
                 .replace("%max%", maxPlayers);
         }
-        sidebar.setLines(sidebar.createLines(parsedLines));
+        final Object[] lines = sidebar.createLines(parsedLines);
+        sidebar.setTitle(title);
+        sidebar.setLines(lines);
         sidebar.sendLines(player);
         sidebar.sendTitle(player);
     }

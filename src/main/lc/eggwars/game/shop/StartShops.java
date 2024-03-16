@@ -25,11 +25,13 @@ import lc.eggwars.utils.IntegerUtils;
 
 public class StartShops {
     
-    public IntObjectHashMap<Shop> load(final EggwarsPlugin plugin) {
+    public ShopsData load(final EggwarsPlugin plugin) {
         tryLoadDefaultShops(plugin);
 
         final HeaderShop[] headerItems = createHeader(plugin);
         final IntObjectHashMap<Shop> shopsPerId = new IntObjectHashMap<>(headerItems.length);
+        final IntObjectHashMap<Inventory> shopsPerSlot = new IntObjectHashMap<>(headerItems.length);
+        final Inventory mainInventory;
 
         for (final HeaderShop headerShop : headerItems) {
             if (headerShop == null) {
@@ -51,8 +53,11 @@ public class StartShops {
             final IntObjectHashMap<Shop.Item> items = createItems(headerItems, shopConfig, shopItems, inventory);
             final Shop shop = new Shop(inventory, items);
             shopsPerId.put(shopID.hashCode(), shop);
+            shopsPerSlot.put(headerShop.slot, inventory);
         }
-        return shopsPerId;
+        mainInventory = shopsPerSlot.get(0);
+
+        return new ShopsData(mainInventory, shopsPerId, shopsPerSlot);
     }
 
     private HeaderShop[] createHeader(final EggwarsPlugin plugin) {
@@ -70,7 +75,7 @@ public class StartShops {
                 index++;
                 continue;
             }
-            headerItems[index++] = new HeaderShop(item, shopSection, Messages.color(config.getString(shopSection + ".title")));
+            headerItems[index++] = new HeaderShop(item, shopSection, Messages.color(config.getString(shopSection + ".title")), item.slot());
         }
         return headerItems;
     }
@@ -117,12 +122,11 @@ public class StartShops {
     private ItemMetaData createMetadata(final ItemStack item) {
         final ItemMeta meta = item.getItemMeta();
         if (meta instanceof LeatherArmorMeta) {
-            meta.setLore(null);
-            meta.setDisplayName(null);
             return new LeatherArmorColorMetadata();
         }
         return null;
     }
 
-    private record HeaderShop(Item item, String shopName, String title) {}
+    private record HeaderShop(Item item, String shopName, String title, int slot) {}
+
 }

@@ -5,6 +5,7 @@ inventory-item:
   item: "307"
   enchantments:
     - "PROTECTION_ENVIRONMENTAL:2"
+
   name: "&b&lTANQUE SUPREMO"
   lore:
     - " "

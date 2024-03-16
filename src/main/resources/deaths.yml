@@ -3,9 +3,12 @@
 suffix-if-killer-exist: " por el jugador &6%d%"
 final-death-prefix: "&6&lFINAL KILL "
 
+# When death cause is inexistent
+fallback-message: "&6%v% ha muerto" 
+
 respawn:
   seconds: 3
-  title: "&e&c&lRespawn in %seconds% &e"
+  title: "&e&c&lRespawn in %time% &e"
   subtitle: "&7Remember learn pvp"
 
 deaths:

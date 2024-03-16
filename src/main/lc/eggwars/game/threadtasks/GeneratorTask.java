@@ -1,10 +1,11 @@
-package lc.eggwars.game.generators;
+package lc.eggwars.game.threadtasks;
 
 import java.util.List;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
+import lc.eggwars.game.generators.TemporaryGenerator;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.InventoryUtils;
@@ -17,39 +18,28 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 
-public class GeneratorThread extends Thread {
-
-    private static GeneratorThread currentThread;
+public final class GeneratorTask {
 
     private final MapData[] maps;
-    private boolean run = true;
 
-    public GeneratorThread(MapData[] maps) {
+    public GeneratorTask(MapData[] maps) {
         this.maps = maps;
     }
 
-    @Override
-    public void run() {
-        while (run) {
-            try {
-                Thread.sleep(1000);
-                for (final MapData map : maps) {
-                    if (map != null && map.getGameInProgress() != null) {
-                        generateItems(map.getGameInProgress());
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void execute() {
+        for (final MapData map : maps) {
+            if (map != null && map.getGameInProgress() != null) {
+                generateItems(map.getGameInProgress());
             }
         }
     }
 
-    private void generateItems(final GameInProgress map) {
-        if (map.getState() != GameState.IN_GAME) {
+    private void generateItems(final GameInProgress game) {
+        if (game.getState() != GameState.IN_GAME) {
             return;
         }
 
-        final ClickableSignGenerator[] generators = map.getMapData().getGenerators();
+        final ClickableSignGenerator[] generators = game.getMapData().getGenerators();
 
         for (final ClickableSignGenerator signGenerator : generators) {
             final TemporaryGenerator generator = signGenerator.getGenerator();
@@ -71,7 +61,7 @@ public class GeneratorThread extends Thread {
                 continue;
             }
         
-            generator.addItem();
+            generator.addItemsToGenerate();
         
             if (generator.getAmount() >= 64) {
                 generator.setAmount(64);
@@ -86,15 +76,20 @@ public class GeneratorThread extends Thread {
     }
 
     private void tryPickupItem(final TemporaryGenerator generator) {
-        for (final Chunk nearbyChunk : generator.getChunks()) {
+        final ClickableSignGenerator data = generator.getData();
+        final Chunk[] chunks = generator.getChunks();
+
+        for (final Chunk nearbyChunk : chunks) {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {
                 if (!(entity instanceof EntityPlayer entityPlayer)) {
                     continue;
                 }
-                final BlockLocation loc = generator.loc();
-                if (isNearby(loc.x(), loc.y(), loc.z(), entityPlayer)) {
+                final int playerX = (int)entityPlayer.locX;
+                final int playerY = (int)entityPlayer.locY;
+                final int playerZ = (int)entityPlayer.locZ;
+                if (isNearby(data.getMinLocation(), data.getMaxLocation(), playerX, playerY, playerZ)) {
                     pickupItem(generator, entityPlayer);
                     destroyItem(generator.getEntityItem().getId(), generator);
                     break;
@@ -107,25 +102,30 @@ public class GeneratorThread extends Thread {
     private void tryPickupItemAndRegenerate(final TemporaryGenerator generator) {
         final Entity item = generator.getEntityItem();
         item.setCustomName(String.valueOf(generator.getAmount()));
+        item.d(generator.hashCode());
 
         final PacketPlayOutSpawnEntity packetEntity = new PacketPlayOutSpawnEntity(item, 2, item.getId());
         final PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(item.getId(), item.getDataWatcher(), true);
+        final ClickableSignGenerator data = generator.getData();
+        final Chunk[] chunks = generator.getChunks();
 
-        for (final Chunk nearbyChunk : generator.getChunks()) {
+        for (final Chunk nearbyChunk : chunks) {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {
                 if (!(entity instanceof EntityPlayer entityPlayer)) {
                     continue;
                 }
-                final BlockLocation loc = generator.loc();
-                if (isNearby(loc.x(), loc.y(), loc.z(), entityPlayer)) {
+                final int playerX = (int)entityPlayer.locX;
+                final int playerY = (int)entityPlayer.locY;
+                final int playerZ = (int)entityPlayer.locZ;
+                if (isNearby(data.getMinLocation(), data.getMaxLocation(), playerX, playerY, playerZ)) {
                     pickupItem(generator, entityPlayer);
                     destroyItem(item.getId(), generator);
                     break;
                 }
-                entityPlayer.playerConnection.sendPacket(packetEntity);
-                entityPlayer.playerConnection.sendPacket(meta);
+                entityPlayer.playerConnection.networkManager.handle(packetEntity);
+                entityPlayer.playerConnection.networkManager.handle(meta);
             }
             continue;
         }
@@ -135,7 +135,7 @@ public class GeneratorThread extends Thread {
         generator.setAmount(InventoryUtils.addItem(generator.getItem(), generator.getAmount(), player.inventory));
 
         final PacketPlayOutNamedSoundEffect itemPickupSound = new PacketPlayOutNamedSoundEffect("random.pop", player.locX, player.locY, player.locZ, 1.0f, 1.0f);
-        player.playerConnection.sendPacket(itemPickupSound);
+        player.playerConnection.networkManager.handle(itemPickupSound);
     }
 
     private void destroyItem(final int itemId, final TemporaryGenerator generator) {
@@ -148,23 +148,18 @@ public class GeneratorThread extends Thread {
                 if (!(entity instanceof EntityPlayer entityPlayer)) {
                     continue;
                 }
-                entityPlayer.playerConnection.sendPacket(destroy);
+                entityPlayer.playerConnection.networkManager.handle(destroy);
             }
         }
     }
    
-    private static final boolean isNearby(final int x, final int y, final int z, final EntityPlayer player) {
+    private static final boolean isNearby(final BlockLocation min, final BlockLocation max, final int x, final int y, final int z) {
         return
-            Math.max(x, player.locX) - Math.min(x, player.locX) <= 1.5 &&
-            Math.max(y, player.locY) - Math.min(y, player.locY) <= 1.5 &&
-            Math.max(z, player.locZ) - Math.min(z, player.locZ) <= 1.5;
-    }
-
-    public static void setThread(final GeneratorThread thread) {
-        currentThread = thread;
-    }
-
-    public static void stopThread() {
-        currentThread.run = false;
+            x >= min.x() &&
+            x <= max.x() &&
+            z >= min.z() &&
+            z <= max.z() &&
+            y >= min.y() &&
+            y <= max.y();
     }
 }

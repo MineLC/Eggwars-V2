@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import io.github.ichocomilk.lightsidebar.LightSidebarLib;
-import io.github.ichocomilk.lightsidebar.Sidebar;
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.sidebar.types.GameSidebar;
@@ -30,10 +28,7 @@ public final class StartSidebar {
         final String[] lines = toArray(config.getStringList(sidebarPath + "lines")); 
         final String title = Messages.color(config.getString(sidebarPath + "title"));
     
-        final Sidebar lightSidebarLib = new LightSidebarLib().createSidebar();
-        final EggwarsSidebar sidebar = getSidebar(lightSidebarLib, type, lines, title);
-
-        lightSidebarLib.setTitle(title);
+        final EggwarsSidebar sidebar = getSidebar(type, lines, title);
 
         return sidebar;
     }
@@ -50,11 +45,11 @@ public final class StartSidebar {
         return array;
     }
 
-    private EggwarsSidebar getSidebar(final Sidebar lightSidebarLib, final SidebarType type, final String[] lines, final String title) {
+    private EggwarsSidebar getSidebar(final SidebarType type, final String[] lines, final String title) {
         switch (type) {
-            case SPAWN: return new SpawnSidebar(lightSidebarLib, lines);
-            case PREGAME: return new PregameSidebar(lightSidebarLib, lines);
-            case IN_GAME: return new GameSidebar(lightSidebarLib, lines);
+            case SPAWN: return new SpawnSidebar(lines, title);
+            case PREGAME: return new PregameSidebar(lines, title);
+            case IN_GAME: return new GameSidebar(title);
             default: return null;
         }
     }

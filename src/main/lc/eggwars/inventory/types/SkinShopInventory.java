@@ -12,6 +12,7 @@ import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.utils.EntityLocation;
 
 public final class SkinShopInventory {
 
@@ -59,10 +60,7 @@ public final class SkinShopInventory {
             event.getWhoClicked().getWorld(),
             skinClicked.id(),
             Integer.MAX_VALUE - 1,
-            loc.getBlockX(),
-            loc.getBlockY(),
-            loc.getBlockZ(),
-            loc.getYaw());
+            new EntityLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getYaw(), loc.getPitch()));
 
         player.closeInventory();
         plugin.getServer().getScheduler().runTaskLater(

@@ -55,9 +55,9 @@ public final class CompleteWorldGenerateListener implements EventListener {
 
         for (final Player player : playersTryingJoin) {    
             GameStorage.getStorage().join(bukkitWorld, gameInProgress, player);
-            PregameItemsStorage.getStorage().send(player);
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(gameInProgress.getWorld().getSpawnLocation());
+            PregameItemsStorage.getStorage().send(player);
         }
     }
 }

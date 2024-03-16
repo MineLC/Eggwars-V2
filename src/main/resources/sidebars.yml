@@ -17,13 +17,10 @@ pregame:
     - ""
     - "&fLCoins: &6%coin%"
     - ""
-    - "&fJugadores: &6%players%/&a%max%"
-    - "&fIniciando en: &6%timer%"
+    - "&fJugadores: &a%players%/&a%max%"
+    - "&fInicia en: &6%timer%"
     - ""
     - "&bplay.mine.lc"
 
 ingame:
   title: "&5&lEggWars"
-  footer:
-    - ""
-    - "&bplay.mine.lc"

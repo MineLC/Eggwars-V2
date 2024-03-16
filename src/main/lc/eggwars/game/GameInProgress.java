@@ -8,7 +8,9 @@ import java.util.HashSet;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -17,16 +19,14 @@ public final class GameInProgress {
     private final MapData data;
     private final World world;
 
-    private Set<BaseTeam> teamsWithEgg = new HashSet<>();
-
-    private Map<Player, BaseTeam> teamPerPlayer = new HashMap<>();
-    private Map<BaseTeam, Set<Player>> playersInTeams = new HashMap<>();
-
-    private Set<Player> players = new HashSet<>();
-    private Set<Player> playersLiving = new HashSet<>();
+    private final Map<Player, GameTeam> teamPerPlayer = new HashMap<>();
+    private final Map<BaseTeam, GameTeam> teamPerBase = new HashMap<>();
+    private final Set<GameTeam> teams = new HashSet<>();
+    private final Set<Player> players = new HashSet<>();
 
     private GameState state = GameState.NONE;
     private GameCountdown countdown;
+    private long startTime;
 
     public GameInProgress(MapData data, World world) {
         this.data = data;
@@ -35,6 +35,10 @@ public final class GameInProgress {
 
     public void setState(final GameState state) {
         this.state = state;
+    }
+
+    public void startTime() {
+        this.startTime = System.currentTimeMillis();
     }
 
     public void setCountdown(GameCountdown countdown) {
@@ -49,16 +53,20 @@ public final class GameInProgress {
         return world;
     }
 
+    public long getStartedTime() {
+        return startTime;
+    }
+
     public Set<Player> getPlayers() {
         return players;
     }
 
-    public Map<Player, BaseTeam> getTeamPerPlayer() {
+    public Map<Player, GameTeam> getTeamPerPlayer() {
         return teamPerPlayer;
     }
 
-    public Set<BaseTeam> getTeamsWithEgg() {
-        return teamsWithEgg;
+    public Map<BaseTeam, GameTeam> getTeamPerBase() {
+        return teamPerBase;
     }
 
     public GameState getState() {
@@ -69,11 +77,11 @@ public final class GameInProgress {
         return countdown;
     }
 
-    public Map<BaseTeam, Set<Player>> getPlayersInTeam() {
-        return playersInTeams;
+    public Set<GameTeam> getTeams() {
+        return teams;
     }
 
-    public Set<Player> getPlayersLiving() {
-        return playersLiving;
+    public boolean playerIsDead(final Player player) {
+        return player.getGameMode() == GameMode.SPECTATOR;
     }
 }

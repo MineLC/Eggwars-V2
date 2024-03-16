@@ -6,13 +6,14 @@ import java.util.UUID;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.endgame.EndgameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameTemporaryData;
 import lc.eggwars.game.pregameitems.teamselector.InventorySelector;
-import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 
 public final class GameStorage {
 
@@ -44,10 +45,7 @@ public final class GameStorage {
         final PreGameCountdown waitToStartCountdown = new PreGameCountdown(
             pregameData,
             game.getPlayers(),
-            () -> {
-                new GameManager().start(game);
-                game.setCountdown(null);
-            },
+            () -> new GameStartAndStop().start(game),
             temporaryData
         );
 
@@ -58,20 +56,23 @@ public final class GameStorage {
         game.setState(GameState.PREGAME);
     }
 
+    public void stop(final GameInProgress game) {
+        new GameStartAndStop().stop(game);
+    }
+
     public void leave(final GameInProgress game, final Player player, final boolean leaveFromGame) {
         playersInGame.remove(player.getUniqueId());
+        final GameTeam team = game.getTeamPerPlayer().get(player);
+        if (team != null) {
+            team.remove(player);
+        }
 
         if (game.getCountdown() instanceof EndgameCountdown) {
-            final BaseTeam team = game.getTeamPerPlayer().get(player);
-            team.getTeam().removePlayer(player);
-
+            game.getPlayers().remove(player);
             if (game.getPlayers().isEmpty()) {
-                new GameManager().stop(game);
+                stop(game);
                 return;
             }
-            game.getPlayers().remove(player);
-            game.getPlayersLiving().remove(player);
-            game.getPlayersInTeam().get(team).remove(player);
             game.getTeamPerPlayer().remove(player);
             return;
         }
@@ -80,16 +81,20 @@ public final class GameStorage {
             game.getPlayers().remove(player);
             pregame.getTemporaryData().leave(player, game);
             if (game.getPlayers().isEmpty()) {
-                new GameManager().stop(game);
+                new GameStartAndStop().stop(game);
             }
             return;
         }
-
-        new GameDeath(plugin).death(
-            game,
-            game.getTeamPerPlayer().get(player),
-            player,
-            leaveFromGame);
+        try {
+            new GameDeath(plugin).death(
+                game,
+                team,
+                player,
+                leaveFromGame,
+                true);   
+        } catch (Exception e) {
+            Logger.info(e);
+        }
     }
 
     public GameInProgress getGame(UUID uuid) {

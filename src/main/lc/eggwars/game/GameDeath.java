@@ -2,7 +2,7 @@ package lc.eggwars.game;
 
 import java.util.Set;
 
-import org.bukkit.GameMode;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
@@ -13,6 +13,7 @@ import lc.eggwars.others.levels.LevelStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 
 public final class GameDeath {
 
@@ -22,46 +23,50 @@ public final class GameDeath {
         this.plugin = plugin;
     }
 
-    public void death(final GameInProgress game, final BaseTeam team, final Player player, final boolean leaveFromGame) {
-        game.getPlayersLiving().remove(player);
+    public void death(final GameInProgress game, final GameTeam gameTeam, final Player player, final boolean leaveFromGame, final boolean finalKill) {
+        final BaseTeam team = gameTeam.getBase();
 
         if (leaveFromGame) {
             game.getPlayers().remove(player);
             game.getTeamPerPlayer().remove(player);
-            game.getPlayersInTeam().get(team).remove(player);
-            team.getTeam().removePlayer(player);
+            gameTeam.remove(player);
+
+            if (game.getPlayers().isEmpty()) {
+                new GameStartAndStop().stop(game);
+                return;
+            }
+        } else {
+            gameTeam.addPlayerDeath();
         }
 
-        if (game.getPlayers().isEmpty()) {
-            new GameManager().stop(game);
-            return;
-        }
+        LevelStorage.getStorage().onDeath(player, finalKill);
+        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, finalKill);
 
-        LevelStorage.getStorage().onDeath(player, leaveFromGame);
-        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, leaveFromGame);
-
-        Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
 
-        if (game.getTeamsWithEgg().size() > 1) {
+        if (gameTeam.getPlayerDeaths() != gameTeam.getPlayers().size()) {
             return;
         }
 
-        final BaseTeam finalTeam = getLastTeamAlive(game);
+        Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
+        final GameTeam finalTeam = getLastTeamAlive(game);
+        Messages.sendNoGet(game.getPlayers(), "LAST TEAM: " + ((finalTeam != null) ? finalTeam.getBase().getName() : "Ninguno"));
         if (finalTeam == null) {
             return;
         }
-
-        Messages.sendNoGet(game.getPlayers(), Messages.get("team.win").replace("%team%", finalTeam.getName()));        
-        for (final Player livingPlayer : game.getPlayersLiving()) {
-            livingPlayer.setGameMode(GameMode.SPECTATOR);
-        }
-        final Set<Player> winners = game.getPlayersInTeam().get(finalTeam);
+        
+        final Set<Player> winners = finalTeam.getPlayers();
         for (final Player winner : winners) {
             LevelStorage.getStorage().win(winner);
         }
 
-        final EndgameCountdown endgameCountdown = new EndgameCountdown(() -> new GameManager().stop(game));
+        final EndgameCountdown endgameCountdown = new EndgameCountdown(game);
+
+        Messages.sendNoGet(game.getPlayers(), Messages.get("team.win")
+            .replace("%team%", finalTeam.getBase().getName())
+            .replace("%time%", endgameCountdown.parseTime((System.currentTimeMillis() - game.getStartedTime()) / 1000)));
+
+        game.setState(GameState.END_GAME);
 
         int id = plugin.getServer().getScheduler().runTaskLater(
             plugin,
@@ -72,20 +77,21 @@ public final class GameDeath {
         game.setCountdown(endgameCountdown);
     }
 
-    private BaseTeam getLastTeamAlive(final GameInProgress game) {
-        BaseTeam finalTeam = null;
-        boolean anotherTeamLive = true;
+    private GameTeam getLastTeamAlive(final GameInProgress game) {
+        GameTeam lastTeam = null;
+        final Set<GameTeam> teams = game.getTeams();
 
-        for (final Player livingPlayer : game.getPlayersLiving()) {
-            if (finalTeam == null) {
-                finalTeam = game.getTeamPerPlayer().get(livingPlayer);
+        for (final GameTeam team : teams) {
+            Bukkit.broadcastMessage("TEAM: " + team.getBase().getName() + ". PLAYERS LIVE: " + (team.getPlayers().size() - team.getPlayerDeaths()));
+            if (team.getPlayers().size() == team.getPlayerDeaths()) {
                 continue;
             }
-            if (!finalTeam.equals(game.getTeamPerPlayer().get(livingPlayer))) {
-                anotherTeamLive = true;
-                break;
+            if (lastTeam != null) {
+                return null;
             }
+            lastTeam = team;
         }
-        return (anotherTeamLive) ? null : finalTeam;
+
+        return lastTeam;
     }
 }

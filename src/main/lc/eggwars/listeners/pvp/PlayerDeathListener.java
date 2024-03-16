@@ -4,10 +4,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import lc.eggwars.EggwarsPlugin;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
 public final class PlayerDeathListener implements EventListener {
+
+    private final EggwarsPlugin plugin;
+
+    public PlayerDeathListener(EggwarsPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @ListenerData(
         priority = EventPriority.HIGHEST,
@@ -18,7 +25,7 @@ public final class PlayerDeathListener implements EventListener {
             return;
         }
         final PlayerDeathEvent event = ((PlayerDeathEvent)defaultEvent);
-        event.getEntity().spigot().respawn();
+        plugin.getServer().getScheduler().runTask(plugin, () -> event.getEntity().spigot().respawn());
         event.setDeathMessage(null);
     }
 }

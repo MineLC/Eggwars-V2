@@ -1,6 +1,7 @@
 carrot:
   slot: 0
   item: "319"
+  stackeable: true
   lore:
     - "&71x &fHierro"
   need-item:
@@ -10,6 +11,7 @@ carrot:
 beef:
   slot: 1
   item: "364"
+  stackeable: true
   lore:
     - "&75x &fHierro"
   need-item:
@@ -19,6 +21,7 @@ beef:
 cake:
   slot: 2
   item: "354"
+  stackeable: true
   lore:
     - "&716x &fHierro"
   need-item:
@@ -28,6 +31,7 @@ cake:
 golden-apple:
   slot: 3
   item: "322"
+  stackeable: true
   lore:
     - "&72x &eOro"
   need-item:
@@ -37,6 +41,7 @@ golden-apple:
 gapple:
   slot: 4
   item: "322:1"
+  stackeable: true
   lore:
     - "&764x &bDiamantes"
   need-item:

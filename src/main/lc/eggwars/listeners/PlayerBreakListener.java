@@ -1,6 +1,5 @@
 package lc.eggwars.listeners;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,14 +16,15 @@ public class PlayerBreakListener implements EventListener {
     )
     public void handle(Event defaultEvent) {
         final BlockBreakEvent event = (BlockBreakEvent)defaultEvent;
-        if (!SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
+        if (SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
+            event.setCancelled(true);
             return;
         }
-        final Material material = event.getBlock().getType();
-        if (material == Material.GLASS) {
-            event.setCancelled(false);
-            return;
+        switch (event.getBlock().getType()) {
+            case OBSIDIAN, GLASS, SANDSTONE, ENDER_STONE:
+                return;
+            default:
+                event.setCancelled(true);
         }
-        event.setCancelled(true);
-    } 
+    }
 }

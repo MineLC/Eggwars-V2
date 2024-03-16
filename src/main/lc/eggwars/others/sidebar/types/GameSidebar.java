@@ -1,37 +1,43 @@
 package lc.eggwars.others.sidebar.types;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 
+import io.github.ichocomilk.lightsidebar.LightSidebarLib;
 import io.github.ichocomilk.lightsidebar.Sidebar;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
 
 public final class GameSidebar implements EggwarsSidebar {
-    private final Sidebar sidebar;
-    private final String[] footer;
+    private final String title;
 
-    public GameSidebar(Sidebar sidebar, String[] footer) {
-        this.sidebar = sidebar;
-        this.footer = footer;
+    public GameSidebar(String title) {
+        this.title = title;
     }
 
     @Override
     public void send(Player player) {
-        sidebar.setLines(createGameLines(player));
-        sidebar.sendLines(player);
-        sidebar.sendTitle(player);
+        send(List.of(player));
     }
 
     @Override
     public void send(Collection<Player> players) {
-        sidebar.setLines(createGameLines(players.iterator().next()));
+        final GameInProgress game = GameStorage.getStorage().getGame(players.iterator().next().getUniqueId());
+        if (game == null) {
+            return;
+        }
+        final Sidebar sidebar = new LightSidebarLib().createSidebar();
+
+        sidebar.setLines(createGameLines(sidebar, game));
+        sidebar.setTitle(title);
 
         for (final Player player : players) {
             sidebar.sendLines(player);
@@ -39,55 +45,27 @@ public final class GameSidebar implements EggwarsSidebar {
         }
     }
 
-    private final Object[] createGameLines(final Player player) {
-        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
-        if (game == null) {
-            return sidebar.createLines(footer);
+    private final PacketPlayOutScoreboardScore[] createGameLines(final Sidebar sidebar, final GameInProgress game) {
+        final Set<GameTeam> teams = game.getTeams();
+
+        final int amountTeams = teams.size();
+        final String[] teamLines = new String[amountTeams];
+        final int[] scores = new int[amountTeams];
+        int score = -1;
+
+        for (final GameTeam team : teams) {
+            final int amountLive = team.getPlayers().size() - team.getPlayerDeaths();
+            final BaseTeam baseTeam = team.getBase();
+
+            scores[++score] = amountLive;
+            teamLines[score] = team.hasEgg()
+                ? ChatColor.GREEN.toString() + "✔ " + baseTeam.getName()
+                : ChatColor.RED.toString() + "✘ " + baseTeam.getName();
         }
-
-        final Set<Entry<BaseTeam, Set<Player>>> playersPerTeam = game.getPlayersInTeam().entrySet();
-        final Set<Player> playersLiving = game.getPlayersLiving();
-
-        final int amountTeams = game.getMapData().getSpawns().size();
-        final String[] teamLines = new String[amountTeams + footer.length];
-        int score = 0;
-
-        for (final Entry<BaseTeam, Set<Player>> team : playersPerTeam) {
-            final Set<Player> players = team.getValue();
-            int amountLive = 0;
-            for (final Player teamPlayer : players) {
-                if (playersLiving.contains(teamPlayer)) {
-                    amountLive++;
-                }
-            }
-            final BaseTeam baseTeam = team.getKey();
-
-            if (amountLive == 0) {
-                teamLines[score++] = createTeamLine(baseTeam.getName(), 'c', 'X', false);
-                continue;
-            }
-
-            if (game.getTeamsWithEgg().contains(baseTeam)) {
-                teamLines[score++] = createTeamLine(baseTeam.getName(), 'a', '✓', false);
-                continue;
-            }
-            teamLines[score++] = createTeamLine(baseTeam.getName(), '7', (char)amountLive, true);
+        final PacketPlayOutScoreboardScore[] lines = (PacketPlayOutScoreboardScore[]) sidebar.createLines(teamLines);
+        for (int i = 0; i < amountTeams; i++) {
+            lines[i].c = scores[i];
         }
-
-        for (int i = 0; i < footer.length; i++) {
-            teamLines[score + i] = footer[i];
-        }
-        return sidebar.createLines(teamLines);
-    }
-
-    private String createTeamLine(final String teamName, final char color, final char value, final boolean number) {
-        final StringBuilder builder = new StringBuilder(teamName.length() + 5);
-        builder.append(teamName);
-        builder.append(' ');
-
-        builder.append(ChatColor.COLOR_CHAR);
-        builder.append((number) ? (int)value : value);
-
-        return builder.toString();
+        return lines;
     }
 }

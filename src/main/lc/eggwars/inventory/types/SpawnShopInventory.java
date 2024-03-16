@@ -20,16 +20,15 @@ public final class SpawnShopInventory {
     }
 
     public void handle(InventoryClickEvent event) {
+        event.setCancelled(true);
         final int slot = event.getSlot();
 
         if (slot == skinShopItem.slot()) {
-            event.setCancelled(true);
             event.getWhoClicked().openInventory(ShopKeepersStorage.getStorage().data().skinShopInventory());
             return;
         }
     
         if (slot == kitItem.slot()) {
-            event.setCancelled(true);
             event.getWhoClicked().openInventory(KitStorage.getStorage().inventory().getInventory());
         }
     }

@@ -29,22 +29,15 @@ public final class ShopKeeperManager {
     }
 
     public void send(final Player player, final GameInProgress game) {
-        final TIntIterator iterator = game.getMapData().getShopIDs().iterator();
+        final TIntIterator shopsID = game.getMapData().getShopsID().iterator();
+        final int shopID = PlayerDataStorage.getStorage().get(player.getUniqueId()).skinSelected;
+
         for (final EntityLocation location : game.getMapData().getShopSpawns()) {
-            final int shopID = PlayerDataStorage.getStorage().get(player.getUniqueId()).skinSelected;
-            spawn(
-                player,
-                player.getWorld(),
-                shopID,
-                iterator.next(),
-                location.x(),
-                location.y() + ShopKeepersStorage.getStorage().skins().get(shopID).addHeight(),
-                location.z(),
-                location.yaw());
+            spawn(player, player.getWorld(), shopID, shopsID.next(), location);
         }
     }
 
-    public int spawn(final Player player, final World world, final int typeID, final int entityID, int x, int y, int z, float yaw) {
+    public int spawn(final Player player, final World world, final int typeID, final int entityID, final EntityLocation location) {
         final Entity entity = createEntityById(typeID, ((CraftWorld)world).getHandle());
 
         if (!(entity instanceof EntityLiving livingEntity)) {
@@ -54,21 +47,22 @@ public final class ShopKeeperManager {
         entity.setCustomName(ShopKeepersStorage.getStorage().customName());
         entity.setCustomNameVisible(true);
 
-        livingEntity.locX = x + 0.5D;
-        livingEntity.locY = y;
-        livingEntity.locZ = z + 0.5D;
-        livingEntity.yaw = yaw;
+        livingEntity.locX = location.x() + 0.5D;
+        livingEntity.locY = location.y() + ShopKeepersStorage.getStorage().skins().get(typeID).addHeight();
+        livingEntity.locZ = location.z() + 0.5D;
+        livingEntity.yaw = location.yaw();
+        livingEntity.pitch = location.pitch();
     
         final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(livingEntity);
         final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(livingEntity.getId(), livingEntity.getDataWatcher(), true);
     
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(spawn);
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(data);
+        ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(spawn);
+        ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(data);
         return entity.getId();
     }
 
     public void deleteEntity(final int id, final Player player) {
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(id));
+        ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(new PacketPlayOutEntityDestroy(id));
     }
 
     private Entity createEntityById(int typeID, net.minecraft.server.v1_8_R3.World world) {  

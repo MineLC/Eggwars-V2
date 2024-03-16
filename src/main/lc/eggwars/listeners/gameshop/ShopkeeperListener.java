@@ -3,6 +3,7 @@ package lc.eggwars.listeners.gameshop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.tinylog.Logger;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
@@ -21,20 +22,33 @@ public final class ShopkeeperListener implements EventListener {
         priority = EventPriority.LOWEST
     )
     public void handle(Event defaultEvent) {
+        try {
+
         final PreInteractEntityEvent event = (PreInteractEntityEvent)defaultEvent;
         final Player player = event.getPlayer();
-        final GameInProgress map = GameStorage.getStorage().getGame(player.getUniqueId());
 
-        if (map == null || map.getState() != GameState.IN_GAME) {
+        if (player.getOpenInventory() != null
+            && player.getOpenInventory().getTopInventory() != null
+            && player.getOpenInventory().getTopInventory().getHolder().equals(ShopKeepersStorage.getStorage().data().itemsShop().getHolder())) {
             return;
         }
 
-        if (map.getMapData().getShopIDs().contains(event.getEntityID())) {
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
+
+        if (game == null || game.getState() != GameState.IN_GAME) {
+            return;
+        }
+
+        if (game.getMapData().getShopsID().contains(event.getEntityID())) {
             final ShopkeepersData.Skin skin = ShopKeepersStorage.getStorage().skins().get(event.getEntityID());
             if (skin != null) {
                 player.sendMessage(skin.message());
             }
             player.openInventory(ShopKeepersStorage.getStorage().data().itemsShop());
+        }   
+        } catch (Exception e) {
+            Logger.info("ERROR ON PREINTERACT ENTITY LISTNER");
+            Logger.error(e);
         }
     }
 }

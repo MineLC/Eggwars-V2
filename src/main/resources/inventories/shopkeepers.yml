@@ -154,7 +154,7 @@ Witch:
 
 Pig:
   click-send: "&dNo estados unidos... no me hagas tocino de vuelta"
-  addHeight: 0
+  addHeight: -1
   cost: 500
 
   # Inventory Settings
@@ -171,7 +171,7 @@ Pig:
 
 Sheep:
   click-send: "&fLa ropa de lana está bien cara"
-  addHeight: 0
+  addHeight: -1
   cost: 500
 
   # Inventory Settings
@@ -256,7 +256,7 @@ Endermite:
 
 Slime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
-  addHeight: 1
+  addHeight: 0
   cost: 750
 
   # Inventory Settings
@@ -392,7 +392,7 @@ Enderman:
 
 CaveSpider:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
-  addHeight: 0
+  addHeight: -1
   cost: 1500
 
   # Inventory Settings
@@ -461,6 +461,7 @@ EntityHorse:
 WitherBoss:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   cost: 2000
+  addHeight: 0
 
   # Inventory Settings
   slot: 26

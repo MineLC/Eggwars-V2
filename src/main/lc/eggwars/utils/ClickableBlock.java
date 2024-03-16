@@ -5,4 +5,5 @@ import org.bukkit.event.block.Action;
 
 public interface ClickableBlock {
     void onClick(final Player player, final Action action);
+    boolean supportLeftClick();
 }

@@ -6,7 +6,7 @@ stone-pickaxe:
   enchantments:
     - "DIG_SPEED:1"
   need-item:
-    amount: 1
+    amount: 10
     item: "265"
 
 iron-pickaxe:
@@ -28,7 +28,7 @@ diamond-pickaxe:
   enchantments:
     - "DIG_SPEED:1"
   need-item:
-    amount: 15
+    amount: 5
     item: "264"
 
 op-diamond-pickaxe:

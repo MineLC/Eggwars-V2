@@ -10,11 +10,18 @@ team:
   already: "&cYa estás en este equipo"
   death: "&cEl equipo %team% ha sido eliminado"
   win:
-    - " "
-    - "&a¡El juego ha acabado!"
-    - "&aEl equipo ganador es %team%"
-    - " "
+    - ""
+    - "&a&l   PARTIDA FINALIZADA"
+    - ""
+    - " &f  Duración: &e%time%"
+    - ""
+    - " &f  Ganador: %team%"
+    - ""
 
+gameshop:
+  clean-inventory: "&cLimpia tu inventario antes de comprar mucha cantidad"
+  need-items: "&cNo tienes items suficientes para comprar esto"
+  no-enough-space: "&cLa cantidad a comprar es tan grande que no cabe en tu inventario"
 kit:
   selected: "&aHas selecionado el kit %name%"
   no-money: "&cNo tienes suficientes lcoins para comprar este kit"

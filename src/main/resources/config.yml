@@ -19,4 +19,7 @@ shopkeepers:
   preview-seconds-duration: 5 
   name: "&e&lTienda"
 
+generators:
+  pickup-distance-blocks: 2
+
 win-celebration-duration-in-seconds: 10

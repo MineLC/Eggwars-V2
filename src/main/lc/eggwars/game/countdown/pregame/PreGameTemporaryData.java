@@ -9,6 +9,7 @@ import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shop.metadata.LeatherArmorColorMetadata;
 import lc.eggwars.teams.BaseTeam;
+import lc.eggwars.teams.GameTeam;
 
 public final class PreGameTemporaryData {
     private final Inventory teamSelector;
@@ -20,16 +21,27 @@ public final class PreGameTemporaryData {
     }
 
     public boolean joinToTeam(final Player player, final GameInProgress game, final BaseTeam team) {
-        final BaseTeam baseTeam = game.getTeamPerPlayer().get(player);
-        if (baseTeam != null) {
-            if (baseTeam.equals(team)) {
+        final GameTeam playerTeam = game.getTeamPerPlayer().get(player);
+        GameTeam teamToJoin = game.getTeamPerBase().get(team);
+
+        if (playerTeam != null) {
+            if (playerTeam.getBase().equals(team)) {
                 return false;
             }
-            game.getPlayersInTeam().get(baseTeam).remove(player);
+            playerTeam.remove(player);
             game.getTeamPerPlayer().remove(player);
+            if (playerTeam.getPlayers().isEmpty()) {
+                game.getTeams().remove(playerTeam);
+            }
         }
-        game.getTeamPerPlayer().put(player, team);
-        game.getPlayersInTeam().get(team).add(player);
+        if (teamToJoin == null) {
+            teamToJoin = new GameTeam(team);
+            game.getTeams().add(teamToJoin);
+            game.getTeamPerBase().put(team, teamToJoin);
+        }
+
+        game.getTeamPerPlayer().put(player, teamToJoin);
+        teamToJoin.add(player);
 
         final ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         new LeatherArmorColorMetadata().setColor(chestplate, player, team.getLeatherColor());
@@ -39,9 +51,9 @@ public final class PreGameTemporaryData {
     }
 
     public void leave(final Player player, final GameInProgress game) {
-        final BaseTeam team = game.getTeamPerPlayer().get(player);
+        final GameTeam team = game.getTeamPerPlayer().get(player);
         if (team != null) {
-            game.getPlayersInTeam().get(team).remove(player);
+            team.remove(player);
         }
         game.getTeamPerPlayer().remove(player);
     }

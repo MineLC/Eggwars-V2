@@ -1,11 +1,9 @@
 package lc.eggwars;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -14,19 +12,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import org.tinylog.Logger;
 
-import io.netty.util.collection.IntObjectHashMap;
-
 import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
 import lc.eggwars.commands.game.GameCommand;
 import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.database.MongoDBHandler;
+import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.StartGameData;
-import lc.eggwars.game.generators.GeneratorThread;
 import lc.eggwars.game.generators.StartGenerators;
 import lc.eggwars.game.pregameitems.StartPreGameItems;
-import lc.eggwars.game.shop.Shop;
+import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
 import lc.eggwars.listeners.PlayerBreakListener;
@@ -34,7 +30,6 @@ import lc.eggwars.listeners.PlayerDropitemListener;
 import lc.eggwars.listeners.PlayerInteractListener;
 import lc.eggwars.listeners.PlayerJoinListener;
 import lc.eggwars.listeners.PlayerQuitListener;
-import lc.eggwars.listeners.gameshop.GameShopInventoryClickListener;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
 import lc.eggwars.listeners.map.CompleteWorldGenerateListener;
@@ -75,8 +70,8 @@ public class EggwarsPlugin extends JavaPlugin {
             try {   
                 DATABASE.init(this);   
             } catch (Exception e) {
-                Logger.error(e);
-            }    
+                getServer().getScheduler().runTask(this, () -> Logger.error(e));
+            }
         });
 
         loadCommands(slimePlugin);
@@ -92,44 +87,40 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartPreGameItems().load(this);
         new StartSidebar().load(this);
 
-        final IntObjectHashMap<Shop> shops = new StartShops().load(this);
-        new StartShopkeepers().load(this, shops);
+        final ShopsData data = new StartShops().load(this);
+        new StartShopkeepers().load(this, data.shops());
 
-        final ListenerRegister listeners = new ListenerRegister(this);
+        final CompletableFuture<Void> loadingMaps = new StartMaps(this, slimePlugin).load();
+        if (loadingMaps != null) {
+            loadingMaps.thenAccept((none) -> new StartSpawn(this).loadSpawn());
+            GameManagerThread.startThread();
+        }
 
-        getServer().getScheduler().runTaskLater(this, () -> {
-            try {
-                new StartMaps(this, slimePlugin).load();
-                new StartSpawn(this).loadSpawn();
-            } catch (Exception e) {
-                Logger.error(e);
-            }
-        }, 40);
-
-        registerBasicListeners(listeners);
-        listeners.register(new GameShopInventoryClickListener(shops), false);
+        registerBasicListeners(data);
     }
 
     @Override
     public void onDisable() {
         DATABASE.shutdown();
 
-        final List<World> worlds = Bukkit.getWorlds();
-
-        for (final World world : worlds) {
-            Bukkit.unloadWorld(world, false);
+        final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SwoftyWorldManager");
+        if (slimePlugin != null) {
+            slimePlugin.getSlimeWorlds().values().forEach((world) -> world.unloadWorld(false));
+            return;
         }
 
-        GeneratorThread.setThread(null);
+        GameManagerThread.stopThread();
         getServer().getScheduler().cancelTasks(this);
     }
 
-    private void registerBasicListeners(final ListenerRegister listeners) {
-        listeners.register(new PlayerDeathListener(), true);
-        listeners.register(new PlayerRespawnListener(), true);
+    private void registerBasicListeners(final ShopsData shopsData) {
+        final ListenerRegister listeners = new ListenerRegister(this);
+
+        listeners.register(new PlayerDeathListener(this), true);
+        listeners.register(new PlayerRespawnListener(this), true);
         listeners.register(new EntityDamageListener(), true);
         listeners.register(new PlayerDamageByPlayerListener(), true);
-        listeners.register(new PlayerInventoryClickListener(this), true);
+        listeners.register(new PlayerInventoryClickListener(this, shopsData), true);
         listeners.register(new PlayerInteractListener(), true);
 
         listeners.register(new ShopkeeperListener(), false);

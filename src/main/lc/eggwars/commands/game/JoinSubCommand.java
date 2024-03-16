@@ -33,7 +33,10 @@ final class JoinSubCommand implements Command {
             sendWithColor(player, "&cFormat: /join &7(worldname)");
             return;
         }
-
+        if (GameStorage.getStorage().getGame(player.getUniqueId()) != null) {
+            send(sender, "Ya estás en un juego. Usa /leave para salir");
+            return;
+        }
         final MapData map = MapStorage.getStorage().getMapData(args[1]);
         if (map == null) {
             sendWithColor(player, "&cThis map don't exist. Available maps: " + MapStorage.getStorage().getMaps().keySet());

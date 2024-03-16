@@ -18,8 +18,8 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
     }
 
     public void setKit(final Player player, final boolean clearInventory) {
-        final int kitSelected = PlayerDataStorage.getStorage().get(player.getUniqueId()).kitSelected;
-        final Kit selectedKit = kitsPerId.get(kitSelected);
+        final int kitSelectedID = PlayerDataStorage.getStorage().get(player.getUniqueId()).kitSelected;
+        final Kit selectedKit = kitsPerId.get(kitSelectedID);
         final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
 
         if (clearInventory) {
@@ -28,7 +28,7 @@ public final record KitStorage(KitInventory inventory, IntObjectHashMap<Kit> kit
             }
         }
 
-        if (selectedKit == null || kitSelected == 0) {
+        if (selectedKit == null || kitSelectedID == 0) {
             return;
         }
 

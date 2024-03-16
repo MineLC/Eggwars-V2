@@ -36,7 +36,7 @@
             <artifactId>lcspigot</artifactId>
             <version>1.8.4</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/lcspigot-0.0.3.jar</systemPath>
+            <systemPath>${basedir}/libs/lcspigot-0.0.4.jar</systemPath>
         </dependency>
         <dependency>  
             <groupId>net.swofty</groupId>  
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.github.ichocomilk</groupId>
             <artifactId>LightSidebar</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

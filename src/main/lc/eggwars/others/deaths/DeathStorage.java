@@ -12,6 +12,7 @@ public final class DeathStorage {
     private static DeathStorage storage;
 
     private final String[] deathMessages;
+    private final String fallbackDeathMessage;
     private final String finalKillPrefix, suffixIfPlayerKill;
 
     private final String respawnTitle, respawnSubtitle;
@@ -19,9 +20,10 @@ public final class DeathStorage {
 
     private final EggwarsPlugin plugin;
 
-    DeathStorage(EggwarsPlugin plugin, String[] deathMessages, String finalKillPrefix, String suffixIfPlayerKill, String title, String subtitle, int waitingTime) {
+    DeathStorage(EggwarsPlugin plugin, String[] deathMessages, String fallbackDeathMessage, String finalKillPrefix, String suffixIfPlayerKill, String title, String subtitle, int waitingTime) {
         this.plugin = plugin;
         this.deathMessages = deathMessages;
+        this.fallbackDeathMessage = fallbackDeathMessage;
         this.finalKillPrefix = finalKillPrefix;
         this.suffixIfPlayerKill = suffixIfPlayerKill;
         this.respawnTitle = title;
@@ -41,19 +43,23 @@ public final class DeathStorage {
 
         final DeathCinematic cinematic = new DeathCinematic(onCompleteCinematic, respawnTitle, respawnSubtitle, respawnWaitTime, player);
         final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> cinematic.run(), 0, 20).getTaskId();
-
         cinematic.setId(id);
         final String message = createMessage(player, false);
+
         if (message != null) {
             Messages.sendNoGet(playersToSendMessage, message);
         }
     }
 
     private String createMessage(final Player player, boolean finalKill) {
-        final String deathMessage = deathMessages[player.getLastDamageCause().getCause().ordinal()];
+        final String deathMessage = (player.getLastDamageCause() == null)
+            ? fallbackDeathMessage
+            : deathMessages[player.getLastDamageCause().getCause().ordinal()];
+
         if (deathMessage == null) {
             return null;
         }
+
         String finalMessage = (finalKill) ? finalKillPrefix : "";
 
         finalMessage += deathMessage.replace("%v%", player.getName());

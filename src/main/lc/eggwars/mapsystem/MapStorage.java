@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import net.swofty.swm.api.world.SlimeWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -73,13 +74,24 @@ public final class MapStorage {
 
     // Execute this method async
     public CompletableFuture<Void> load(final String worldName) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
         try {
-            return slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
+            SlimeWorld world = slimePlugin.loadWorld(loader, worldName, false, PROPERTIES);
+            CompletableFuture<Void> generationFuture = slimePlugin.generateWorld(world);
+            generationFuture.whenComplete((result, ex) -> {
+                if (ex != null) {
+                    future.completeExceptionally(ex);
+                } else {
+                    future.complete(null);
+                }
+            });
         } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
             e.printStackTrace();
-            return null;
+            future.completeExceptionally(e);
         }
+        return future;
     }
+
 
     public void loadClickableBlocks(final World world) {
         final MapData map = mapsPerName.get(world.getName());

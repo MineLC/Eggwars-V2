@@ -91,7 +91,7 @@ final class GameStartAndStop {
 
     private void addToTeam(final GameInProgress game, final Player player, final GameTeam team, final boolean alreadyInTheTeam) {
         final BlockLocation spawn = game.getMapData().getSpawns().get(team.getBase());
-        player.teleport(new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z()));
+        player.teleport(new Location(game.getWorld(), spawn.x(), spawn.y(), spawn.z()));
         player.setGameMode(GameMode.SURVIVAL);
 
         if (!alreadyInTheTeam) {

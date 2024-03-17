@@ -42,7 +42,9 @@
             <groupId>net.swofty</groupId>  
             <artifactId>swoftyworldmanager-api</artifactId>  
             <version>4.0.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/swoftyworldmanager-api-4.0.0.jar</systemPath>
+
         </dependency>
         <dependency>
             <groupId>com.github.ichocomilk</groupId>

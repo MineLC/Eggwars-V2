@@ -94,7 +94,6 @@ public class EggwarsPlugin extends JavaPlugin {
         if (loadingMaps != null) {
             loadingMaps.thenAccept((none) -> {
                 new StartSpawn(this).loadSpawn();
-                new StartPreGameData().loadMap(this);
             });
             GameManagerThread.startThread();
         }

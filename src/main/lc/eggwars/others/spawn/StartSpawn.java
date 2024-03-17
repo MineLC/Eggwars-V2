@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
@@ -64,6 +65,8 @@ public class StartSpawn {
             bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
             final SpawnStorage oldStorage = SpawnStorage.getStorage();
             SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
+            new StartPreGameData().loadMap(plugin);
+
         });
     }
 

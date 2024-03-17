@@ -70,6 +70,12 @@
             <version>2.0.12</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>obed.me</groupId>
+            <artifactId>LCCommons</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
    </dependencies>
 
     <build>

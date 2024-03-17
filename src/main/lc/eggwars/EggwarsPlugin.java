@@ -3,6 +3,7 @@ package lc.eggwars;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
+import lc.eggwars.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,11 +26,6 @@ import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
-import lc.eggwars.listeners.PlayerBreakListener;
-import lc.eggwars.listeners.PlayerDropitemListener;
-import lc.eggwars.listeners.PlayerInteractListener;
-import lc.eggwars.listeners.PlayerJoinListener;
-import lc.eggwars.listeners.PlayerQuitListener;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
 import lc.eggwars.listeners.map.CompleteWorldGenerateListener;
@@ -131,6 +127,7 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerQuitListener(), true);  
         listeners.register(new PlayerDropitemListener(), true);  
         listeners.register(new CompleteWorldGenerateListener(), true);
+        listeners.register(new PlayerChatListener(), true);
 
         listeners.cancelEvent(BlockPhysicsEvent.class);
         listeners.cancelEvent(BlockGrowEvent.class);

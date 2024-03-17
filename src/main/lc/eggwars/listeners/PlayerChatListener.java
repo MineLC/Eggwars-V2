@@ -10,6 +10,7 @@ import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 import obed.me.lccommons.api.entities.PlayerData;
 import obed.me.lccommons.api.services.UserProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
@@ -36,21 +37,21 @@ public class PlayerChatListener implements EventListener {
 
         String message = event.getMessage();
         if(!p.hasPermission("minelc.vip"))
-            message = ChatColor.stripColor(message);
+            message = StringUtils.remove(message , '&');
 
         GameInProgress game = GameStorage.getStorage().getGame(p.getUniqueId());
         String global_format = String.format("%s %s &8» &7%s",
-                pp.getRankInfo().getRank().getPrefix(), "&7" + p.getName(), message);
+                pp.getRankInfo().getRank().getPrefix(), "&7" + pp.getRankInfo().getUserColor() + p.getName(), message);
 
         if(game == null){
             Messages.sendNoGet(SpawnStorage.getStorage().location().getWorld().getPlayers(), global_format);
             return;
         }
         if(game.getState() == GameState.PREGAME){
-            Messages.sendNoGet(game.getWorld().getPlayers(), global_format);
+            Messages.sendNoGet(game.getPlayers(), global_format);
             return;
         }
-        String formatted = String.format("%s %s &8» &7%s", "&8(Espectador)", p.getName(), message);
+        String formatted = String.format("%s &7%s &8» &7%s", "&8&lEspectador", p.getName(), message);
 
         if(p.getGameMode() == GameMode.SPECTATOR){
             Messages.sendNoGet(game.getPlayers().stream()
@@ -61,13 +62,15 @@ public class PlayerChatListener implements EventListener {
         }
         GameTeam team = game.getTeams().stream().filter(t -> t.getPlayers().contains(p)).findFirst().orElse(null);
         if(team == null) return;
-        formatted = String.format("&6(Global) %s %s &8» &7%s", team.getBase().getKey(), p.getName(), message);
+
+
+        formatted = String.format("&6&lGLOBAL %s%s &8» &7%s", team.getBase().getTeam().getPrefix(), p.getName(), message);
 
         if(event.getMessage().startsWith("!")){
-            Messages.sendNoGet(game.getPlayers(), formatted);
+            Messages.sendNoGet(game.getPlayers(), formatted.replaceFirst("!", ""));
             return;
         }
-        formatted = String.format("%s %s &8» &7%s", team.getBase().getKey(), p.getName(), message);
+        formatted = String.format("&b&lEQUIPO %s%s &8» &7%s", team.getBase().getTeam().getPrefix(), p.getName(), message);
         Messages.sendNoGet(team.getPlayers(), formatted);
 
 

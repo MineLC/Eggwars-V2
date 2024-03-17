@@ -67,7 +67,10 @@ public class StartSpawn {
             SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
             new StartPreGameData().loadMap(plugin);
 
-        });
+        }).thenAccept((none)-> {
+            new StartPreGameData().loadMap(plugin);
+        })
+        ;
     }
 
     private SpawnShopInventory getSpawnShopInventory() {

@@ -36,7 +36,7 @@ public final class Messages {
     }
 
     public static final void sendNoGet(final Collection<Player> senders, final String message) {
-        final BaseComponent[] components = TextComponent.fromLegacyText(message);
+        final BaseComponent[] components = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message));
         for(final Player sender : senders) {
             sender.spigot().sendMessage(components);
         }

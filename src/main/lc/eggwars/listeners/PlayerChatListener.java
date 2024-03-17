@@ -4,6 +4,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.teams.GameTeam;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -11,6 +12,7 @@ import obed.me.lccommons.api.entities.PlayerData;
 import obed.me.lccommons.api.services.UserProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -38,10 +40,10 @@ public class PlayerChatListener implements EventListener {
 
         GameInProgress game = GameStorage.getStorage().getGame(p.getUniqueId());
         String global_format = String.format("%s %s &8» &7%s",
-                pp.getRankInfo().getRank().getPrefix(), pp.getRankInfo().getUserColor() + p.getName(), message);
+                pp.getRankInfo().getRank().getPrefix(), "&7" + p.getName(), message);
 
         if(game == null){
-            Messages.sendNoGet(p.getWorld().getPlayers(), global_format);
+            Messages.sendNoGet(SpawnStorage.getStorage().location().getWorld().getPlayers(), global_format);
             return;
         }
         if(game.getState() == GameState.PREGAME){

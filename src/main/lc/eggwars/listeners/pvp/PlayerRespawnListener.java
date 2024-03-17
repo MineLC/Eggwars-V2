@@ -1,6 +1,5 @@
 package lc.eggwars.listeners.pvp;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -57,8 +56,6 @@ public final class PlayerRespawnListener implements EventListener {
             }
             return;
         }
-        Bukkit.broadcastMessage("PLAYERS DEATHS: " + team.getPlayerDeaths());
-        Bukkit.broadcastMessage("CAN ELIMINATE: " + (team.getPlayerDeaths() == team.getPlayers().size()));
 
         final BlockLocation spawn = game.getMapData().getSpawns().get(team.getBase());
         final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());

@@ -8,10 +8,17 @@ sign-lines:
   - "&8Click derecho"
   - "%speed% -> %speed_next%"
 
+disable-default-world: "world"
+
 spawn:
   world: "spawn"
-  cords: "10,74,1"
+  cords: "10,74,1,23,23"
   border: 126
+
+pregame:
+  world: "pregame"
+  cords: "0,65,0,19,1.7"
+  border: 200
 
 shopkeepers:
   rows: 5

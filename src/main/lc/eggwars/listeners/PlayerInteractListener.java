@@ -13,7 +13,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
-import lc.eggwars.game.pregameitems.PregameItemsStorage;
+import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.utils.ClickableBlock;
@@ -86,7 +86,7 @@ public final class PlayerInteractListener implements EventListener {
             if (!(game.getCountdown() instanceof PreGameCountdown pregame)) {
                 return;
             }
-            if (PregameItemsStorage.getStorage().getSelectTeamItem().item().getType() == type) {
+            if (PregameStorage.getStorage().selectTeam().item().getType() == type) {
                 event.setCancelled(true);
                 event.getPlayer().openInventory(pregame.getTemporaryData().getTeamSelectorInventory());
                 return;

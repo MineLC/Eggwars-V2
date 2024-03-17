@@ -21,7 +21,7 @@ import lc.eggwars.database.MongoDBHandler;
 import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.game.generators.StartGenerators;
-import lc.eggwars.game.pregameitems.StartPreGameItems;
+import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
@@ -33,10 +33,10 @@ import lc.eggwars.listeners.PlayerQuitListener;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
 import lc.eggwars.listeners.map.CompleteWorldGenerateListener;
-import lc.eggwars.listeners.pvp.EntityDamageListener;
-import lc.eggwars.listeners.pvp.PlayerDamageByPlayerListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
 import lc.eggwars.listeners.pvp.PlayerRespawnListener;
+import lc.eggwars.listeners.pvp.damage.EntityDamageListener;
+import lc.eggwars.listeners.pvp.damage.PlayerDamageByPlayerListener;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
@@ -84,7 +84,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartDeaths(this).load(this);
         new StartSpawn(this).loadItems();
         new StartLevels(this).load();
-        new StartPreGameItems().load(this);
+        new StartPreGameData().loadItems(this);
         new StartSidebar().load(this);
 
         final ShopsData data = new StartShops().load(this);
@@ -92,7 +92,10 @@ public class EggwarsPlugin extends JavaPlugin {
 
         final CompletableFuture<Void> loadingMaps = new StartMaps(this, slimePlugin).load();
         if (loadingMaps != null) {
-            loadingMaps.thenAccept((none) -> new StartSpawn(this).loadSpawn());
+            loadingMaps.thenAccept((none) -> {
+                new StartSpawn(this).loadSpawn();
+                new StartPreGameData().loadMap(this);
+            });
             GameManagerThread.startThread();
         }
 

@@ -2,7 +2,6 @@ package lc.eggwars.game;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
@@ -50,7 +49,7 @@ public final class GameDeath {
 
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
         final GameTeam finalTeam = getLastTeamAlive(game);
-        Messages.sendNoGet(game.getPlayers(), "LAST TEAM: " + ((finalTeam != null) ? finalTeam.getBase().getName() : "Ninguno"));
+       
         if (finalTeam == null) {
             return;
         }
@@ -82,7 +81,6 @@ public final class GameDeath {
         final Set<GameTeam> teams = game.getTeams();
 
         for (final GameTeam team : teams) {
-            Bukkit.broadcastMessage("TEAM: " + team.getBase().getName() + ". PLAYERS LIVE: " + (team.getPlayers().size() - team.getPlayerDeaths()));
             if (team.getPlayers().size() == team.getPlayerDeaths()) {
                 continue;
             }

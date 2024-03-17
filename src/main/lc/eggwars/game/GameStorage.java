@@ -12,7 +12,7 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.endgame.EndgameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameTemporaryData;
-import lc.eggwars.game.pregameitems.teamselector.InventorySelector;
+import lc.eggwars.game.pregame.teamselector.InventorySelector;
 import lc.eggwars.teams.GameTeam;
 
 public final class GameStorage {

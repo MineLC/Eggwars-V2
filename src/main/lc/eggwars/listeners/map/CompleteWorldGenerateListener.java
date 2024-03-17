@@ -12,7 +12,7 @@ import org.bukkit.event.EventPriority;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.game.pregameitems.PregameItemsStorage;
+import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.lcspigot.listeners.EventListener;
@@ -56,8 +56,8 @@ public final class CompleteWorldGenerateListener implements EventListener {
         for (final Player player : playersTryingJoin) {    
             GameStorage.getStorage().join(bukkitWorld, gameInProgress, player);
             player.setGameMode(GameMode.ADVENTURE);
-            player.teleport(gameInProgress.getWorld().getSpawnLocation());
-            PregameItemsStorage.getStorage().send(player);
+            player.teleport(PregameStorage.getStorage().mapLocation());
+            PregameStorage.getStorage().send(player);
         }
     }
 }

@@ -1,4 +1,4 @@
-package lc.eggwars.listeners.pvp;
+package lc.eggwars.listeners.pvp.damage;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.others.spawn.SpawnStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
@@ -24,12 +25,15 @@ public final class EntityDamageListener implements EventListener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
+        if (SpawnStorage.getStorage().isInSpawn(player)) {
+            event.setCancelled(true);
+            event.setDamage(0);
+            return;
+        }
 
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
 
         if (game == null) {
-            event.setCancelled(true);
-            event.setDamage(0);    
             return;
         }
 

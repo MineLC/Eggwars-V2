@@ -52,17 +52,17 @@ public final class DeathStorage {
     }
 
     private String createMessage(final Player player, boolean finalKill) {
-        final String deathMessage = (player.getLastDamageCause() == null)
+        String deathMessage = (player.getLastDamageCause() == null)
             ? fallbackDeathMessage
             : deathMessages[player.getLastDamageCause().getCause().ordinal()];
 
         if (deathMessage == null) {
-            return null;
+            deathMessage = fallbackDeathMessage;
         }
 
         String finalMessage = (finalKill) ? finalKillPrefix : "";
 
-        finalMessage += deathMessage.replace("%v%", player.getName());
+        finalMessage = finalMessage + deathMessage.replace("%v%", player.getName());
         if (player.getKiller() != null) {
             finalMessage = finalMessage.replace("%d%", player.getKiller().getName()) + suffixIfPlayerKill;
         }

@@ -1,22 +1,16 @@
-package lc.eggwars.game.pregameitems;
+package lc.eggwars.game.pregame;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.others.spawn.SpawnStorage;
 
-public final class PregameItemsStorage {
-    private static PregameItemsStorage storage;
-    private final boolean addShopSpawnitem;
-    private final Item selectTeam;
+public record PregameStorage(Location mapLocation, boolean addShopSpawnitem, Item selectTeam) {
+    private static PregameStorage storage;
 
-    PregameItemsStorage(boolean addShopSpawnitem, Item selectTeam) {
-        this.addShopSpawnitem = addShopSpawnitem;
-        this.selectTeam = selectTeam;
-    }
-
-    public static PregameItemsStorage getStorage() {
+    public static PregameStorage getStorage() {
         return storage;
     }
 
@@ -29,11 +23,7 @@ public final class PregameItemsStorage {
         inventory.setItem(selectTeam.slot(), selectTeam.item());
     }
 
-    public Item getSelectTeamItem() {
-        return selectTeam;
-    }
-
-    static void update(PregameItemsStorage newStorage) {
+    static void update(PregameStorage newStorage) {
         storage = newStorage;
     }
 }

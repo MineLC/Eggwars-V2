@@ -2,6 +2,7 @@
 
 minimum-players-to-start: 2
 waiting-to-start: 50 # Cuantos segundos debes esperar para que inicie el juego
+sidebar-update-delay: 3 # Cuantos segundos tarda la sidebar en actualizarse
 
 # Messages every x seconds
 waiting-player: 20 # "Esperando por más jugadores"

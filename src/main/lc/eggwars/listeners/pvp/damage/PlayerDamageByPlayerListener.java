@@ -1,4 +1,4 @@
-package lc.eggwars.listeners.pvp;
+package lc.eggwars.listeners.pvp.damage;
 
 import java.util.Set;
 
@@ -10,33 +10,36 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.teams.GameTeam;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
-import lc.eggwars.teams.GameTeam;
 
 public final class PlayerDamageByPlayerListener implements EventListener {
 
     @ListenerData(
-        event = EntityDamageByEntityEvent.class,
-        priority = EventPriority.LOWEST
+        priority = EventPriority.NORMAL,
+        event = EntityDamageByEntityEvent.class
     )
-    public void handle(Event defaultEvent) {
+    public void handle(final Event defaultEvent) {
         if (!(defaultEvent instanceof EntityDamageByEntityEvent event)) {
+            return;
+        }
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) {
             return;
         }
 
         final GameInProgress game = GameStorage.getStorage().getGame(event.getDamager().getUniqueId());
-
         if (game == null || game.getState() != GameState.IN_GAME) {
-            event.getDamager().sendMessage("No estás en juego");
             return;
         }
-
         final GameTeam playerTeam = game.getTeamPerPlayer().get(event.getDamager());
+
+        if (playerTeam == null) {
+            return;
+        }
         final Set<Player> playersInTeam = playerTeam.getPlayers();
 
         if (playersInTeam.contains(event.getEntity())) {
-            event.getDamager().sendMessage("Pertenece a tu equipo");
             event.setCancelled(true);
             event.setDamage(0);
         }

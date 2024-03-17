@@ -40,7 +40,7 @@ public final class ShopKeeperManager {
     public int spawn(final Player player, final World world, final int typeID, final int entityID, final EntityLocation location) {
         final Entity entity = createEntityById(typeID, ((CraftWorld)world).getHandle());
 
-        if (!(entity instanceof EntityLiving livingEntity)) {
+        if (entity == null || !(entity instanceof EntityLiving livingEntity)) {
             return -1;
         }
         entity.d(entityID);

@@ -34,8 +34,10 @@ public class PreGameCountdown extends GameCountdown {
 
     @Override
     public void run() {
-        final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
-        sidebar.send(players);
+        if (countdown % data.sidebarUpdateTime == 0) {
+            final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
+            sidebar.send(players);   
+        }
 
         if (players.size() < data.minPlayers) {
             if (waitingCountdown % data.waitingTime == 0) {
@@ -49,8 +51,12 @@ public class PreGameCountdown extends GameCountdown {
             return;
         }
 
+        players.forEach((player) -> player.setLevel(countdown));
+
         if (countdown <= 0) {
             temporary = null;
+            players.forEach((player) -> player.setLevel(0));
+
             complete.execute();
             Messages.send(players, "pregame.start-game");
             Bukkit.getScheduler().cancelTask(getId());
@@ -95,6 +101,7 @@ public class PreGameCountdown extends GameCountdown {
     }
 
     public static record Data(
+        int sidebarUpdateTime,
         int waitingTime,
         int messageTime,
         int secondsToMakeSound, 

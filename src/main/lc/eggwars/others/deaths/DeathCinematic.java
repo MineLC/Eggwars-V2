@@ -33,7 +33,7 @@ final class DeathCinematic implements Runnable {
         }
         final String subtitle = respawnSubtitle.replace("%time%", parseTime(seconds));
         final Title titleOptions = new Title(TextComponent.fromLegacyText(respawnTitle), TextComponent.fromLegacyText(subtitle), 0, 25, 0);
-        player.sendTitle(titleOptions, subtitle);
+        player.sendTitle(titleOptions);
         --seconds;
     }
 

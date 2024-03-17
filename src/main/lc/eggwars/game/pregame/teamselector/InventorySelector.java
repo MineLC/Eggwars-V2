@@ -1,4 +1,4 @@
-package lc.eggwars.game.pregameitems.teamselector;
+package lc.eggwars.game.pregame.teamselector;
 
 import java.util.Collection;
 

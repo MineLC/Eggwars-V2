@@ -3,7 +3,6 @@ package lc.eggwars.listeners.gameshop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.tinylog.Logger;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
@@ -22,10 +21,11 @@ public final class ShopkeeperListener implements EventListener {
         priority = EventPriority.LOWEST
     )
     public void handle(Event defaultEvent) {
-        try {
-
         final PreInteractEntityEvent event = (PreInteractEntityEvent)defaultEvent;
         final Player player = event.getPlayer();
+        if (player == null) {
+            return;
+        }
 
         if (player.getOpenInventory() != null
             && player.getOpenInventory().getTopInventory() != null
@@ -46,9 +46,5 @@ public final class ShopkeeperListener implements EventListener {
             }
             player.openInventory(ShopKeepersStorage.getStorage().data().itemsShop());
         }   
-        } catch (Exception e) {
-            Logger.info("ERROR ON PREINTERACT ENTITY LISTNER");
-            Logger.error(e);
-        }
     }
 }

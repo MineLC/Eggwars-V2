@@ -10,6 +10,7 @@ public class StartGameData {
     public void load(EggwarsPlugin plugin) {
         final FileConfiguration config = plugin.loadConfig("countdowns");
         final PreGameCountdown.Data preGameData = new PreGameCountdown.Data(
+            config.getInt("sidebar-update-delay"),
             config.getInt("waiting-to-start"),
             config.getInt("game-starting-in"),
             config.getInt("sound-starting"),

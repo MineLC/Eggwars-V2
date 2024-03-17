@@ -12,6 +12,7 @@ import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.utils.EntityLocation;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -40,7 +41,6 @@ public class StartSpawn {
         final FileConfiguration config = plugin.getConfig();
         final String world = config.getString("spawn.world");
         if (world == null) {
-            System.out.println("The spawn world don't exist");
             return;
         }
         final String spawn = config.getString("spawn.cords");
@@ -52,17 +52,18 @@ public class StartSpawn {
             return;
         }
         mapLoaded.thenAccept((none) -> {
+            final String defaultWorldName = config.getString("disable-default-world");
+            final World defaultWorld = Bukkit.getWorld(defaultWorldName);
+            if (defaultWorld != null) {
+                Bukkit.unloadWorld(defaultWorld, false);
+            }
             final World bukkitWorld = Bukkit.getWorld(world);
-            final String[] split = spawn.split(",");
-            final Location spawnLocation = new Location(
-                bukkitWorld,
-                Integer.parseInt(split[0]),
-                Integer.parseInt(split[1]),
-                Integer.parseInt(split[2]));
-
+            final EntityLocation entityLocation = EntityLocation.create(spawn);
+            final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
+        
             bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
             final SpawnStorage oldStorage = SpawnStorage.getStorage();
-            SpawnStorage.update(new SpawnStorage(spawnLocation, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
+            SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
         });
     }
 

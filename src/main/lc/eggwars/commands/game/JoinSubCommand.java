@@ -13,7 +13,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
-import lc.eggwars.game.pregameitems.PregameItemsStorage;
+import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
@@ -71,9 +71,9 @@ final class JoinSubCommand implements Command {
                 return;
             }
             player.setGameMode(GameMode.ADVENTURE);
-            player.teleport(game.getWorld().getSpawnLocation());
+            player.teleport(PregameStorage.getStorage().mapLocation());
 
-            PregameItemsStorage.getStorage().send(player);
+            PregameStorage.getStorage().send(player);
 
         } else { // Ingame state. You can spectate but no play
             player.setGameMode(GameMode.SPECTATOR);

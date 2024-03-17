@@ -42,7 +42,6 @@ public final class StartDeaths {
                 continue;
             } 
             deathMessages[damageCause.ordinal()] = Messages.color(config.getString("deaths." + cause));
-            Logger.info(deathMessages[damageCause.ordinal()]);
         }
         return deathMessages;
     }

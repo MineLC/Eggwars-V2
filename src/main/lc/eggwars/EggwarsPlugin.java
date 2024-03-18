@@ -128,7 +128,9 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerDropitemListener(), true);  
         listeners.register(new CompleteWorldGenerateListener(), true);
         listeners.register(new PlayerChatListener(), true);
+        listeners.register(new PlayerSaturationEvent(), true);
 
+        listeners.register(new WorldRainEvent(), true);
         listeners.cancelEvent(BlockPhysicsEvent.class);
         listeners.cancelEvent(BlockGrowEvent.class);
     }

@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.tinylog.Logger;
@@ -133,6 +134,7 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new WorldRainEvent(), true);
         listeners.cancelEvent(BlockPhysicsEvent.class);
         listeners.cancelEvent(BlockGrowEvent.class);
+        listeners.cancelEvent(PlayerArmorStandManipulateEvent.class);
     }
 
     public FileConfiguration loadConfig(final String name) {

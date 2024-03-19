@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -46,7 +47,7 @@ public final class EntityDamageListener implements EventListener {
             }
 
             if (event.getCause() == DamageCause.VOID) {
-                player.teleport(player.getWorld().getSpawnLocation());
+                player.teleport(PregameStorage.getStorage().mapLocation());
             }
             return;
         }
@@ -54,7 +55,7 @@ public final class EntityDamageListener implements EventListener {
         if (game.getState() == GameState.END_GAME) {
             event.setCancelled(true);
             if (event.getCause() == DamageCause.VOID) {
-                player.teleport(player.getWorld().getSpawnLocation());
+                player.teleport(game.getWorld().getSpawnLocation());
             }
             return;
         }

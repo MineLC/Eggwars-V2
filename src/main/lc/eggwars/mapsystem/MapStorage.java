@@ -2,29 +2,27 @@ package lc.eggwars.mapsystem;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import net.swofty.swm.api.world.SlimeWorld;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import io.netty.util.collection.IntObjectHashMap;
+import com.grinderwolf.swm.api.exceptions.CorruptedWorldException;
+import com.grinderwolf.swm.api.exceptions.NewerFormatException;
+import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
+import com.grinderwolf.swm.api.exceptions.WorldInUseException;
+import com.grinderwolf.swm.api.loaders.SlimeLoader;
+import com.grinderwolf.swm.api.world.SlimeWorld;
+import com.grinderwolf.swm.api.world.properties.SlimeProperties;
+import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
+import com.grinderwolf.swm.plugin.SWMPlugin;
 
+import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.IntegerUtils;
-
-import net.swofty.swm.api.SlimePlugin;
-import net.swofty.swm.api.exceptions.CorruptedWorldException;
-import net.swofty.swm.api.exceptions.NewerFormatException;
-import net.swofty.swm.api.exceptions.UnknownWorldException;
-import net.swofty.swm.api.exceptions.WorldInUseException;
-import net.swofty.swm.api.loaders.SlimeLoader;
-import net.swofty.swm.api.world.properties.SlimeProperties;
-import net.swofty.swm.api.world.properties.SlimePropertyMap;
 
 public final class MapStorage {
     private static MapStorage mapStorage;
@@ -33,63 +31,51 @@ public final class MapStorage {
 
     static {
         PROPERTIES = new SlimePropertyMap();
-        PROPERTIES.setValue(SlimeProperties.DIFFICULTY, "normal");
-        PROPERTIES.setValue(SlimeProperties.PVP, true);
-        PROPERTIES.setValue(SlimeProperties.ALLOW_MONSTERS, false);
-        PROPERTIES.setValue(SlimeProperties.ALLOW_ANIMALS, false);
+        PROPERTIES.setString(SlimeProperties.DIFFICULTY, "normal");
+        PROPERTIES.setBoolean(SlimeProperties.PVP, true);
+        PROPERTIES.setBoolean(SlimeProperties.ALLOW_MONSTERS, false);
+        PROPERTIES.setBoolean(SlimeProperties.ALLOW_ANIMALS, false);
     }
 
     private final Map<World, IntObjectHashMap<ClickableBlock>> clickableBlocks = new HashMap<>();
 
-    private final Map<String, Set<Player>> worldsCurrentlyLoading = new HashMap<>();
-
     private final Map<String, MapData> mapsPerName;
     
-    private final SlimePlugin slimePlugin;
+    private final SWMPlugin slimePlugin;
     private final SlimeLoader loader;
 
-    MapStorage(SlimePlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName) {
+    MapStorage(SWMPlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName) {
         this.slimePlugin = slimePlugin;
         this.loader = loader;
         this.mapsPerName = mapsPerName;
     }
 
     // Execute this method async
-    public Set<Player> loadMap(final String worldName) {
-        try {
-            final MapData map = mapsPerName.get(worldName);
-            if (map == null) {
-                return null;
-            }
-            final Set<Player> playersWaitingToJoin = new HashSet<>();
-            worldsCurrentlyLoading.put(worldName, playersWaitingToJoin);
-
-            slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
-            return playersWaitingToJoin;
-        } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
-            e.printStackTrace();
+    public CompletableFuture<Void> loadMap(final String worldName) {
+        final MapData map = mapsPerName.get(worldName);
+        if (map == null) {
             return null;
         }
+
+        return CompletableFuture.runAsync(() -> {
+            try {
+                slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
+            } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException| IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     // Execute this method async
     public CompletableFuture<Void> load(final String worldName) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        try {
-            SlimeWorld world = slimePlugin.loadWorld(loader, worldName, false, PROPERTIES);
-            CompletableFuture<Void> generationFuture = slimePlugin.generateWorld(world);
-            generationFuture.whenComplete((result, ex) -> {
-                if (ex != null) {
-                    future.completeExceptionally(ex);
-                } else {
-                    future.complete(null);
-                }
-            });
-        } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
-            e.printStackTrace();
-            future.completeExceptionally(e);
-        }
-        return future;
+        return CompletableFuture.runAsync(() -> {
+            try {
+                SlimeWorld world = slimePlugin.loadWorld(loader, worldName, false, PROPERTIES);
+                slimePlugin.generateWorld(world);
+            } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
@@ -102,7 +88,7 @@ public final class MapStorage {
 
     public void unload(final World world) {
         clickableBlocks.remove(world);
-        slimePlugin.getSlimeWorlds().get(world.getName()).unloadWorld(false);
+        Bukkit.unloadWorld(world, false);
     }
 
     public ClickableBlock getClickableBlock(final World world, Location location) {
@@ -115,10 +101,6 @@ public final class MapStorage {
 
     public MapData getMapData(final String worldName) {
         return mapsPerName.get(worldName);
-    }
-
-    public Map<String, Set<Player>> getWorldsCurrentlyLoading() {
-        return worldsCurrentlyLoading;
     }
 
     public Map<String, MapData> getMaps() {

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,17 +27,13 @@ import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.EntityLocation;
-import net.swofty.swm.api.SlimePlugin;
-import net.swofty.swm.api.world.SlimeWorld;
 
 final class SaveSubCommand implements Command {
 
-    private final SlimePlugin slimePlugin;
     private final EggwarsPlugin plugin;
     private final MapCreatorData data;
 
-    SaveSubCommand(SlimePlugin slimePlugin, EggwarsPlugin plugin, MapCreatorData data) {
-        this.slimePlugin = slimePlugin;
+    SaveSubCommand(EggwarsPlugin plugin, MapCreatorData data) {
         this.plugin = plugin;
         this.data = data;
     }
@@ -63,12 +60,6 @@ final class SaveSubCommand implements Command {
             sendWithColor(player, "&cAlready exist a map with this name. Try other");
             return;
         }
-        final SlimeWorld slimeWorld = slimePlugin.getSlimeWorlds().get(player.getWorld().getName());
-
-        if (slimeWorld == null) {
-            sendWithColor(player, "The world need be a slime world manager world");
-            return;
-        }
 
         try {
             mapFile.createNewFile();
@@ -80,7 +71,7 @@ final class SaveSubCommand implements Command {
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
 
             player.teleport(SpawnStorage.getStorage().location());
-            plugin.getServer().getScheduler().runTask(plugin, () -> slimeWorld.unloadWorld(true));
+            Bukkit.unloadWorld(player.getWorld(), true);
         } catch (IOException e) {
             sendWithColor(player, "&cError on create the map");
             e.printStackTrace();

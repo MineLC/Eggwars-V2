@@ -6,17 +6,16 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
-import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.utils.EntityLocation;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class StartSpawn {
     private final EggwarsPlugin plugin;
@@ -48,29 +47,18 @@ public class StartSpawn {
         if (spawn == null) {
             return;
         }
-        final CompletableFuture<Void> mapLoaded = MapStorage.getStorage().load(world);
-        if (mapLoaded == null) {
+        final World bukkitWorld = Bukkit.getWorld(world);
+        if (bukkitWorld == null) {
+            Logger.info("can't found the spawn world: " + world);
             return;
         }
-        mapLoaded.thenAccept((none) -> {
-            final String defaultWorldName = config.getString("disable-default-world");
-            final World defaultWorld = Bukkit.getWorld(defaultWorldName);
-            if (defaultWorld != null) {
-                Bukkit.unloadWorld(defaultWorld, false);
-            }
-            final World bukkitWorld = Bukkit.getWorld(world);
-            final EntityLocation entityLocation = EntityLocation.create(spawn);
-            final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
-        
-            bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
-            final SpawnStorage oldStorage = SpawnStorage.getStorage();
-            SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
-            new StartPreGameData().loadMap(plugin);
-
-        }).thenAccept((none)-> {
-            new StartPreGameData().loadMap(plugin);
-        })
-        ;
+        final EntityLocation entityLocation = EntityLocation.create(spawn);
+        final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
+        bukkitWorld.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
+        final SpawnStorage oldStorage = SpawnStorage.getStorage();
+        SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
+        new StartPreGameData().loadMap(plugin);
     }
 
     private SpawnShopInventory getSpawnShopInventory() {

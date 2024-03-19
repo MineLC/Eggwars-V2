@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.inventory.internal.InventoryCreator;
@@ -33,18 +34,17 @@ public final class StartPreGameData {
         if (spawn == null) {
             return;
         }
-        final CompletableFuture<Void> mapLoaded = MapStorage.getStorage().load(world);
-        if (mapLoaded == null) {
+
+        final World bukkitWorld = Bukkit.getWorld(world);
+        if (bukkitWorld == null) {
+            Logger.info("can't found the pregame world: " + world);
             return;
         }
-        mapLoaded.thenAccept((none) -> {
-            final World bukkitWorld = Bukkit.getWorld(world);
-            final EntityLocation entityLocation = EntityLocation.create(spawn);
-            final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
-        
-            bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
-            final PregameStorage oldStorage = PregameStorage.getStorage();
-            PregameStorage.update(new PregameStorage(location, oldStorage.addShopSpawnitem(), oldStorage.selectTeam()));
-        });
+        final EntityLocation entityLocation = EntityLocation.create(spawn);
+        final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
+        bukkitWorld.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        bukkitWorld.getWorldBorder().setSize(config.getInt("pregame.border"));
+        final PregameStorage oldStorage = PregameStorage.getStorage();
+        PregameStorage.update(new PregameStorage(location, oldStorage.addShopSpawnitem(), oldStorage.selectTeam()));
     }
 }

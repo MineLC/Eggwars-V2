@@ -4,19 +4,22 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
+
+import com.grinderwolf.swm.api.loaders.SlimeLoader;
+import com.grinderwolf.swm.plugin.SWMPlugin;
 
 import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
@@ -35,52 +38,39 @@ import lc.eggwars.utils.ClickableBlock;
 import lc.eggwars.utils.EntityLocation;
 import lc.eggwars.utils.IntegerUtils;
 
-import net.swofty.swm.api.SlimePlugin;
-import net.swofty.swm.api.exceptions.CorruptedWorldException;
-import net.swofty.swm.api.exceptions.NewerFormatException;
-import net.swofty.swm.api.exceptions.UnknownWorldException;
-import net.swofty.swm.api.exceptions.WorldInUseException;
-import net.swofty.swm.api.loaders.SlimeLoader;
-import net.swofty.swm.api.world.SlimeWorld;
-import net.swofty.swm.api.world.properties.SlimePropertyMap;
-
 public final class StartMaps {
 
     private final EggwarsPlugin plugin;
     private final SlimeLoader loader;
-    private final SlimePlugin slimePlugin;
+    private final SWMPlugin slimePlugin;
 
-    public StartMaps(EggwarsPlugin plugin, SlimePlugin slimePlugin) {
+    public StartMaps(EggwarsPlugin plugin, SWMPlugin slimePlugin) {
         this.plugin = plugin;
         this.slimePlugin = slimePlugin;
         this.loader = slimePlugin.getLoader("file");
     }
 
-    public CompletableFuture<Void> load() {
-        final SlimeLoader loader = slimePlugin.getLoader("file");
+    public void load() {
         final File mapFolder = new File(plugin.getDataFolder(), "maps");
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return null;
+            return;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
             MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
-            return null;
+            return;
         }
-
-        return CompletableFuture.runAsync(() -> {
-            final Map<String, MapData> mapsPerName = new HashMap<>();
-            final MapData[] maps = new MapData[mapFiles.length];
-            if (mapFiles.length > 0) {
-                loadMapData(maps, mapFiles, mapsPerName);
-            }
-            MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
-            GameManagerThread.setMaps(maps);
-        });
+        final Map<String, MapData> mapsPerName = new HashMap<>();
+        final MapData[] maps = new MapData[mapFiles.length];
+        if (mapFiles.length > 0) {
+            loadMapData(maps, mapFiles, mapsPerName);
+        }
+        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
+        GameManagerThread.setMaps(maps);
     }
 
     private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
@@ -93,26 +83,21 @@ public final class StartMaps {
             }
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-                final SlimeWorld mapWorld = slimePlugin.loadWorld(loader, data.world(), false, new SlimePropertyMap());
-                final CompletableFuture<Void> completable = slimePlugin.generateWorld(mapWorld);
+                final World world = Bukkit.getWorld(data.world());
+                if (world == null) {
+                    continue;
+                }
                 final int newIndex = index;
 
-                completable.thenAccept((none) -> {
-                    final MapData map = loadMapData(data, newIndex);
-                    maps[newIndex] = map;
-                    mapsPerName.put(data.world(), map);   
-                    mapWorld.unloadWorld(false);
-                });
+                final MapData map = loadMapData(data, newIndex);
+                maps[newIndex] = map;
+                mapsPerName.put(data.world(), map);
                 index++;
+                Bukkit.unloadWorld(world, false);
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
                     Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                     Logger.error(e);
-                });
-            } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException | IOException e1) {
-                plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    Logger.warn("Error on generate the map: " + mapFile.getName() + ". Maybe corrupt .swofty world ");
-                    Logger.error(e1);
                 });
             }
         }

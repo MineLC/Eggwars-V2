@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.tinylog.Logger;
 
@@ -22,13 +21,14 @@ public final class GameStorage {
     private final EggwarsPlugin plugin;
     private final PreGameCountdown.Data pregameData;
     private final Map<UUID, GameInProgress> playersInGame = new HashMap<>();
+    private final Map<GameInProgress, String> gamesInPregame = new HashMap<>();
 
     GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data data) {
         this.plugin = plugin;
         this.pregameData = data;
     }
 
-    public void join(final World world, final GameInProgress game, final Player player) {
+    public void join(final String world, final GameInProgress game, final Player player) {
         playersInGame.put(player.getUniqueId(), game);
         game.getPlayers().add(player);
 
@@ -45,7 +45,7 @@ public final class GameStorage {
         final PreGameCountdown waitToStartCountdown = new PreGameCountdown(
             pregameData,
             game.getPlayers(),
-            () -> new GameStartAndStop().start(game),
+            () -> new GameStartAndStop().start(plugin, game, world),
             temporaryData
         );
 
@@ -54,9 +54,13 @@ public final class GameStorage {
 
         game.setCountdown(waitToStartCountdown);
         game.setState(GameState.PREGAME);
+        gamesInPregame.put(game, world);
     }
 
     public void stop(final GameInProgress game) {
+        if (game.getState() == GameState.PREGAME) {
+            gamesInPregame.remove(game);
+        }
         new GameStartAndStop().stop(game);
     }
 
@@ -81,7 +85,7 @@ public final class GameStorage {
             game.getPlayers().remove(player);
             pregame.getTemporaryData().leave(player, game);
             if (game.getPlayers().isEmpty()) {
-                new GameStartAndStop().stop(game);
+                stop(game);
             }
             return;
         }

@@ -1,30 +1,22 @@
 package lc.eggwars.commands.game;
 
-import java.util.Set;
-
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lc.lcspigot.commands.Command;
 
-import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
-import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.sidebar.SidebarStorage;
+import lc.eggwars.others.sidebar.SidebarType;
 
-final class JoinSubCommand implements Command {
-
-    private final EggwarsPlugin plugin;
-
-    JoinSubCommand(EggwarsPlugin plugin) {
-        this.plugin = plugin;
-    }
+public final class JoinCommand implements Command {
 
     @Override
     public void handle(CommandSender sender, String[] args) {
@@ -43,45 +35,35 @@ final class JoinSubCommand implements Command {
             return;
         }
 
-        final GameInProgress game = map.getGameInProgress();
+        GameInProgress game = map.getGameInProgress();
 
         if (game == null) {
-            if (MapStorage.getStorage().getWorldsCurrentlyLoading().containsKey(args[1])) {
-                Messages.send(sender, "map.currently-loading");
-                return;
-            }
-
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-                final Set<Player> playersWaitingToJoin = MapStorage.getStorage().loadMap(args[1]);
-                if (playersWaitingToJoin == null) {
-                    sendWithColor(player, "&cError on load the world");
-                    return;
-                }
-                playersWaitingToJoin.add(player);
-            });
-            return;
+            game = new GameInProgress(map);
+            map.setGame(game);
         }
 
-        player.getInventory().clear();
-
-        if (game.getState() == GameState.PREGAME) {
+        if (game.getState() == GameState.PREGAME || game.getState() == GameState.NONE) {
             final int maxPlayers = map.getMaxPersonsPerTeam() * map.getSpawns().size();
             if (game.getPlayers().size() >= maxPlayers) {
                 Messages.send(player, "pregame.full");
                 return;
             }
+            player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(PregameStorage.getStorage().mapLocation());
-
+    
             PregameStorage.getStorage().send(player);
-
-        } else { // Ingame state. You can spectate but no play
-            player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(game.getWorld().getSpawnLocation());  
+            GameStorage.getStorage().join(args[1], game, player);
+            SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME).send(player);
+            return;
         }
 
-        GameStorage.getStorage().join(game.getWorld(), game, player);
-        new ShopKeeperManager().send(player, game);
+        // Ingame or endgame state. You can spectate but no play
+        player.getInventory().clear();
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(game.getWorld().getSpawnLocation());  
+        GameStorage.getStorage().join(args[1], game, player);
+        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(player);
     }
 
     @Override

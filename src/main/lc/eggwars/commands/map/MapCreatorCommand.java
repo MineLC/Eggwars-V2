@@ -10,7 +10,6 @@ import lc.eggwars.mapsystem.MapCreatorData;
 import lc.lcspigot.commands.Command;
 
 import net.md_5.bungee.api.ChatColor;
-import net.swofty.swm.api.SlimePlugin;
 
 public final class MapCreatorCommand implements Command {
 
@@ -29,7 +28,7 @@ public final class MapCreatorCommand implements Command {
 
     private final MapCreatorData data;
 
-    public MapCreatorCommand(SlimePlugin slimePlugin, EggwarsPlugin plugin, MapCreatorData data) {
+    public MapCreatorCommand(EggwarsPlugin plugin, MapCreatorData data) {
         this.editor = new EditorSubCommand(data);
         this.addGenerator = new AddGeneratorSubCommand();
         this.removeGenerator = new RemoveGeneratorSubCommand();
@@ -41,7 +40,7 @@ public final class MapCreatorCommand implements Command {
         this.addshopkeeper = new AddShopkeeperSubCommand();
         this.removeshopkeeper = new RemoveShoopkeperSubCommand();
         this.info = new InfoSubCommand();
-        this.save = new SaveSubCommand(slimePlugin, plugin, data);
+        this.save = new SaveSubCommand(plugin, data);
         this.data = data;
     }
 

@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapStorage;
@@ -21,22 +22,34 @@ import lc.eggwars.utils.BlockLocation;
 
 final class GameStartAndStop {
 
-    void start(final GameInProgress game) {
-        game.setState(GameState.IN_GAME);
-        game.setCountdown(null);
+    void start(final EggwarsPlugin plugin, final GameInProgress game, final String worldName) {
+        MapStorage.getStorage().load(worldName).thenAccept((none) -> {
+            final World world = Bukkit.getWorld(worldName);
+            game.setWorld(world);
 
+            MapStorage.getStorage().loadClickableBlocks(world);
+    
+            new GeneratorManager().load(game);
+
+            plugin.getServer().getScheduler().runTask(plugin, () -> startForPlayers(game));
+
+            game.startTime();
+            game.setState(GameState.IN_GAME);
+            game.setCountdown(null);
+        });
+    }
+
+    private void startForPlayers(final GameInProgress game) {
         setTeams(game);
 
-        for (final Player player : game.getPlayers()) {
+        final Set<Player> players = game.getPlayers();
+        final ShopKeeperManager shopKeeperManager = new ShopKeeperManager();
+        for (final Player player : players) {
             KitStorage.getStorage().setKit(player, true);
+            shopKeeperManager.send(player, game);
         }
 
-        new GeneratorManager().load(game);
-        new ShopKeeperManager().send(game.getPlayers(), game.getWorld(), game);
-
-        game.startTime();
-
-        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());      
+        SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
     }
 
     void stop(final GameInProgress game) {       

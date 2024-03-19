@@ -15,9 +15,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import org.tinylog.Logger;
 
+import com.grinderwolf.swm.plugin.SWMPlugin;
+
 import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
-import lc.eggwars.commands.game.GameCommand;
+import lc.eggwars.commands.game.JoinCommand;
 import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.database.MongoDBHandler;
@@ -30,7 +32,6 @@ import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
-import lc.eggwars.listeners.map.CompleteWorldGenerateListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
 import lc.eggwars.listeners.pvp.PlayerRespawnListener;
 import lc.eggwars.listeners.pvp.damage.EntityDamageListener;
@@ -48,7 +49,6 @@ import lc.eggwars.teams.StartTeams;
 import lc.lcspigot.commands.CommandStorage;
 import lc.lcspigot.listeners.ListenerRegister;
 
-import net.swofty.swm.api.SlimePlugin;
 
 public class EggwarsPlugin extends JavaPlugin {
 
@@ -58,7 +58,7 @@ public class EggwarsPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SwoftyWorldManager");
+        final SWMPlugin slimePlugin = (SWMPlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
         if (slimePlugin == null) {
             Logger.error("EggwarsCore need slimeworld manager to work");
             return;
@@ -72,7 +72,7 @@ public class EggwarsPlugin extends JavaPlugin {
             }
         });
 
-        loadCommands(slimePlugin);
+        loadCommands();
 
         new StartMessages().load(this);
         new StartGenerators().load(this);
@@ -88,13 +88,13 @@ public class EggwarsPlugin extends JavaPlugin {
         final ShopsData data = new StartShops().load(this);
         new StartShopkeepers().load(this, data.shops());
 
-        final CompletableFuture<Void> loadingMaps = new StartMaps(this, slimePlugin).load();
-        if (loadingMaps != null) {
-            loadingMaps.thenAccept((none) -> {
-                new StartSpawn(this).loadSpawn();
-            });
-            GameManagerThread.startThread();
-        }
+        getServer().getScheduler().runTaskLater(this, () -> {
+            new StartMaps(this, slimePlugin).load();
+            new StartSpawn(this).loadSpawn();
+            new StartPreGameData().loadMap(this);
+        }, 20);
+
+        GameManagerThread.startThread();
 
         registerBasicListeners(data);
     }
@@ -102,13 +102,6 @@ public class EggwarsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         DATABASE.shutdown();
-
-        final SlimePlugin slimePlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SwoftyWorldManager");
-        if (slimePlugin != null) {
-            slimePlugin.getSlimeWorlds().values().forEach((world) -> world.unloadWorld(false));
-            return;
-        }
-
         GameManagerThread.stopThread();
         getServer().getScheduler().cancelTasks(this);
     }
@@ -128,7 +121,6 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerJoinListener(), true);  
         listeners.register(new PlayerQuitListener(), true);  
         listeners.register(new PlayerDropitemListener(), true);  
-        listeners.register(new CompleteWorldGenerateListener(), true);
         listeners.register(new PlayerChatListener(), true);
         listeners.register(new PlayerSaturationEvent(), true);
 
@@ -155,9 +147,9 @@ public class EggwarsPlugin extends JavaPlugin {
         }
     }
 
-    private void loadCommands(SlimePlugin slimePlugin) {
-        CommandStorage.register(new MapCreatorCommand(slimePlugin, this, new MapCreatorData()), "map");
-        CommandStorage.register(new GameCommand(this), "game");
+    private void loadCommands() {
+        CommandStorage.register(new MapCreatorCommand(this, new MapCreatorData()), "map");
+        CommandStorage.register(new JoinCommand(), "game");
         CommandStorage.register(new LeaveCommand(), "leave");
         CommandStorage.register(new InfoCommand(), "info");
 

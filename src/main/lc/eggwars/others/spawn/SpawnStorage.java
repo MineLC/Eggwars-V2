@@ -18,6 +18,7 @@ public final record SpawnStorage(Location location, Item shopItem, Map<Material,
     public void setItems(final Player player) {
         final PlayerInventory inventory = player.getInventory();
         inventory.clear();
+        inventory.setArmorContents(null);
         inventory.setItem(shopItem.slot(), shopItem.item());
     }
 

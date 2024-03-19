@@ -4,4 +4,4 @@ version: 0.0.1
 
 main: lc.eggwars.EggwarsPlugin
 description: EggwarsCore for minelc
-depends: [SwoftyWorldManager]
+depends: [SlimeWorldManager]

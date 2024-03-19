@@ -17,20 +17,19 @@ import org.bukkit.entity.Player;
 public final class GameInProgress {
 
     private final MapData data;
-    private final World world;
 
     private final Map<Player, GameTeam> teamPerPlayer = new HashMap<>();
     private final Map<BaseTeam, GameTeam> teamPerBase = new HashMap<>();
     private final Set<GameTeam> teams = new HashSet<>();
     private final Set<Player> players = new HashSet<>();
 
+    private World world;
     private GameState state = GameState.NONE;
     private GameCountdown countdown;
     private long startTime;
 
-    public GameInProgress(MapData data, World world) {
+    public GameInProgress(MapData data) {
         this.data = data;
-        this.world = world;
     }
 
     public void setState(final GameState state) {
@@ -83,5 +82,21 @@ public final class GameInProgress {
 
     public boolean playerIsDead(final Player player) {
         return player.getGameMode() == GameMode.SPECTATOR;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return (object instanceof GameInProgress otherGame) ? otherGame.data.equals(this.data) : false;
+    }
+
+    @Override
+    public int hashCode() {
+        return data.hashCode();
+    }
+
+    void setWorld(final World world) {
+        if (this.world == null) {
+            this.world = world;
+        }
     }
 }

@@ -22,7 +22,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 
 public final class ShopKeeperManager {
 
-    public void send(final Collection<Player> players, final World world, final GameInProgress game) {
+    public void send(final Collection<Player> players, final GameInProgress game) {
         for (final Player player : players) {
             send(player, game);
         }

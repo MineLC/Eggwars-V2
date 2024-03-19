@@ -24,8 +24,7 @@ public final class UpdateShopkeepersTask {
     private void update(final GameInProgress game) {
         final long elapseSeconds = (System.currentTimeMillis() - game.getStartedTime()) / 1000;
         if (elapseSeconds % 30 == 0) {
-            game.getPlayers().forEach((player) -> player.sendMessage("ENVIADO PAPU. ELAPSE: " + elapseSeconds));
-            new ShopKeeperManager().send(game.getPlayers(), game.getWorld(), game);
+            new ShopKeeperManager().send(game.getPlayers(),game);
         }
     }
 }

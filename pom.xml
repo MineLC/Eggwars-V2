@@ -38,14 +38,6 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/lcspigot-0.0.5.jar</systemPath>
         </dependency>
-        <dependency>  
-            <groupId>net.swofty</groupId>  
-            <artifactId>swoftyworldmanager-api</artifactId>  
-            <version>4.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/swoftyworldmanager-api-4.0.0.jar</systemPath>
-
-        </dependency>
         <dependency>
             <groupId>com.github.ichocomilk</groupId>
             <artifactId>LightSidebar</artifactId>
@@ -64,17 +56,19 @@
             <version>2.0.12</version>
             <scope>compile</scope>
        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.12</version>
-            <scope>compile</scope>
+        <dependency>  
+            <groupId>com.grinderwolf</groupId>
+            <artifactId>slimeworldmanager-api</artifactId>
+            <version>2.2.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/slimeworld-plugin-2.2.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>obed.me</groupId>
             <artifactId>LCCommons</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/LCCommons-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
    </dependencies>
 

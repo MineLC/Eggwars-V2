@@ -29,6 +29,24 @@ header: # Header slots need be 0-9
     name: "&aHerramientas"
     lore:
       - "&7Compra herramientas aquí"
+  bows:
+    slot: 5
+    item: "261"
+    name: "&aArcos y flechas"
+    lore:
+      - "&7Compra arcos y flechas aquí"
+  potions:
+    slot: 6
+    item: "285"
+    name: "&aPociones"
+    lore:
+      - "&7Compra pociones aquí"
+  special:
+    slot: 7
+    item: "130"
+    name: "&aEspeciales"
+    lore:
+      - "&7Compra items especiales aquí"
 
 blocks:
   title: "&0Tienda de Bloques"
@@ -40,3 +58,9 @@ food:
   title: "&0Tienda de comida"
 tools:
   title: "&0Tienda de herramientas"
+bows:
+  title: "&0Tienda de Arcos y flechas"
+potions:
+  title: "&0Tienda de pociones"
+special:
+  title: "&0Tienda de items especiales"

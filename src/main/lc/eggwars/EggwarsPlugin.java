@@ -92,9 +92,8 @@ public class EggwarsPlugin extends JavaPlugin {
             new StartMaps(this, slimePlugin).load();
             new StartSpawn(this).loadSpawn();
             new StartPreGameData().loadMap(this);
+            GameManagerThread.startThread();
         }, 20);
-
-        GameManagerThread.startThread();
 
         registerBasicListeners(data);
     }
@@ -149,7 +148,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
     private void loadCommands() {
         CommandStorage.register(new MapCreatorCommand(this, new MapCreatorData()), "map");
-        CommandStorage.register(new JoinCommand(), "game");
+        CommandStorage.register(new JoinCommand(), "join");
         CommandStorage.register(new LeaveCommand(), "leave");
         CommandStorage.register(new InfoCommand(), "info");
 

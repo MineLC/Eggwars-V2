@@ -3,6 +3,7 @@ package lc.eggwars.listeners;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -16,6 +17,8 @@ import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.specialitems.PlatformItem;
+import lc.eggwars.others.specialitems.TrackerItem;
 import lc.eggwars.utils.ClickableBlock;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -81,6 +84,7 @@ public final class PlayerInteractListener implements EventListener {
 
         if (game != null) {
             if (game.getState() == GameState.IN_GAME) {
+                handleSpecialItems(game, event.getPlayer(), type);
                 return;
             }
             if (!(game.getCountdown() instanceof PreGameCountdown pregame)) {
@@ -97,6 +101,19 @@ public final class PlayerInteractListener implements EventListener {
         if (inventory != null) {
             event.setCancelled(true);
             event.getPlayer().openInventory(inventory);
+        }
+    }
+
+    private void handleSpecialItems(final GameInProgress game, final Player player, final Material material) {
+        switch (material) {
+            case BEDROCK:
+                new PlatformItem().handle(player);
+                break;
+            case COMPASS:
+                new TrackerItem().handle(player, game);
+                break;
+            default:
+                return;
         }
     }
 }

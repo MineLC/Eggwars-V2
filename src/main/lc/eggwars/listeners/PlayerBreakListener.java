@@ -24,7 +24,6 @@ public class PlayerBreakListener implements EventListener {
             case OBSIDIAN, GLASS, SANDSTONE, ENDER_STONE:
                 return;
             default:
-                event.setCancelled(true);
         }
     }
 }

@@ -101,7 +101,51 @@ iron-boots:
   slot: 11
   item: "309"
   lore:
-    - "&710x &eOro"
+    - "&75x &bDiamantes"
   need-item:
-    amount: 10
-    item: "266"
+    amount: 5
+    item: "264"
+
+protection-iron-helmet:
+  slot: 12
+  item: "306"
+  enchants:
+    - "PROTECTION_ENVIRONMENTAL:1"
+  lore:
+    - "&732x &bDiamantes"
+  need-item:
+    amount: 32
+    item: "264"
+
+protection-iron-chestplate:
+  slot: 13
+  item: "307"
+  enchants:
+    - "PROTECTION_ENVIRONMENTAL:1"
+  lore:
+    - "&732x &bDiamantes"
+  need-item:
+    amount: 32
+    item: "264"
+
+protection-iron-leggings:
+  slot: 14
+  item: "308"
+  enchants:
+    - "PROTECTION_ENVIRONMENTAL:1"
+  lore:
+    - "&732x &bDiamantes"
+  need-item:
+    amount: 32
+    item: "264"
+
+protection-iron-boots:
+  slot: 15
+  item: "309"
+  enchants:
+    - "PROTECTION_ENVIRONMENTAL:1"
+  lore:
+    - "&732x &bDiamantes"
+  need-item:
+    amount: 32
+    item: "264"

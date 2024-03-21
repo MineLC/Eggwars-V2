@@ -32,7 +32,7 @@ public final class GeneratorStorage {
 
         final String speed = genLevel.itemsToGenerate() + "/" + genLevel.waitingTime() + "s";
         final String speedNext = (level == generator.maxlevel())
-            ? "MAX"
+            ? ChatColor.BOLD + "MAX"
             : generator.levels()[level + 1].itemsToGenerate() + "/" + generator.levels()[level + 1].waitingTime() + "s";
 
         for (int i = 0; i < lines.length; i++) {

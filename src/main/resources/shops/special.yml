@@ -1,0 +1,49 @@
+chest:
+  slot: 0
+  item: "54"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+ender-chest:
+  slot: 1
+  item: "130"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+platform:
+  slot: 2
+  item: "7"
+  lore:
+    - "&7Altura min: 10"
+    - "&7Altura max: 150"
+    - ""
+    - "&78x &eOro"
+  need-item:
+    amount: 8
+    item: "266"
+
+tracker:
+  slot: 3
+  item: "345"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+troll-stick:
+  slot: 4
+  item: "280"
+  enchants:
+    - "KNOCKBACK:1"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"

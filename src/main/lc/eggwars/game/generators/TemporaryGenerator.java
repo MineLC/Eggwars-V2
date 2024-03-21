@@ -79,7 +79,7 @@ public final class TemporaryGenerator {
     }
 
     public boolean canRefreshItem() {
-        return (currentLevel.refreshEvery() == waitedTime);
+        return currentLevel.refreshEvery() == waitedTime;
     }
 
     public int getWaitedTime() {
@@ -96,10 +96,6 @@ public final class TemporaryGenerator {
 
     public List<Entity> getEntities(Chunk chunk) {
         return chunk.entitySlices[height];
-    }
-
-    public int getRefreshEvery() {
-        return currentLevel.refreshEvery();
     }
 
     public ItemStack getItem() {

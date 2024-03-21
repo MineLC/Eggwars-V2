@@ -21,7 +21,7 @@ public final class JoinCommand implements Command {
     @Override
     public void handle(CommandSender sender, String[] args) {
         final Player player = (Player)sender;
-        if (args.length != 2) {
+        if (args.length != 1) {
             sendWithColor(player, "&cFormat: /join &7(worldname)");
             return;
         }
@@ -29,7 +29,7 @@ public final class JoinCommand implements Command {
             send(sender, "Ya estás en un juego. Usa /leave para salir");
             return;
         }
-        final MapData map = MapStorage.getStorage().getMapData(args[1]);
+        final MapData map = MapStorage.getStorage().getMapData(args[0]);
         if (map == null) {
             sendWithColor(player, "&cThis map don't exist. Available maps: " + MapStorage.getStorage().getMaps().keySet());
             return;
@@ -53,7 +53,7 @@ public final class JoinCommand implements Command {
             player.teleport(PregameStorage.getStorage().mapLocation());
     
             PregameStorage.getStorage().send(player);
-            GameStorage.getStorage().join(args[1], game, player);
+            GameStorage.getStorage().join(args[0], game, player);
             SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME).send(player);
             return;
         }
@@ -62,7 +62,7 @@ public final class JoinCommand implements Command {
         player.getInventory().clear();
         player.setGameMode(GameMode.SPECTATOR);
         player.teleport(game.getWorld().getSpawnLocation());  
-        GameStorage.getStorage().join(args[1], game, player);
+        GameStorage.getStorage().join(args[0], game, player);
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(player);
     }
 

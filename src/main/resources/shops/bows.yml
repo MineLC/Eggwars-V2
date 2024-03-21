@@ -1,0 +1,64 @@
+normal-bow:
+  slot: 0
+  item: "261"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+power-one-bow:
+  slot: 1
+  item: "261"
+  enchants:
+    - "ARROW_DAMAGE:1"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+punch-bow:
+  slot: 2
+  item: "261"
+  enchants:
+    - "KNOCKBACK:1"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+power-and-punch-bow:
+  slot: 3
+  item: "261"
+  enchants:
+    - "ARROW_DAMAGE:1"
+    - "KNOCKBACK:1"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+power-two-bow:
+  slot: 4
+  item: "261"
+  enchants:
+    - "ARROW_DAMAGE:2"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+arrow:
+  slot: 5
+  item: "262"
+  amount: 4
+  stackeable: true
+  lore:
+    - "&71x &eOro"
+  need-item:
+    amount: 5
+    item: "266"

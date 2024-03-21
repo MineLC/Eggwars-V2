@@ -1,0 +1,53 @@
+healing:
+  slot: 0
+  item: "373:8229"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+healing-splash:
+  slot: 1
+  item: "373:16421"
+  lore:
+    - "&710x &eOro"
+  need-item:
+    amount: 10
+    item: "266"
+
+night-vision:
+  slot: 2
+  item: "373:8198"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+  
+jump:
+  slot: 3
+  item: "373:16459"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+regeneration-two:
+  slot: 4
+  item: "373:8225"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"
+
+strength:
+  slot: 5
+  item: "373:8201"
+  lore:
+    - "&75x &bDiamantes"
+  need-item:
+    amount: 5
+    item: "264"

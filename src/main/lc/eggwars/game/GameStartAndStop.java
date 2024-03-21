@@ -28,10 +28,11 @@ final class GameStartAndStop {
             game.setWorld(world);
 
             MapStorage.getStorage().loadClickableBlocks(world);
-    
-            new GeneratorManager().load(game);
 
-            plugin.getServer().getScheduler().runTask(plugin, () -> startForPlayers(game));
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                startForPlayers(game);
+                new GeneratorManager().load(game);
+            });
 
             game.startTime();
             game.setState(GameState.IN_GAME);

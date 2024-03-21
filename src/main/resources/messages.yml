@@ -19,8 +19,8 @@ team:
     - ""
 
 special-items:
-  platform-cant-use: "&cSolo puedes usar la plataforma en &eAltura > 20&c y &eAltura < 150&c. &6Altura: Y"
-
+  platform-cant-use: "&cSolo puedes usar la plataforma en &eAltura > 10&c y &eAltura < 150&c. &6Altura: Y"
+  tracker: "&7Jugador: &a%player%&7. Distancia: &e%distance% &7bloques."
 gameshop:
   clean-inventory: "&cLimpia tu inventario antes de comprar mucha cantidad"
   need-items: "&cNo tienes items suficientes para comprar esto"

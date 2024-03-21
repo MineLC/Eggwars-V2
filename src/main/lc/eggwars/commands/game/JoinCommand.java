@@ -1,5 +1,8 @@
 package lc.eggwars.commands.game;
 
+import java.util.Collection;
+import java.util.Set;
+
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -55,6 +58,7 @@ public final class JoinCommand implements Command {
             PregameStorage.getStorage().send(player);
             GameStorage.getStorage().join(args[0], game, player);
             SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME).send(player);
+            showPlayers(player, game.getPlayers());
             return;
         }
 
@@ -64,6 +68,14 @@ public final class JoinCommand implements Command {
         player.teleport(game.getWorld().getSpawnLocation());  
         GameStorage.getStorage().join(args[0], game, player);
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(player);
+        showPlayers(player, game.getPlayers());
+    }
+
+    private void showPlayers(final Player player, final Set<Player> players) {
+        for (final Player otherPlayer : players) {
+            otherPlayer.showPlayer(player);
+            player.showPlayer(otherPlayer);
+        }
     }
 
     @Override

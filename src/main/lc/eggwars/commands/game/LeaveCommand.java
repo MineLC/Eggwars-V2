@@ -1,5 +1,7 @@
 package lc.eggwars.commands.game;
 
+import java.util.Set;
+
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,6 +29,12 @@ public final class LeaveCommand implements Command {
         GameStorage.getStorage().leave(game, player, true);
         SpawnStorage.getStorage().setItems(player);
         SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
+
+        final Set<Player> players = game.getPlayers();
+        for (final Player otherPlayer : players) {
+            otherPlayer.hidePlayer(player);
+            player.hidePlayer(otherPlayer);
+        }
         send(player, "Has salido del juego");
     }
 }

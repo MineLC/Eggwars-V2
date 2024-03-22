@@ -31,7 +31,7 @@ public final class TemporaryGenerator {
     public TemporaryGenerator(
         int level,
         BaseGenerator base,
-        Entity entityItem,
+        GeneratorEntityItem entityItem,
         org.bukkit.World world,
         int id,
         ClickableSignGenerator data

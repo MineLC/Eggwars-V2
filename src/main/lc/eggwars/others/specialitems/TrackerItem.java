@@ -27,8 +27,10 @@ public final class TrackerItem {
                 }
                 final float distance = (float)teamPlayer.getLocation().distance(player.getLocation());
                 player.sendMessage(Messages.get("special-items.tracker")
-                    .replace("%distance%", String.valueOf(distance)
-                    .replace("%player%", teamPlayer.getName())));
+                    .replace("%distance%", String.valueOf(distance))
+                    .replace("%player%", teamPlayer.getName()));
+
+                player.setCompassTarget(teamPlayer.getLocation());
             }
         }
     }

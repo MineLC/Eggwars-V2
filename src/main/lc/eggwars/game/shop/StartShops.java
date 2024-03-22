@@ -104,9 +104,13 @@ public class StartShops {
                 continue;
             }
             shopInventory.setItem(realSlot, item.item());
-            final net.minecraft.server.v1_8_R3.ItemStack buyItem = CraftItemStack.asNMSCopy(item.item());
+            final ItemStack itemStack = item.item();
+            final ItemMeta meta = itemStack.getItemMeta();
+            meta.setLore(null);
+            itemStack.setItemMeta(meta);
+
+            final net.minecraft.server.v1_8_R3.ItemStack buyItem = CraftItemStack.asNMSCopy(itemStack);
             final net.minecraft.server.v1_8_R3.ItemStack needItem = CraftItemStack.asNMSCopy(creator.getItem(shopitem + ".need-item"));
-            buyItem.setTag(null);
             items.put(realSlot, new Shop.Item(buyItem, needItem, needItem.count, config.getBoolean(shopitem + ".stackeable"), createMetadata(item.item())));
         }
         return items;

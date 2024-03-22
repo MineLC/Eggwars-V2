@@ -10,7 +10,7 @@ import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.Kit;
 
-public class KitInventory {
+public final class KitInventory {
 
     private final IntObjectHashMap<Kit> inventoryItems;
     private final Inventory inventory;

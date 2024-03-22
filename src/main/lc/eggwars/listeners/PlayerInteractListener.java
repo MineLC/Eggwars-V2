@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
@@ -17,9 +18,11 @@ import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.specialitems.JumpPadItem;
 import lc.eggwars.others.specialitems.PlatformItem;
 import lc.eggwars.others.specialitems.TrackerItem;
 import lc.eggwars.utils.ClickableBlock;
+
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
@@ -84,7 +87,7 @@ public final class PlayerInteractListener implements EventListener {
 
         if (game != null) {
             if (game.getState() == GameState.IN_GAME) {
-                handleSpecialItems(game, event.getPlayer(), type);
+                handleSpecialItems(game, event.getPlayer(), event.getItem(), type);
                 return;
             }
             if (!(game.getCountdown() instanceof PreGameCountdown pregame)) {
@@ -104,13 +107,19 @@ public final class PlayerInteractListener implements EventListener {
         }
     }
 
-    private void handleSpecialItems(final GameInProgress game, final Player player, final Material material) {
+    private void handleSpecialItems(final GameInProgress game, final Player player, final ItemStack item, final Material material) {
         switch (material) {
             case BEDROCK:
-                new PlatformItem().handle(player);
+                new PlatformItem().handle(player, item);
                 break;
             case COMPASS:
                 new TrackerItem().handle(player, game);
+                break;
+            case GOLD_PLATE:
+                new JumpPadItem().handleUp(player, item);
+                break;
+            case IRON_PLATE:
+                new JumpPadItem().handleDirectional(player, item);
                 break;
             default:
                 return;

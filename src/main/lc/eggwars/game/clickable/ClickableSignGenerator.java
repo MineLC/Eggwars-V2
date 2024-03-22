@@ -67,9 +67,9 @@ public final class ClickableSignGenerator implements ClickableBlock {
 
     public void setGenerator(final World world, final int id) {
         final GeneratorEntityItem item = new GeneratorEntityItem();
-        item.locX = loc.x() + 0.5D;
+        item.locX = loc.x();
         item.locY = loc.y();
-        item.locZ = loc.z() + 0.5D;
+        item.locZ = loc.z();
 
         item.setCustomNameVisible(true);
         item.setItemStack(base.drop());

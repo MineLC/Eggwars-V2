@@ -34,3 +34,16 @@ obsidian:
   need-item:
     amount: 5
     item: "264"
+button-wood:
+  slot: 4
+  item: "143"
+  amount: 2
+  stackeable: true
+  lore:
+    - "&7Un clásico de"
+    - "&7Captura la lana"
+    - ""
+    - "&71x &eOro"
+  need-item:
+    amount: 1
+    item: "266"

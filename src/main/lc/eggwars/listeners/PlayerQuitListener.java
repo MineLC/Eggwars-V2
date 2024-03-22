@@ -24,7 +24,8 @@ public final class PlayerQuitListener implements EventListener {
         final PlayerQuitEvent event = (PlayerQuitEvent)defaultEvent;
         final Player player = event.getPlayer();
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
-
+        event.setQuitMessage(null);
+        
         if (game != null) {
             GameStorage.getStorage().leave(game, player, true);
         }

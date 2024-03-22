@@ -1,12 +1,8 @@
 # Eggwars
 Eggwars core for MineLC
 
-## How to compile:
-> [!NOTE]
-> We need java 17 to compile
-1) Clone the repository
-2) Download:
-   1) lcspigot 1.8.4 ```https://github.com/MineLC/LCSpigot```
-   2) minecore ```https://github.com/MineLC/MineCore```
-4) Create a folder named "libs" and put the plugins
-5) Execute in your terminal "mvn install"
+Made in 1.8 with many features and high performance
+
+> [!WARNING]
+Project uses the default copyright laws 
+<a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository#choosing-the-right-license">See here</a>

@@ -41,13 +41,12 @@ public final class StartKits {
         final File[] kitsFiles = kitsFolder.listFiles();
         final IntObjectHashMap<Kit> kits = new IntObjectHashMap<>();
         final IntObjectHashMap<Kit> kitsPerId = new IntObjectHashMap<>();
-        int index = 0;
 
         for (final File kitFile : kitsFiles) {
             final Kit kit = createKit(YamlConfiguration.loadConfiguration(kitFile));
             kitsPerId.put(kit.name().hashCode(), kit);
             inventory.setItem(kit.inventoryItem().slot(), kit.inventoryItem().item());
-            kits.put(index++, kit);
+            kits.put(kit.inventoryItem().slot(), kit);
         }
         KitStorage.update(new KitStorage(new KitInventory(kits, inventory), kitsPerId));
     }

@@ -17,10 +17,11 @@ public record PregameStorage(Location mapLocation, boolean addShopSpawnitem, Ite
     public void send(final Player player) {
         final PlayerInventory inventory = player.getInventory();
         inventory.clear();
+
+        inventory.setItem(selectTeam.slot(), selectTeam.item());
         if (addShopSpawnitem) {
             inventory.setItem(SpawnStorage.getStorage().shopItem().slot(), SpawnStorage.getStorage().shopItem().item());
         }
-        inventory.setItem(selectTeam.slot(), selectTeam.item());
     }
 
     static void update(PregameStorage newStorage) {

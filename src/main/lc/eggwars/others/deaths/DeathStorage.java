@@ -64,7 +64,7 @@ public final class DeathStorage {
 
         finalMessage = finalMessage + deathMessage.replace("%v%", player.getName());
         if (player.getKiller() != null) {
-            finalMessage = finalMessage.replace("%d%", player.getKiller().getName()) + suffixIfPlayerKill;
+            finalMessage = finalMessage + suffixIfPlayerKill.replace("%d%", player.getKiller().getName());
         }
         return finalMessage;
     }

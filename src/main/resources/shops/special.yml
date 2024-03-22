@@ -19,6 +19,7 @@ ender-chest:
 platform:
   slot: 2
   item: "7"
+  name: "&7Plataforma 3x3"
   lore:
     - "&7Altura min: 10"
     - "&7Altura max: 150"
@@ -31,6 +32,7 @@ platform:
 tracker:
   slot: 3
   item: "345"
+  name: "&cRastreador"
   lore:
     - "&75x &bDiamantes"
   need-item:
@@ -40,8 +42,29 @@ tracker:
 troll-stick:
   slot: 4
   item: "280"
-  enchants:
+  name: "&ePalo empujador"
+  enchantments:
     - "KNOCKBACK:1"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+up-jumpad:
+  slot: 5
+  item: "147"
+  name: "&eSube 5 bloques arriba"
+  lore:
+    - "&75x &eOro"
+  need-item:
+    amount: 5
+    item: "266"
+
+directional-jumpad:
+  slot: 6
+  item: "148"
+  name: "&eImpusalte hacia tu dirección"
   lore:
     - "&75x &eOro"
   need-item:

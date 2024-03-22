@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -12,7 +13,7 @@ import lc.eggwars.messages.Messages;
 
 public final class PlatformItem {
 
-    public void handle(final Player player) {
+    public void handle(final Player player, final ItemStack item) {
         final Location location = player.getLocation();
         final int y = location.getBlockY() - 6;
 
@@ -38,7 +39,13 @@ public final class PlatformItem {
         setBlock(world, x + 1, y, z - 1);
         setBlock(world, x - 1, y, z + 1);
         setBlock(world, x + 1, y, z + 1);
-        player.getInventory().setItemInHand(null);
+
+        if (item.getAmount() == 1) {
+            player.getInventory().setItemInHand(null);
+            return;
+        }
+        item.setAmount(item.getAmount() - 1);
+        player.getInventory().setItemInHand(item);
     }
 
     private void setBlock(final World world, final int x, final int y, final int z) {

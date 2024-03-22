@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.tinylog.Logger;
-
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.EggwarsPlugin;
@@ -49,11 +47,7 @@ public final class PlayerRespawnListener implements EventListener {
         player.setGameMode(GameMode.SPECTATOR);
  
         if (!team.hasEgg()) {
-            try {
-                new GameDeath(plugin).death(game, team, player, false, true);
-            } catch (Exception e) {
-                Logger.info(e);
-            }
+            new GameDeath(plugin).death(game, team, player, false, true);
             return;
         }
 

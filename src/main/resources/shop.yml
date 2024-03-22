@@ -37,7 +37,7 @@ header: # Header slots need be 0-9
       - "&7Compra arcos y flechas aquí"
   potions:
     slot: 6
-    item: "285"
+    item: "373:0"
     name: "&aPociones"
     lore:
       - "&7Compra pociones aquí"

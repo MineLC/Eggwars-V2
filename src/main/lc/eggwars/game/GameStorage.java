@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
-import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.countdown.endgame.EndgameCountdown;
@@ -89,16 +88,13 @@ public final class GameStorage {
             }
             return;
         }
-        try {
-            new GameDeath(plugin).death(
-                game,
-                team,
-                player,
-                leaveFromGame,
-                true);   
-        } catch (Exception e) {
-            Logger.info(e);
-        }
+
+        new GameDeath(plugin).death(
+            game,
+            team,
+            player,
+            leaveFromGame,
+            true);
     }
 
     public GameInProgress getGame(UUID uuid) {

@@ -21,6 +21,7 @@ public final class GeneratorEntityItem extends Entity {
 
     @Override
     protected void b(NBTTagCompound arg0) {
+
     }
 
     @Override

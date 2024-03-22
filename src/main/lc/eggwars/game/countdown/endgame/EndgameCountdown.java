@@ -26,12 +26,17 @@ public class EndgameCountdown extends GameCountdown  {
     public void run() {
         try {
             final Set<GameTeam> teams = game.getTeams();
+            final Set<Player> gamePlayers = game.getPlayers();
+
             for (final GameTeam team : teams) {
                 final Set<Player> players = team.getPlayers();
 
                 for (final Player player : players) {
                     team.remove(player);
-
+                    for (final Player otherPlayer : gamePlayers) {
+                        otherPlayer.hidePlayer(player);
+                        player.hidePlayer(otherPlayer);
+                    }
                     player.teleport(SpawnStorage.getStorage().location());
                     player.setGameMode(GameMode.ADVENTURE);
 

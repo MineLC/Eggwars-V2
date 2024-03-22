@@ -140,8 +140,8 @@ public final class GeneratorTask {
 
     private void destroyItem(final int itemId, final TemporaryGenerator generator) {
         final PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(itemId);
-
-        for (final Chunk nearbyChunk : generator.getChunks()) {
+        final Chunk[] chunks = generator.getChunks();
+        for (final Chunk nearbyChunk : chunks) {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {

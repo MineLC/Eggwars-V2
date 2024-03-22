@@ -16,14 +16,12 @@ public final class LeatherArmorColorMetadata implements ItemMetaData {
     public ItemStack parse(ItemStack item, Player player) {      
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
         if (game == null) {
-            player.sendMessage("Trying parse but none");
             return item;
         }
         final GameTeam team = game.getTeamPerPlayer().get(player);
         if (team != null) {
             setColor(item, player, team.getBase().getLeatherColor());
         }
-        player.sendMessage("Parse complete");
         return item;
     }
 

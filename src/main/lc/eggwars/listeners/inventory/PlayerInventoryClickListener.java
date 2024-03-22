@@ -54,7 +54,7 @@ public class PlayerInventoryClickListener implements EventListener {
             }
             final GameInProgress gameInProgress = GameStorage.getStorage().getGame(event.getWhoClicked().getUniqueId());
 
-            if (gameInProgress.getState() == GameState.PREGAME) {
+            if (gameInProgress != null && gameInProgress.getState() == GameState.PREGAME) {
                 event.setCancelled(true);
             }
             return;

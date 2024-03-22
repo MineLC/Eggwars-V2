@@ -1,7 +1,5 @@
 package lc.eggwars.game.pregame;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,7 +8,6 @@ import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.inventory.internal.InventoryCreator;
-import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.utils.EntityLocation;
 
 public final class StartPreGameData {

@@ -21,9 +21,10 @@ public class PlayerBreakListener implements EventListener {
             return;
         }
         switch (event.getBlock().getType()) {
-            case OBSIDIAN, GLASS, SANDSTONE, ENDER_STONE:
+            case OBSIDIAN, GLASS, SANDSTONE, ENDER_STONE, WOOD_BUTTON:
                 return;
             default:
+                event.setCancelled(true);
         }
     }
 }

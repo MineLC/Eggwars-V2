@@ -30,8 +30,13 @@ final class GameStartAndStop {
             MapStorage.getStorage().loadClickableBlocks(world);
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                startForPlayers(game);
+                world.getWorldBorder().setCenter(world.getSpawnLocation());
+                world.getWorldBorder().setSize(game.getMapData().getBorderSize());
+    
+                new GeneratorManager().setGeneratorSigns(game);
                 new GeneratorManager().load(game);
+
+                startForPlayers(game);
             });
 
             game.startTime();
@@ -60,6 +65,7 @@ final class GameStartAndStop {
         CompletableFuture.runAsync(() -> {
             final World world = game.getWorld();
             new GeneratorManager().unload(game);
+
             game.getMapData().setGame(null);
 
             MapStorage.getStorage().unload(world);
@@ -111,6 +117,7 @@ final class GameStartAndStop {
         if (!alreadyInTheTeam) {
             game.getTeamPerPlayer().put(player, team);
         }
+        GameStorage.getStorage().getPlayerInGame(player.getUniqueId()).setTeam(team);
 
         team.add(player);
     }

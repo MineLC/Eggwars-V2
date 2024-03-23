@@ -73,8 +73,8 @@ public class PlayerChatListener implements EventListener {
         if(team == null) return;
 
         if(event.getMessage().charAt(0) == '!'){
-            final String globalMessage = String.format("&6&lGLOBAL %s %s%s &8» &7%s", pp.getRankInfo().getRank().getPrefix(), team.getBase().getTeam().getPrefix(), p.getName(), message);
-            Messages.sendNoGet(game.getPlayers(), globalMessage);
+            final String globalMessage = String.format("&6&lGLOBAL %s%s &8» &7%s",  team.getBase().getTeam().getPrefix(), p.getName(), message);
+            Messages.sendNoGet(game.getPlayers(), globalMessage.substring(0));
             return;
         }
 

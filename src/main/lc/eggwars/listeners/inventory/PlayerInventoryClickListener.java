@@ -73,7 +73,6 @@ public class PlayerInventoryClickListener implements EventListener {
             if (gameInProgress.getState() == GameState.PREGAME) {
                 final PreGameTemporaryData temporaryData = ((PreGameCountdown)gameInProgress.getCountdown()).getTemporaryData();
                 if (InventoryUtils.getId(temporaryData.getTeamSelectorInventory()) == inventory) {
-                    event.getWhoClicked().sendMessage("MAMAHUEVAZO");
                     new TeamSelectorInventory().handle(event, gameInProgress, temporaryData);
                     return;
                 }

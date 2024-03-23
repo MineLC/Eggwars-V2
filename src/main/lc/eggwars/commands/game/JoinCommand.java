@@ -1,6 +1,5 @@
 package lc.eggwars.commands.game;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.bukkit.GameMode;

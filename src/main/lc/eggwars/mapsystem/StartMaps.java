@@ -95,10 +95,8 @@ public final class StartMaps {
                 index++;
                 Bukkit.unloadWorld(world, false);
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-                plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    Logger.warn("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
-                    Logger.error(e);
-                });
+                Logger.error("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
+                Logger.error(e);
             }
         }
     }
@@ -132,7 +130,7 @@ public final class StartMaps {
             final BaseTeam team = TeamStorage.getStorage().getTeam(entry.getKey());
 
             if (team == null) {
-                Logger.warn("The map " + data.world() + " uses a inexistent team: " + entry.getKey());
+                Logger.info("The map " + data.world() + " uses a inexistent team: " + entry.getKey());
                 continue;
             }
 
@@ -163,7 +161,7 @@ public final class StartMaps {
             final BaseTeam team = TeamStorage.getStorage().getTeam(spawn.getKey());
 
             if (team == null) {
-                Logger.warn("The map " + data.world() + " uses a inexistent team: " + spawn.getKey());
+                Logger.info("The map " + data.world() + " uses a inexistent team: " + spawn.getKey());
                 continue;
             }
 
@@ -187,7 +185,7 @@ public final class StartMaps {
         for (final Entry<String, String[]> generator : generatorsEntries) {
             final BaseGenerator baseGenerator = GeneratorStorage.getStorage().getGenerator(generator.getKey());
             if (baseGenerator == null) {
-                Logger.warn("The generator " + generator.getKey() + " don't exist");
+                Logger.info("The generator " + generator.getKey() + " don't exist");
                 return null;
             }
             final String[] cordsAndLevels = generator.getValue();

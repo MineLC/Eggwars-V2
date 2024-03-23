@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.tinylog.Logger;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
@@ -49,7 +48,7 @@ public class StartSpawn {
         }
         final World bukkitWorld = Bukkit.getWorld(world);
         if (bukkitWorld == null) {
-            Logger.info("can't found the spawn world: " + world);
+            Logger.warn("can't found the spawn world: " + world);
             return;
         }
         final EntityLocation entityLocation = EntityLocation.create(spawn);
@@ -58,7 +57,6 @@ public class StartSpawn {
         bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
         final SpawnStorage oldStorage = SpawnStorage.getStorage();
         SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
-        new StartPreGameData().loadMap(plugin);
     }
 
     private SpawnShopInventory getSpawnShopInventory() {

@@ -1,5 +1,6 @@
 package lc.eggwars.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,11 +17,21 @@ import lc.lcspigot.commands.Command;
 public final class InfoCommand implements Command {
 
     @Override
-    public void handle(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
+    public void handle(CommandSender sender, String[] args) { 
+        Player player;
+        if (args.length == 1) {
+            player = Bukkit.getPlayer(args[0]);
+            if (player == null) {
+                sendWithColor(sender, "&cEste jugador no existe");
+                return;
+            }
+        }
+        if (!(sender instanceof Player)) {
             send(sender, "You need be a user to use this command");
             return;
-        } 
+        } else {
+            player = (Player)sender;
+        }
 
         final String format = Messages.get("commands.info");
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());

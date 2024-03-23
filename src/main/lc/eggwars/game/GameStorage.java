@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
@@ -19,8 +20,7 @@ public final class GameStorage {
 
     private final EggwarsPlugin plugin;
     private final PreGameCountdown.Data pregameData;
-    private final Map<UUID, GameInProgress> playersInGame = new HashMap<>();
-    private final Map<GameInProgress, String> gamesInPregame = new HashMap<>();
+    private final Map<UUID, PlayerInGame> playersInGame = new HashMap<>();
 
     GameStorage(EggwarsPlugin plugin, PreGameCountdown.Data data) {
         this.plugin = plugin;
@@ -28,7 +28,7 @@ public final class GameStorage {
     }
 
     public void join(final String world, final GameInProgress game, final Player player) {
-        playersInGame.put(player.getUniqueId(), game);
+        playersInGame.put(player.getUniqueId(), new PlayerInGame(game));
         game.getPlayers().add(player);
 
         if (game.getState() != GameState.NONE) {
@@ -53,13 +53,9 @@ public final class GameStorage {
 
         game.setCountdown(waitToStartCountdown);
         game.setState(GameState.PREGAME);
-        gamesInPregame.put(game, world);
     }
 
     public void stop(final GameInProgress game) {
-        if (game.getState() == GameState.PREGAME) {
-            gamesInPregame.remove(game);
-        }
         new GameStartAndStop().stop(game);
     }
 
@@ -69,7 +65,6 @@ public final class GameStorage {
         if (team != null) {
             team.remove(player);
         }
-
         if (game.getCountdown() instanceof EndgameCountdown) {
             game.getPlayers().remove(player);
             if (game.getPlayers().isEmpty()) {
@@ -79,7 +74,6 @@ public final class GameStorage {
             game.getTeamPerPlayer().remove(player);
             return;
         }
-
         if (game.getCountdown() instanceof PreGameCountdown pregame) {
             game.getPlayers().remove(player);
             pregame.getTemporaryData().leave(player, game);
@@ -88,17 +82,27 @@ public final class GameStorage {
             }
             return;
         }
+        if (player.getGameMode() != GameMode.SPECTATOR) {
+            new GameDeath(plugin).death(
+                game,
+                team,
+                player,
+                leaveFromGame,
+                true);
+        }
+    }
 
-        new GameDeath(plugin).death(
-            game,
-            team,
-            player,
-            leaveFromGame,
-            true);
+    public void remove(final UUID uuid) {
+        playersInGame.remove(uuid);
+    }
+
+    public PlayerInGame getPlayerInGame(final UUID uuid) {
+        return playersInGame.get(uuid);
     }
 
     public GameInProgress getGame(UUID uuid) {
-        return playersInGame.get(uuid);
+        final PlayerInGame playerInGame = playersInGame.get(uuid);
+        return (playerInGame == null) ? null : playerInGame.getGame();
     }
 
     public static GameStorage getStorage() {

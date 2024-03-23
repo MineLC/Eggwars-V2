@@ -75,6 +75,6 @@ public class StartTeams {
         if (rgb.length != 3) {
             return Color.AQUA;
         }
-        return Color.fromBGR(IntegerUtils.parsePositive(rgb[0]), IntegerUtils.parsePositive(rgb[1]), IntegerUtils.parsePositive(rgb[2]));
+        return Color.fromRGB(IntegerUtils.parsePositive(rgb[0]), IntegerUtils.parsePositive(rgb[1]), IntegerUtils.parsePositive(rgb[2]));
     }
 }

@@ -2,6 +2,8 @@ package lc.eggwars.game.threadtasks;
 
 import java.util.List;
 
+import org.bukkit.GameMode;
+
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
@@ -83,7 +85,8 @@ public final class GeneratorTask {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {
-                if (!(entity instanceof EntityPlayer entityPlayer)) {
+                if (!(entity instanceof EntityPlayer entityPlayer)
+                    || entityPlayer.getBukkitEntity().getGameMode() == GameMode.SPECTATOR) {
                     continue;
                 }
                 final int playerX = (int)entityPlayer.locX;
@@ -113,7 +116,8 @@ public final class GeneratorTask {
             final List<Entity> entities = generator.getEntities(nearbyChunk);
 
             for (final Entity entity : entities) {
-                if (!(entity instanceof EntityPlayer entityPlayer)) {
+                if (!(entity instanceof EntityPlayer entityPlayer)
+                    || entityPlayer.getBukkitEntity().getGameMode() == GameMode.SPECTATOR) {
                     continue;
                 }
                 final int playerX = (int)entityPlayer.locX;

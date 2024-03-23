@@ -5,7 +5,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.countdown.endgame.EndgameCountdown;
+import lc.eggwars.game.countdown.endgame.EndgameCountdown; 
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.levels.LevelStorage;
@@ -29,7 +29,9 @@ public final class GameDeath {
             game.getPlayers().remove(player);
             game.getTeamPerPlayer().remove(player);
             gameTeam.remove(player);
-
+            if (gameTeam.getPlayers().isEmpty()) {
+                gameTeam.destroyEgg();
+            }
             if (game.getPlayers().isEmpty()) {
                 new GameStartAndStop().stop(game);
                 return;
@@ -43,13 +45,12 @@ public final class GameDeath {
 
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
 
-        if (gameTeam.getPlayerDeaths() != gameTeam.getPlayers().size()) {
+        if (gameTeam.getPlayers().size() > gameTeam.getPlayerDeaths()) {
             return;
         }
 
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
         final GameTeam finalTeam = getLastTeamAlive(game);
-       
         if (finalTeam == null) {
             return;
         }
@@ -81,13 +82,12 @@ public final class GameDeath {
         final Set<GameTeam> teams = game.getTeams();
 
         for (final GameTeam team : teams) {
-            if (team.getPlayers().size() == team.getPlayerDeaths()) {
-                continue;
+            if (team.getPlayers().size() > team.getPlayerDeaths()) {
+                if (lastTeam != null) {
+                    return null;
+                }
+                lastTeam = team;
             }
-            if (lastTeam != null) {
-                return null;
-            }
-            lastTeam = team;
         }
 
         return lastTeam;

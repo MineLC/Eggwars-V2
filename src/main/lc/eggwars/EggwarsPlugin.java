@@ -12,7 +12,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import org.tinylog.Logger;
 
 import com.grinderwolf.swm.plugin.SWMPlugin;
@@ -60,7 +59,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
         final SWMPlugin slimePlugin = (SWMPlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
         if (slimePlugin == null) {
-            Logger.error("EggwarsCore need slimeworld manager to work");
+            Logger.info("EggwarsCore need slimeworld manager to work");
             return;
         }
 
@@ -68,7 +67,8 @@ public class EggwarsPlugin extends JavaPlugin {
             try {   
                 DATABASE.init(this);   
             } catch (Exception e) {
-                getServer().getScheduler().runTask(this, () -> Logger.error(e));
+                getServer().getScheduler().runTask(this, () -> Logger.info(e));
+                setEnabled(false);
             }
         });
 
@@ -89,10 +89,15 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartShopkeepers().load(this, data.shops());
 
         getServer().getScheduler().runTaskLater(this, () -> {
-            new StartMaps(this, slimePlugin).load();
-            new StartSpawn(this).loadSpawn();
-            new StartPreGameData().loadMap(this);
-            GameManagerThread.startThread();
+            try {
+                new StartMaps(this, slimePlugin).load();
+                new StartSpawn(this).loadSpawn();
+                new StartPreGameData().loadMap(this);
+                GameManagerThread.startThread();   
+            } catch (Exception e) {
+                Logger.error(e);
+                setEnabled(false);
+            }
         }, 20);
 
         registerBasicListeners(data);
@@ -122,6 +127,7 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerDropitemListener(), true);  
         listeners.register(new PlayerChatListener(), true);
         listeners.register(new PlayerSaturationEvent(), true);
+        listeners.register(new ItemPickupListener(), true);
 
         listeners.cancelEvent(BlockPhysicsEvent.class);
         listeners.cancelEvent(BlockGrowEvent.class);

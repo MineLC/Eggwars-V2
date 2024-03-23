@@ -39,7 +39,7 @@ public class StartShops {
             }
             final FileConfiguration shopConfig = tryLoadShop(plugin, headerShop.shopName);
             if (shopConfig == null) {
-                Logger.warn("Can't found shop file for the header item: " + headerShop.shopName);
+                Logger.info("Can't found shop file for the header item: " + headerShop.shopName);
                 continue;
             }
             final String shopID = ("shop-"+headerShop.shopName);
@@ -71,7 +71,7 @@ public class StartShops {
         for (final String shopSection : header) {
             final Item item = creator.create("header." + shopSection);
             if (item.slot() < 0 || item.slot() > 9) {
-                Logger.warn("Header item slot need be 0-9");
+                Logger.info("Header item slot need be 0-9");
                 index++;
                 continue;
             }

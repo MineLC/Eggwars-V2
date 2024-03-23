@@ -12,6 +12,7 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameDeath;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.levels.LevelStorage;
@@ -59,6 +60,7 @@ public final class PlayerRespawnListener implements EventListener {
             player.teleport(spawnLocation);
             player.setGameMode(GameMode.SURVIVAL);
             KitStorage.getStorage().setKit(player, false);
+            new ShopKeeperManager().send(player, game);
         }, false);
     }
 }

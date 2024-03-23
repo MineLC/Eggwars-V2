@@ -34,7 +34,7 @@ public final class StartPreGameData {
 
         final World bukkitWorld = Bukkit.getWorld(world);
         if (bukkitWorld == null) {
-            Logger.info("can't found the pregame world: " + world);
+            Logger.warn("can't found the pregame world: " + world);
             return;
         }
         final EntityLocation entityLocation = EntityLocation.create(spawn);

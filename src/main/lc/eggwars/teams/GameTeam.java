@@ -27,6 +27,7 @@ public final class GameTeam {
 
     public void remove(final Player player) {
         players.remove(player);
+        playersDeath--;
         baseTeam.getTeam().removePlayer(player);
     }
 

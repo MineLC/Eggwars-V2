@@ -1,6 +1,9 @@
 package lc.eggwars.game.clickable;
 
+import java.util.Set;
+
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
@@ -58,6 +61,14 @@ public final class ClickableDragonEgg implements ClickableBlock  {
 
         PlayerDataStorage.getStorage().get(player.getUniqueId()).destroyedEggs++;
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
+        makeSound(game.getTeamPerBase().get(team).getPlayers());
+        player.playSound(player.getLocation(), Sound.ENDERDRAGON_HIT, 1.0f, 1.0f);
+    }
+
+    private void makeSound(final Set<Player> players) {
+        for (final Player player : players) {
+            player.playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 1.0f, 1.0f);
+        }
     }
 
     @Override

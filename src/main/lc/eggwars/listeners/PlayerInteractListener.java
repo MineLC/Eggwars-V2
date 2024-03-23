@@ -1,5 +1,6 @@
 package lc.eggwars.listeners;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,9 +12,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.PlayerInGame;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapStorage;
@@ -35,10 +36,14 @@ public final class PlayerInteractListener implements EventListener {
     public void handle(Event defaultEvent) {
         final PlayerInteractEvent event = (PlayerInteractEvent)defaultEvent;
 
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL) {
+        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL
+            || event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-
+        if (event.getItem() != null && handleInteractWithItems(event)) {
+            return;
+        }
+        event.setCancelled(false);
         if (SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
             event.setCancelled(true);
             if (event.getItem() == null) {
@@ -53,10 +58,6 @@ public final class PlayerInteractListener implements EventListener {
 
         if (handleClickableBlocks(event)) {
             return;
-        }
-
-        if (event.getItem() != null) {
-            handleInteractWithItems(event);
         }
     }
 
@@ -81,23 +82,19 @@ public final class PlayerInteractListener implements EventListener {
         return true;
     }
 
-    private void handleInteractWithItems(final PlayerInteractEvent event) {
-        final GameInProgress game = GameStorage.getStorage().getGame(event.getPlayer().getUniqueId());
+    private boolean handleInteractWithItems(final PlayerInteractEvent event) {
+        final PlayerInGame playerInGame = GameStorage.getStorage().getPlayerInGame(event.getPlayer().getUniqueId());
         final Material type = event.getItem().getType();
 
-        if (game != null) {
-            if (game.getState() == GameState.IN_GAME) {
-                handleSpecialItems(game, event.getPlayer(), event.getItem(), type);
-                return;
+        if (playerInGame != null) {
+            if (playerInGame.getGame().getState() == GameState.IN_GAME) {
+                return handleSpecialItems(event, playerInGame, event.getPlayer(), event.getItem(), type);
             }
-            if (!(game.getCountdown() instanceof PreGameCountdown pregame)) {
-                return;
-            }
-            if (PregameStorage.getStorage().selectTeam().item().getType() == type) {
+            if (playerInGame.getGame().getState() == GameState.PREGAME && PregameStorage.getStorage().selectTeam().item().getType() == type) {
                 event.setCancelled(true);
-                event.getPlayer().openInventory(pregame.getTemporaryData().getTeamSelectorInventory());
-                return;
+                event.getPlayer().openInventory(((PreGameCountdown)playerInGame.getGame().getCountdown()).getTemporaryData().getTeamSelectorInventory());
             }
+            return true;
         }
 
         final Inventory inventory = SpawnStorage.getStorage().items().get(type);
@@ -105,24 +102,28 @@ public final class PlayerInteractListener implements EventListener {
             event.setCancelled(true);
             event.getPlayer().openInventory(inventory);
         }
+        return true;
     }
 
-    private void handleSpecialItems(final GameInProgress game, final Player player, final ItemStack item, final Material material) {
+    private boolean handleSpecialItems(final PlayerInteractEvent event, final PlayerInGame game, final Player player, final ItemStack item, final Material material) {
         switch (material) {
             case BEDROCK:
                 new PlatformItem().handle(player, item);
-                break;
+                event.setCancelled(true);
+                return true;
             case COMPASS:
-                new TrackerItem().handle(player, game);
-                break;
+                new TrackerItem().handle(player, game.getGame());
+                return true;
             case GOLD_PLATE:
-                new JumpPadItem().handleUp(player, item);
-                break;
+                new JumpPadItem().handleUp(player, item, game);
+                event.setCancelled(true);
+                return true;
             case IRON_PLATE:
-                new JumpPadItem().handleDirectional(player, item);
-                break;
+                new JumpPadItem().handleDirectional(player, item, game);
+                event.setCancelled(true);
+                return true;
             default:
-                return;
+                return false;
         }
     }
 }

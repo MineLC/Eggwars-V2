@@ -25,24 +25,24 @@ public class EndgameCountdown extends GameCountdown  {
     @Override
     public void run() {
         try {
-            final Set<GameTeam> teams = game.getTeams();
             final Set<Player> gamePlayers = game.getPlayers();
+    
+            for (final Player player : gamePlayers) {
+                final GameTeam team = game.getTeamPerPlayer().get(player);
 
-            for (final GameTeam team : teams) {
-                final Set<Player> players = team.getPlayers();
-
-                for (final Player player : players) {
-                    team.remove(player);
-                    for (final Player otherPlayer : gamePlayers) {
-                        otherPlayer.hidePlayer(player);
-                        player.hidePlayer(otherPlayer);
-                    }
-                    player.teleport(SpawnStorage.getStorage().location());
-                    player.setGameMode(GameMode.ADVENTURE);
-
-                    SpawnStorage.getStorage().setItems(player);
-                    SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
+                for (final Player otherPlayer : gamePlayers) {
+                    otherPlayer.hidePlayer(player);
+                    player.hidePlayer(otherPlayer);
                 }
+                if (team != null) {
+                    team.remove(player);
+                }
+                player.teleport(SpawnStorage.getStorage().location());
+                player.setGameMode(GameMode.ADVENTURE);
+
+                SpawnStorage.getStorage().setItems(player);
+                SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
+                GameStorage.getStorage().remove(player.getUniqueId());
             }
             game.setCountdown(null);
             GameStorage.getStorage().stop(game);

@@ -144,7 +144,7 @@ public final class StartKits {
 
             if (type == null) {
                 type = PotionEffectType.ABSORPTION;
-                Logger.warn("The potion type: " + split[0] + " don't exist");
+                Logger.info("The potion type: " + split[0] + " don't exist");
             }
             if (split.length >= 2) {
                 level = Integer.parseInt(split[1]) - 1;

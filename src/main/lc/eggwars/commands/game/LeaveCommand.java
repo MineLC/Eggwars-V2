@@ -23,12 +23,13 @@ public final class LeaveCommand implements Command {
             send(player, "Actualmente no estás en ningun juego");
             return;
         }
-        player.teleport(SpawnStorage.getStorage().location());
-        player.setGameMode(GameMode.ADVENTURE);
 
         GameStorage.getStorage().leave(game, player, true);
         SpawnStorage.getStorage().setItems(player);
         SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
+
+        player.teleport(SpawnStorage.getStorage().location());
+        player.setGameMode(GameMode.ADVENTURE);
 
         final Set<Player> players = game.getPlayers();
         for (final Player otherPlayer : players) {

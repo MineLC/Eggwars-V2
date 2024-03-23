@@ -1,6 +1,7 @@
 package lc.eggwars.game.pregame;
 
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -18,10 +19,9 @@ public record PregameStorage(Location mapLocation, boolean addShopSpawnitem, Ite
         final PlayerInventory inventory = player.getInventory();
         inventory.clear();
 
+        inventory.setItem(SpawnStorage.getStorage().shopItem().slot(), SpawnStorage.getStorage().shopItem().item());
         inventory.setItem(selectTeam.slot(), selectTeam.item());
-        if (addShopSpawnitem) {
-            inventory.setItem(SpawnStorage.getStorage().shopItem().slot(), SpawnStorage.getStorage().shopItem().item());
-        }
+        ((CraftInventory)inventory).getInventory().update();
     }
 
     static void update(PregameStorage newStorage) {

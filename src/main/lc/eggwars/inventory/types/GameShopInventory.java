@@ -1,6 +1,5 @@
 package lc.eggwars.inventory.types;
 
-
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -14,7 +13,9 @@ import lc.eggwars.game.shop.metadata.ItemMetaData;
 import lc.eggwars.game.shop.metadata.LeatherArmorColorMetadata;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.utils.InventoryUtils;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.ItemStack;
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class GameShopInventory {
@@ -61,6 +62,7 @@ public final class GameShopInventory {
             }
             InventoryUtils.removeAmount(item.needAmount(), item.needItem(), inventory);
             inventory.items[firstEmpty] = getItem(item.meta(), item.buyItem(), player);
+            buySound(player);
             return true;
         }
 
@@ -83,7 +85,14 @@ public final class GameShopInventory {
 
         InventoryUtils.removeAmount(itemsToRemove, item.needItem(), inventory);
         InventoryUtils.addItem(item.buyItem(), itemsToBuy, inventory);
+        buySound(player);
         return true;
+    }
+
+    private void buySound(final Player player) {
+        final EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
+        final PacketPlayOutNamedSoundEffect itemPickupSound = new PacketPlayOutNamedSoundEffect("random.pop", entityPlayer.locX, entityPlayer.locY, entityPlayer.locZ, 1.0f, 1.0f);
+        entityPlayer.playerConnection.networkManager.handle(itemPickupSound);
     }
 
     private ItemStack getItem(final ItemMetaData meta, final ItemStack fallbackItem, final Player player) {

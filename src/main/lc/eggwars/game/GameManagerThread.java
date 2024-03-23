@@ -1,5 +1,6 @@
 package lc.eggwars.game;
 
+
 import org.tinylog.Logger;
 
 import lc.eggwars.game.threadtasks.GeneratorTask;

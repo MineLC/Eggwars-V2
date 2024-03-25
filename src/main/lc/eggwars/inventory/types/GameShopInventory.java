@@ -66,8 +66,8 @@ public final class GameShopInventory {
             return true;
         }
 
-        final int itemsToRemove;
-        final int itemsToBuy;
+        int itemsToRemove;
+        int itemsToBuy;
 
         if (event.getAction() != InventoryAction.MOVE_TO_OTHER_INVENTORY) {
             itemsToRemove = item.needAmount();
@@ -78,12 +78,18 @@ public final class GameShopInventory {
             itemsToBuy = item.buyItem().count * buyAmount;
         }
 
+        if (itemsToRemove > 64) {
+            itemsToRemove = 64;
+        }
+        if (itemsToBuy > 64) {
+            itemsToBuy = 64;
+        }
+
         if (!InventoryUtils.canAdd(item.buyItem(), itemsToBuy, inventory)) {
             Messages.send(player, "gameshop.no-enough-space");
             return true;
         }
-
-        InventoryUtils.removeAmount(itemsToRemove, item.needItem(), inventory);
+        InventoryUtils.removeAmount((itemsToRemove), item.needItem(), inventory);
         InventoryUtils.addItem(item.buyItem(), itemsToBuy, inventory);
         buySound(player);
         return true;

@@ -1,6 +1,7 @@
 package lc.eggwars.game.clickable;
 
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -59,6 +60,7 @@ public final class ClickableSignGenerator implements ClickableBlock {
         temporaryGenerator.levelUp();
         GeneratorStorage.getStorage().setLines(temporaryGenerator.getWorld().getWorld().getBlockAt(loc.x(), loc.y(), loc.z()), base, temporaryGenerator.getLevel());
         Messages.send(player, "generator.levelup");
+        player.playSound(player.getLocation(), Sound.LEVEL_UP, 1.0f, 1.0f);
     }
 
     public void cleanData() {

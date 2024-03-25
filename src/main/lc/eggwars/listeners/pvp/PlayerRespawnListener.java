@@ -2,6 +2,7 @@ package lc.eggwars.listeners.pvp;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -46,7 +47,11 @@ public final class PlayerRespawnListener implements EventListener {
 
         event.setRespawnLocation(player.getWorld().getSpawnLocation());
         player.setGameMode(GameMode.SPECTATOR);
- 
+
+        if (player.getKiller() != null) {
+            player.getKiller().playSound(player.getLocation(), Sound.BAT_DEATH, 1.0f, 1.0f);       
+        }
+        
         if (!team.hasEgg()) {
             new GameDeath(plugin).death(game, team, player, false, true);
             return;
@@ -54,8 +59,8 @@ public final class PlayerRespawnListener implements EventListener {
 
         final BlockLocation spawn = game.getMapData().getSpawns().get(team.getBase());
         final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
-
-        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {
+       
+        DeathStorage.getStorage().onDeath(game, game.getPlayers(), player, () -> {
             LevelStorage.getStorage().onDeath(player, false);
             player.teleport(spawnLocation);
             player.setGameMode(GameMode.SURVIVAL);

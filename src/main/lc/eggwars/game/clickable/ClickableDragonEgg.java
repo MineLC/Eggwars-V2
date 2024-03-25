@@ -16,6 +16,7 @@ import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.GameTeam;
+import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.ClickableBlock;
 
@@ -56,7 +57,10 @@ public final class ClickableDragonEgg implements ClickableBlock  {
         player.getWorld().getBlockAt(location.x(), location.y(), location.z()).setType(Material.AIR);
         teamToDestroy.destroyEgg();
 
-        final String eggBreaked = Messages.get("eggs.break-other").replace("%team%", team.getName()).replace("%player%", player.getName());
+        final String eggBreaked = Messages.get("eggs.break-other")
+            .replace("%team%", team.getName())
+            .replace("%player%", TeamStorage.getStorage().tryAddTeamPrefix(playerTeam, player));
+
         Messages.sendNoGet(game.getPlayers(), eggBreaked);
 
         PlayerDataStorage.getStorage().get(player.getUniqueId()).destroyedEggs++;

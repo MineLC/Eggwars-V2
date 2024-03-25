@@ -39,6 +39,7 @@ import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
 import lc.eggwars.messages.StartMessages;
 import lc.eggwars.others.deaths.StartDeaths;
+import lc.eggwars.others.events.StartEvents;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.levels.StartLevels;
 import lc.eggwars.others.sidebar.StartSidebar;
@@ -84,6 +85,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartLevels(this).load();
         new StartPreGameData().loadItems(this);
         new StartSidebar().load(this);
+        new StartEvents(this).load();
 
         final ShopsData data = new StartShops().load(this);
         new StartShopkeepers().load(this, data.shops());

@@ -36,6 +36,7 @@ public final class LeaveCommand implements Command {
             otherPlayer.hidePlayer(player);
             player.hidePlayer(otherPlayer);
         }
+        player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));
         send(player, "Has salido del juego");
     }
 }

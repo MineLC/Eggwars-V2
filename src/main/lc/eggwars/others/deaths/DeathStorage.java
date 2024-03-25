@@ -5,8 +5,11 @@ import java.util.Collection;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.teams.GameTeam;
+import lc.eggwars.teams.TeamStorage;
 
 public final class DeathStorage {
     private static DeathStorage storage;
@@ -31,9 +34,9 @@ public final class DeathStorage {
         this.respawnWaitTime = waitingTime;
     }
 
-    public void onDeath(final Collection<Player> playersToSendMessage, final Player player, final CountdownCallback onCompleteCinematic, final boolean finalKill) {
+    public void onDeath(final GameInProgress game, final Collection<Player> playersToSendMessage, final Player player, final CountdownCallback onCompleteCinematic, final boolean finalKill) {
         if (finalKill) {
-            final String message = createMessage(player, true);
+            final String message = createMessage(game, player, true);
             if (message != null) {
                 Messages.sendNoGet(playersToSendMessage, message);
             }
@@ -44,27 +47,30 @@ public final class DeathStorage {
         final DeathCinematic cinematic = new DeathCinematic(onCompleteCinematic, respawnTitle, respawnSubtitle, respawnWaitTime, player);
         final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> cinematic.run(), 0, 20).getTaskId();
         cinematic.setId(id);
-        final String message = createMessage(player, false);
+        final String message = createMessage(game, player, false);
 
         if (message != null) {
             Messages.sendNoGet(playersToSendMessage, message);
         }
     }
 
-    private String createMessage(final Player player, boolean finalKill) {
+    private String createMessage(final GameInProgress game, final Player player, boolean finalKill) {
         String deathMessage = (player.getLastDamageCause() == null)
             ? fallbackDeathMessage
             : deathMessages[player.getLastDamageCause().getCause().ordinal()];
-
+        
         if (deathMessage == null) {
             deathMessage = fallbackDeathMessage;
         }
 
         String finalMessage = (finalKill) ? finalKillPrefix : "";
+        GameTeam team = game.getTeamPerPlayer().get(player);
 
-        finalMessage = finalMessage + deathMessage.replace("%v%", player.getName());
+        finalMessage = finalMessage + deathMessage.replace("%v%", TeamStorage.getStorage().tryAddTeamPrefix(team, player));
+
         if (player.getKiller() != null) {
-            finalMessage = finalMessage + suffixIfPlayerKill.replace("%d%", player.getKiller().getName());
+            team = game.getTeamPerPlayer().get(player.getKiller());
+            finalMessage = finalMessage + suffixIfPlayerKill.replace("%d%", TeamStorage.getStorage().tryAddTeamPrefix(team, player.getKiller()));
         }
         return finalMessage;
     }

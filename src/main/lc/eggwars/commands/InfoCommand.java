@@ -25,15 +25,15 @@ public final class InfoCommand implements Command {
                 sendWithColor(sender, "&cEste jugador no existe");
                 return;
             }
-        }
-        if (!(sender instanceof Player)) {
-            send(sender, "You need be a user to use this command");
-            return;
         } else {
-            player = (Player)sender;
+            if (!(sender instanceof Player)) {
+                send(sender, "You need be a user to use this command");
+                return;
+            } else {
+                player = (Player)sender;
+            }
         }
 
-        final String format = Messages.get("commands.info");
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
         final Kit kit = KitStorage.getStorage().kitsPerId().get(data.kitSelected);
         final String kitName = (data.kitSelected == 0 || kit == null) ? "Ninguno" : kit.name();
@@ -42,7 +42,8 @@ public final class InfoCommand implements Command {
             ? ShopKeepersStorage.getStorage().skins().get(ShopkeepersData.VILLAGER_SKIN).name()
             : skin.name();
         
-        send(sender, format
+        send(sender, Messages.get("commands.info")
+            .replace("%name%", player.getName())
             .replace("%kills%", String.valueOf(data.kills))
             .replace("%deaths%", String.valueOf(data.deaths))
             .replace("%eggs%", String.valueOf(data.destroyedEggs))

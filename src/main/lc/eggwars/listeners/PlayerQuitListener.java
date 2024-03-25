@@ -30,7 +30,7 @@ public final class PlayerQuitListener implements EventListener {
             GameStorage.getStorage().leave(game, player, true);
         }
 
-            final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
-            DatabaseManager.getManager().saveData(player.getUniqueId(), data);
+        final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
+        DatabaseManager.getManager().saveData(player.getUniqueId(), data);
     }
 }

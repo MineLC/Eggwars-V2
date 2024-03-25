@@ -22,18 +22,8 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 
 public final class GeneratorTask {
 
-    private final MapData[] maps;
-
-    public GeneratorTask(MapData[] maps) {
-        this.maps = maps;
-    }
-
-    public void execute() {
-        for (final MapData map : maps) {
-            if (map != null && map.getGameInProgress() != null) {
-                generateItems(map.getGameInProgress());
-            }
-        }
+    public void execute(final MapData map) {
+        generateItems(map.getGameInProgress());
     }
 
     private void generateItems(final GameInProgress game) {

@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.mapsystem.MapData;
+import lc.eggwars.others.events.GameEvent;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.GameTeam;
 
@@ -26,6 +27,10 @@ public final class GameInProgress {
     private World world;
     private GameState state = GameState.NONE;
     private GameCountdown countdown;
+
+    private GameEvent[] events;
+    private int currentEvent = 0;
+
     private long startTime;
 
     public GameInProgress(MapData data) {
@@ -78,6 +83,26 @@ public final class GameInProgress {
 
     public Set<GameTeam> getTeams() {
         return teams;
+    }
+
+    public GameEvent[] getEvents() {
+        return events;
+    }
+
+    public GameEvent getCurrentEvent() {
+        return (currentEvent >= events.length) ? null : events[currentEvent];
+    }
+
+    public int getCurrentEventIndex() {
+        return currentEvent;
+    }
+
+    public void nextEvent() {
+        currentEvent++;
+    }
+
+    public void setEvents(final GameEvent[] events) {
+        this.events = events;
     }
 
     public boolean playerIsDead(final Player player) {

@@ -69,7 +69,7 @@ commands:
     - " &b&lComandos públicos &0(/hentai)"
     - " "
     - " &f/level &7- Como funcionan los niveles"
-    - " &f/stats &7- Mira tus estadísticas"
+    - " &f/info &7(jugador)- Mira tus estadísticas"
     - " "
     - " &9&lDISCORD: &7http://mine.lc/discord"
 
@@ -77,6 +77,8 @@ commands:
     - " "
     - " &6&lINFORMACIÓN"
     - " "
+    - " &8- &fJugador: &a%name%"
+    - ""
     - " &8- &fNivel&7: %level%"
     - " &8- &fLCoins&7: %coins%"
     - " "
@@ -91,4 +93,58 @@ commands:
     - " "
     - " &8- &fVictorias&7: %wins%"
     - " &8- &fHuevos rotos&7: %eggs%"
+    - " "
+
+events:
+  time-remain: "&aQuedan %time% minutos para el siguiente evento"
+  spam-message: "&aEl evento %event% empieza en... %time% segundos"
+  format:
+    - ""
+    - " &a&lEVENTOS"
+    - ""
+    - " &7Los eventos que se jugaran en"
+    - " &7está partida serán:"
+    - " "
+
+death-match:
+  start-title:
+    title: "&aListos o no..."
+    subtitle: "&eAquí Vamos!"
+  start-message:
+    - ""
+    - " &c&lDEATH MATCH &7(Ilimitado)"
+    - " "
+    - " &7Todos serán teletransportados"
+    - " &7Al centro y ningun equipo tendrá huevo"
+    - " &7Cada 5 minutos obtendrán wither 1"
+    - " &7Asi que mueran rápido... >:)"
+    - " "
+
+treason:
+  start-message:
+    - ""
+    - " &c&lTRAICIÓN &7(1 minuto)"
+    - " "
+    - " &7Puedes matar a tus compañeros"
+    - " &7y obtener sus cosas"
+    - " &7¿Cometerás un crimen de guerra?"
+    - " &7Después de todo, esto es... &5&lEGG WARS"
+    - " "
+
+fatigue:
+  start-message:
+    - ""
+    - " &e&lCANSANCIO &7(30 segundos)"
+    - " "
+    - " &7Estoy cansado jefe :'v"
+    - " &7Tienes fatiga minera y hambre 1"
+    - " "
+
+willpower:
+  start-message:
+    - ""
+    - " &b&lHASTA EL ÚLTIMO HOMBRE &7(30 segundos)"
+    - " "
+    - " &7Todos obtienen resistencia y fuerza 1."
+    - " &a¡Salvemos a nuestros compañeros!"
     - " "

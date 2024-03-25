@@ -1,0 +1,36 @@
+# Cuando es la diferencia entre el tiempo. Si tengo una tolerancia de 10
+# y el "start-time" es 500. Puede variar entre 450-550
+start-time-tolerance: 10
+events-seconds: [500, 900, 400, 200]
+
+deathmatch:
+  name: "&c&lDEATH MATCH"
+  info: "&8(&a%time%&8) &c&lDEATH MATCH &7- &fTodos los huevos rotos y pvp"
+
+  start-time: 3600
+  regresive-count: 3
+  duration: 1000000
+
+  worldborder-size: 30
+  potions-add-every-seconds: 300
+  effects:
+    - "WITHER:1:10000"
+
+treason:
+  name: "&c&lTRAICIÓN"
+  info: "&8(&a%time%&8) &c&lTRAICIÓN &7- &fPuedes matar a tus compañeros durante 1 minuto"
+  duration: 60
+
+fatigue:
+  name: "&e&lCANSANCIO"
+  info: "&8(&a%time%&8) &e&lCANSANCIO &7- &fObten hambre y fatiga minera 1 por 30 segundos"
+  effects:
+    - "HUNGER:1:600"
+    - "SLOW_DIGGING:1:600"
+
+willpower:
+  name: "&b&lHASTA EL ÚLTIMO HOMBRE"
+  info: "&8(&a%time%&8) &b&lHASTA EL ÚLTIMO HOMBRE &7- &fObten resistencia y fuerza 1 por 30 segundos"
+  effects:
+    - "DAMAGE_RESISTANCE:1:600"
+    - "INCREASE_DAMAGE:1:600"

@@ -54,7 +54,7 @@ public final class GameSidebar implements EggwarsSidebar {
         int score = -1;
 
         for (final GameTeam team : teams) {
-            final int amountLive = team.getPlayers().size() - team.getPlayerDeaths();
+            final int amountLive = team.getPlayersWithLive();
             final BaseTeam baseTeam = team.getBase();
 
             scores[++score] = amountLive;

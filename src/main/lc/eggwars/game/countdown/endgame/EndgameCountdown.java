@@ -43,6 +43,7 @@ public class EndgameCountdown extends GameCountdown  {
                 SpawnStorage.getStorage().setItems(player);
                 SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
                 GameStorage.getStorage().remove(player.getUniqueId());
+                player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));
             }
             game.setCountdown(null);
             GameStorage.getStorage().stop(game);

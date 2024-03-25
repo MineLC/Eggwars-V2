@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -93,8 +94,8 @@ public final class PlayerInteractListener implements EventListener {
             if (playerInGame.getGame().getState() == GameState.PREGAME && PregameStorage.getStorage().selectTeam().item().getType() == type) {
                 event.setCancelled(true);
                 event.getPlayer().openInventory(((PreGameCountdown)playerInGame.getGame().getCountdown()).getTemporaryData().getTeamSelectorInventory());
+                return true;
             }
-            return true;
         }
 
         final Inventory inventory = SpawnStorage.getStorage().items().get(type);
@@ -123,6 +124,7 @@ public final class PlayerInteractListener implements EventListener {
                 event.setCancelled(true);
                 return true;
             default:
+                event.setUseItemInHand(Result.ALLOW);
                 return false;
         }
     }

@@ -5,13 +5,13 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.countdown.endgame.EndgameCountdown; 
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.levels.LevelStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
-import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.GameTeam;
 
 public final class GameDeath {
@@ -23,12 +23,9 @@ public final class GameDeath {
     }
 
     public void death(final GameInProgress game, final GameTeam gameTeam, final Player player, final boolean leaveFromGame, final boolean finalKill) {
-        final BaseTeam team = gameTeam.getBase();
-
         if (leaveFromGame) {
             game.getPlayers().remove(player);
             game.getTeamPerPlayer().remove(player);
-            gameTeam.remove(player);
             if (gameTeam.getPlayers().isEmpty()) {
                 gameTeam.destroyEgg();
             }
@@ -37,19 +34,19 @@ public final class GameDeath {
                 return;
             }
         } else {
-            gameTeam.addPlayerDeath();
+            gameTeam.removeOnePlayerWithLive();
         }
 
         LevelStorage.getStorage().onDeath(player, finalKill);
-        DeathStorage.getStorage().onDeath(game.getPlayers(), player, () -> {}, finalKill);
+        DeathStorage.getStorage().onDeath(game, game.getPlayers(), player, () -> {}, finalKill);
 
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
 
-        if (gameTeam.getPlayers().size() > gameTeam.getPlayerDeaths()) {
+        if (gameTeam.getPlayersWithLive() > 0) {
             return;
         }
 
-        Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", team.getName()));
+        Messages.sendNoGet(game.getPlayers(), Messages.get("team.death").replace("%team%", gameTeam.getBase().getName()));
         final GameTeam finalTeam = getLastTeamAlive(game);
         if (finalTeam == null) {
             return;
@@ -64,7 +61,7 @@ public final class GameDeath {
 
         Messages.sendNoGet(game.getPlayers(), Messages.get("team.win")
             .replace("%team%", finalTeam.getBase().getName())
-            .replace("%time%", endgameCountdown.parseTime((System.currentTimeMillis() - game.getStartedTime()) / 1000)));
+            .replace("%time%", GameCountdown.parseTime((System.currentTimeMillis() - game.getStartedTime()) / 1000)));
 
         game.setState(GameState.END_GAME);
 
@@ -82,7 +79,7 @@ public final class GameDeath {
         final Set<GameTeam> teams = game.getTeams();
 
         for (final GameTeam team : teams) {
-            if (team.getPlayers().size() > team.getPlayerDeaths()) {
+            if (team.getPlayersWithLive() > 0) {
                 if (lastTeam != null) {
                     return null;
                 }

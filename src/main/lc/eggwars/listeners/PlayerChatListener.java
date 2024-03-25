@@ -6,6 +6,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.teams.GameTeam;
+import lc.eggwars.teams.TeamStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 import obed.me.lccommons.api.entities.PlayerData;
@@ -40,7 +41,7 @@ public class PlayerChatListener implements EventListener {
             message = StringUtils.remove(message , '&');
         }
 
-        GameInProgress game = GameStorage.getStorage().getGame(p.getUniqueId());
+        final GameInProgress game = GameStorage.getStorage().getGame(p.getUniqueId());
 
         if (game == null) {
             return;
@@ -59,9 +60,14 @@ public class PlayerChatListener implements EventListener {
 
             return;
         }
-    
+
+        final GameTeam team = game.getTeamPerPlayer().get(p);
+        if (team == null) {
+            return;
+        }
+
         if(p.getGameMode() == GameMode.SPECTATOR){
-            final String spectatorMessage = String.format("%s &7%s &8» &7%s", "&8&lEspectador", p.getName(), message);
+            final String spectatorMessage = "&8&lEspectador " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message;
 
             Messages.sendNoGet(game.getPlayers().stream()
                 .filter(player -> player.getGameMode() == GameMode.SPECTATOR)
@@ -69,16 +75,14 @@ public class PlayerChatListener implements EventListener {
 
             return;
         }
-        GameTeam team = game.getTeams().stream().filter(t -> t.getPlayers().contains(p)).findFirst().orElse(null);
-        if(team == null) return;
 
         if(event.getMessage().charAt(0) == '!'){
-            final String globalMessage = String.format("&6&lGLOBAL %s%s &8» &7%s",  team.getBase().getTeam().getPrefix(), p.getName(), message);
-            Messages.sendNoGet(game.getPlayers(), globalMessage.substring(0));
+            final String globalMessage = "&6&lGLOBAL " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message.substring(1);
+            Messages.sendNoGet(game.getPlayers(), globalMessage);
             return;
         }
 
-        final String teamMessage = String.format("&b&lEQUIPO %s%s &8» &7%s", team.getBase().getTeam().getPrefix(), p.getName(), message);
+        final String teamMessage = "&b&lEQUIPO " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message;
         Messages.sendNoGet(team.getPlayers(), teamMessage);
     }
 }

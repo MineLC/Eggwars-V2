@@ -64,6 +64,7 @@ public final class GameStorage {
         final GameTeam team = game.getTeamPerPlayer().get(player);
         if (team != null) {
             team.remove(player);
+            team.removeOnePlayerWithLive();
         }
         if (game.getCountdown() instanceof EndgameCountdown) {
             game.getPlayers().remove(player);

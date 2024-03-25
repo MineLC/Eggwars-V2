@@ -4,13 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
+import org.tinylog.Logger;
 
 public final class GameTeam {
     private final BaseTeam baseTeam;
     private final Set<Player> players = new HashSet<>();
 
     private boolean hasEgg = true;
-    private int playersDeath = 0;
+    private int playersWithLive = 0;
 
     public GameTeam(BaseTeam team) {
         this.baseTeam = team;
@@ -22,12 +23,12 @@ public final class GameTeam {
 
     public void add(final Player player) {
         players.add(player);
+        playersWithLive++;
         baseTeam.getTeam().addPlayer(player);
     }
 
     public void remove(final Player player) {
         players.remove(player);
-        playersDeath--;
         baseTeam.getTeam().removePlayer(player);
     }
 
@@ -35,16 +36,16 @@ public final class GameTeam {
         return players;
     }
 
-    public void addPlayerDeath() {
-        playersDeath++;
+    public void removeOnePlayerWithLive() {
+        playersWithLive--;
     }
 
     public void destroyEgg() {
         hasEgg = false;
     }
 
-    public int getPlayerDeaths() {
-        return playersDeath;
+    public int getPlayersWithLive() {
+        return playersWithLive;
     }
 
     public boolean hasEgg() {

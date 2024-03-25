@@ -3,6 +3,8 @@ package lc.eggwars.teams;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.entity.Player;
+
 public final class TeamStorage {
     private static TeamStorage team;
 
@@ -24,6 +26,12 @@ public final class TeamStorage {
 
     public Set<String> getTeamsName() {
         return teamsPerName.keySet();
+    }
+
+    public String tryAddTeamPrefix(final GameTeam team, final Player player) {
+        return (team != null)
+            ? team.getBase().getTeam().getPrefix() + player.getName()
+            : player.getName();
     }
 
     public static TeamStorage getStorage() {

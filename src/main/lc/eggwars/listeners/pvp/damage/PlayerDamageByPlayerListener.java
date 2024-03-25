@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.others.events.GameEventType;
 import lc.eggwars.teams.GameTeam;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -29,7 +30,8 @@ public final class PlayerDamageByPlayerListener implements EventListener {
         }
 
         final GameInProgress game = GameStorage.getStorage().getGame(event.getDamager().getUniqueId());
-        if (game == null || game.getState() != GameState.IN_GAME) {
+        if (game == null || game.getState() != GameState.IN_GAME
+            || (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.TREASON)) {
             return;
         }
         final GameTeam playerTeam = game.getTeamPerPlayer().get(event.getDamager());

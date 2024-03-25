@@ -70,7 +70,7 @@ public final class StartKits {
             creator.create("inventory-item"),
             createArmor(config, creator),
             createItems(config),
-            createPotionEffects(config),
+            createPotionEffects(config, "effects"),
             config.getInt("cost"));
     }
 
@@ -128,8 +128,8 @@ public final class StartKits {
         return items;
     }
 
-    private PotionEffect[] createPotionEffects(final FileConfiguration config) {
-        final List<String> effects = config.getStringList("effects");
+    public PotionEffect[] createPotionEffects(final FileConfiguration config, final String section) {
+        final List<String> effects = config.getStringList(section);
         if (effects.isEmpty()) {
             return null;
         }

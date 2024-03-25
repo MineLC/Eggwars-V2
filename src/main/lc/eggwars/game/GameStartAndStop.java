@@ -10,9 +10,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
+import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.messages.Messages;
+import lc.eggwars.others.events.EventStorage;
+import lc.eggwars.others.events.GameEvent;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
@@ -28,6 +32,7 @@ final class GameStartAndStop {
             game.setWorld(world);
 
             MapStorage.getStorage().loadClickableBlocks(world);
+            game.setEvents(EventStorage.getStorage().createEvents());
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 world.getWorldBorder().setCenter(world.getSpawnLocation());
@@ -38,6 +43,8 @@ final class GameStartAndStop {
 
                 startForPlayers(game);
             });
+
+            sendEventMessage(game);
 
             game.startTime();
             game.setState(GameState.IN_GAME);
@@ -56,6 +63,16 @@ final class GameStartAndStop {
         }
 
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
+    }
+    
+    private void sendEventMessage(final GameInProgress game) {
+        final StringBuilder builder = new StringBuilder(Messages.get("events.format"));
+        final GameEvent[] events = game.getEvents();
+        for (final GameEvent event : events) {
+            builder.append(event.information().replace("%time%", GameCountdown.parseTime(event.secondToStart())));
+            builder.append('\n');
+        }
+        Messages.sendNoGet(game.getPlayers(), builder.toString());
     }
 
     void stop(final GameInProgress game) {       

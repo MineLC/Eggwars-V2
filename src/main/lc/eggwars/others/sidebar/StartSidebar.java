@@ -16,14 +16,14 @@ public final class StartSidebar {
         final FileConfiguration config = plugin.loadConfig("sidebars");
         final EggwarsSidebar[] sidebars = new EggwarsSidebar[3];
 
-        sidebars[SidebarType.SPAWN.ordinal()] = createSidebar(plugin, config, "spawn", SidebarType.SPAWN);
-        sidebars[SidebarType.PREGAME.ordinal()] = createSidebar(plugin, config, "pregame", SidebarType.PREGAME);
-        sidebars[SidebarType.IN_GAME.ordinal()] = createSidebar(plugin, config, "ingame", SidebarType.IN_GAME);
+        sidebars[SidebarType.SPAWN.ordinal()] = createSidebar(config, "spawn", SidebarType.SPAWN);
+        sidebars[SidebarType.PREGAME.ordinal()] = createSidebar(config, "pregame", SidebarType.PREGAME);
+        sidebars[SidebarType.IN_GAME.ordinal()] = createSidebar(config, "ingame", SidebarType.IN_GAME);
 
         SidebarStorage.update(new SidebarStorage(sidebars));
     }
 
-    private EggwarsSidebar createSidebar(final EggwarsPlugin plugin, final FileConfiguration config, final String path, final SidebarType type) {
+    private EggwarsSidebar createSidebar(final FileConfiguration config, final String path, final SidebarType type) {
         final String sidebarPath = path + '.';
         final String[] lines = toArray(config.getStringList(sidebarPath + "lines")); 
         final String title = Messages.color(config.getString(sidebarPath + "title"));

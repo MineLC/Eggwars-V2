@@ -2,9 +2,7 @@ package lc.eggwars.game.shop.shopkeepers;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.inventory.Inventory;
 import org.tinylog.Logger;
 
@@ -16,9 +14,7 @@ import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.messages.Messages;
 
-import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.EntityTypes;
-import net.minecraft.server.v1_8_R3.World;
 
 public final class StartShopkeepers {
 
@@ -31,12 +27,16 @@ public final class StartShopkeepers {
         final IntObjectHashMap<ShopkeepersData.Skin> inventoryItems = new IntObjectHashMap<>();
         final IntObjectHashMap<ShopkeepersData.Skin> skinsPerID = new IntObjectHashMap<>();
 
-        final World world = ((CraftWorld)Bukkit.getWorlds().get(0)).getHandle();
-
         for (final String mob : mobs) {
-            if (!(EntityTypes.createEntityByName(mob, world) instanceof EntityLiving entity)) {
-                Logger.warn("A entity with the name " + mob + " don't exist.");
-                inventoryItems.put(config.getInt(mob + ".slot"),  new ShopkeepersData.Skin("Villager", 120, "null message on click", -1, 0));
+            int id = 0;
+            try {
+                id = EntityTypes.getEntityByName(mob);
+            } catch (Exception e) {
+                Logger.info("The entity type: " + mob + " don't exist");
+                continue;
+            }
+            if (id == 0) {
+                Logger.info("The entity type: " + mob + " don't exist");
                 continue;
             }
             final String mobPath = mob + '.';
@@ -44,13 +44,13 @@ public final class StartShopkeepers {
             final Item item = creator.create(mob);
             final ShopkeepersData.Skin skin = new ShopkeepersData.Skin(
                 mob,
-                EntityTypes.a(entity),
+                id,
                 message,
                 config.getInt(mobPath + "addHeight"),
                 config.getInt(mobPath + "cost"));
             inventory.setItem(item.slot(), item.item());
             inventoryItems.put(item.slot(), skin);
-            skinsPerID.put(skin.id(), skin);
+            skinsPerID.put(id, skin);
         }
 
         ShopKeepersStorage.update(new ShopKeepersStorage(

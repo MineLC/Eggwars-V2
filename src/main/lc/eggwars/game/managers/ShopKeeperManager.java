@@ -11,11 +11,11 @@ import gnu.trove.iterator.TIntIterator;
 import lc.eggwars.database.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
+import lc.eggwars.game.shop.shopkeepers.ShopkeeperEntity;
 import lc.eggwars.utils.EntityLocation;
 
-import net.minecraft.server.v1_8_R3.Entity;
+
 import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
@@ -38,23 +38,19 @@ public final class ShopKeeperManager {
     }
 
     public int spawn(final Player player, final World world, final int typeID, final int entityID, final EntityLocation location) {
-        final Entity entity = createEntityById(typeID, ((CraftWorld)world).getHandle());
-
-        if (entity == null || !(entity instanceof EntityLiving livingEntity)) {
-            return -1;
-        }
+        final EntityLiving entity = new ShopkeeperEntity(((CraftWorld)world).getHandle());
         entity.d(entityID);
         entity.setCustomName(ShopKeepersStorage.getStorage().customName());
         entity.setCustomNameVisible(true);
 
-        livingEntity.locX = location.x() + 0.5D;
-        livingEntity.locY = location.y() + ShopKeepersStorage.getStorage().skins().get(typeID).addHeight();
-        livingEntity.locZ = location.z() + 0.5D;
-        livingEntity.yaw = location.yaw();
-        livingEntity.pitch = location.pitch();
+        entity.locX = location.x() + 0.5D;
+        entity.locY = location.y() + ShopKeepersStorage.getStorage().skins().get(typeID).addHeight();
+        entity.locZ = location.z() + 0.5D;
+        entity.yaw = location.yaw();
+        entity.pitch = location.pitch();
     
-        final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(livingEntity);
-        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(livingEntity.getId(), livingEntity.getDataWatcher(), true);
+        final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(entity, typeID);
+        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true);
     
         ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(spawn);
         ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(data);
@@ -64,18 +60,4 @@ public final class ShopKeeperManager {
     public void deleteEntity(final int id, final Player player) {
         ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(new PacketPlayOutEntityDestroy(id));
     }
-
-    private Entity createEntityById(int typeID, net.minecraft.server.v1_8_R3.World world) {  
-        try {
-            Class<? extends Entity> classEntity = EntityTypes.a(typeID);
-
-            if (classEntity != null) {
-                return (Entity)classEntity.getConstructor(net.minecraft.server.v1_8_R3.World.class).newInstance(world);
-            }
-        } catch (Exception var4) {
-           var4.printStackTrace();
-        }
-  
-        return null;
-     }
 }

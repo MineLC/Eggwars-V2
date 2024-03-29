@@ -2,7 +2,6 @@ package lc.eggwars.game.countdown.endgame;
 
 import java.util.Set;
 
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.tinylog.Logger;
 
@@ -37,10 +36,7 @@ public class EndgameCountdown extends GameCountdown  {
                 if (team != null) {
                     team.remove(player);
                 }
-                player.teleport(SpawnStorage.getStorage().location());
-                player.setGameMode(GameMode.ADVENTURE);
-
-                SpawnStorage.getStorage().setItems(player);
+                SpawnStorage.getStorage().sendToSpawn(player);
                 SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
                 GameStorage.getStorage().remove(player.getUniqueId());
                 player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));

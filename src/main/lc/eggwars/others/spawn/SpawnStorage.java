@@ -2,6 +2,7 @@ package lc.eggwars.others.spawn;
 
 import java.util.Map;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -15,11 +16,16 @@ import lc.eggwars.inventory.types.SpawnShopInventory;
 public final record SpawnStorage(Location location, Item shopItem, Map<Material, Inventory> items, SpawnShopInventory shopInventory) {
     private static SpawnStorage storage;
 
-    public void setItems(final Player player) {
+    public void sendToSpawn(final Player player) {
         final PlayerInventory inventory = player.getInventory();
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setHealth(20);
+        player.setLevel(0);
+        player.setFoodLevel(20);
         inventory.clear();
         inventory.setArmorContents(null);
         inventory.setItem(shopItem.slot(), shopItem.item());
+        player.teleport(location);
     }
 
     public boolean isInSpawn(final HumanEntity player) {

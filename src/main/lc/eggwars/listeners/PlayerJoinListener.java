@@ -29,9 +29,7 @@ public final class PlayerJoinListener implements EventListener {
         final PlayerJoinEvent event = (PlayerJoinEvent)defaultEvent;
         final Player player = event.getPlayer();
         event.setJoinMessage(null);
-        
-        player.teleport(SpawnStorage.getStorage().location());
-        SpawnStorage.getStorage().setItems(event.getPlayer());
+        SpawnStorage.getStorage().sendToSpawn(event.getPlayer());
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
         for (final Player otherPlayer : players) {

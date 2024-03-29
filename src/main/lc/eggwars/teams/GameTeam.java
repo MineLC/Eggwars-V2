@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
-import org.tinylog.Logger;
 
 public final class GameTeam {
     private final BaseTeam baseTeam;

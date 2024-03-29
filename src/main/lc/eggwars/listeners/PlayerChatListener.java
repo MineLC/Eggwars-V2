@@ -21,7 +21,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-
 public class PlayerChatListener implements EventListener {
 
     @ListenerData(
@@ -48,9 +47,7 @@ public class PlayerChatListener implements EventListener {
         }
 
         if(game.getState() == GameState.PREGAME){
-            final String global_format = String.format(
-                "%s %s &8» &7%s",
-                pp.getRankInfo().getRank().getPrefix(), "&7" + pp.getRankInfo().getUserColor() + p.getName(), message);
+            final String global_format = pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + p.getName() + " &8» &f" + message;
 
             final Collection<Player> players = (game.getState() == GameState.PREGAME)
                 ? game.getPlayers()
@@ -67,8 +64,7 @@ public class PlayerChatListener implements EventListener {
         }
 
         if(p.getGameMode() == GameMode.SPECTATOR){
-            final String spectatorMessage = "&8&lEspectador " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message;
-
+            final String spectatorMessage = "&8&lEspectador " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» &f" + message;
             Messages.sendNoGet(game.getPlayers().stream()
                 .filter(player -> player.getGameMode() == GameMode.SPECTATOR)
                 .collect(Collectors.toList()), spectatorMessage);
@@ -77,12 +73,12 @@ public class PlayerChatListener implements EventListener {
         }
 
         if(event.getMessage().charAt(0) == '!'){
-            final String globalMessage = "&6&lGLOBAL " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message.substring(1);
+            final String globalMessage = "&6&lGLOBAL " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» &f" + message.substring(1);
             Messages.sendNoGet(game.getPlayers(), globalMessage);
             return;
         }
 
-        final String teamMessage = "&b&lEQUIPO " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» " + message;
+        final String teamMessage = "&b&lEQUIPO " + TeamStorage.getStorage().tryAddTeamPrefix(team, p) + " &8» &f" + message;
         Messages.sendNoGet(team.getPlayers(), teamMessage);
     }
 }

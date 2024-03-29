@@ -15,6 +15,7 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.others.deaths.DeathStorage;
+import lc.eggwars.others.events.GameEventType;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.levels.LevelStorage;
 import lc.eggwars.teams.GameTeam;
@@ -49,7 +50,13 @@ public final class PlayerRespawnListener implements EventListener {
         player.setGameMode(GameMode.SPECTATOR);
 
         if (player.getKiller() != null) {
-            player.getKiller().playSound(player.getLocation(), Sound.BAT_DEATH, 1.0f, 1.0f);       
+            if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.FULLHEALTH) {
+                player.getKiller().setHealth(20.0D);
+                player.getKiller().setFoodLevel(20);
+                player.getKiller().playSound(player.getLocation(), Sound.EAT, 1.0f, 1.0f);       
+            } else {
+                player.getKiller().playSound(player.getLocation(), Sound.BAT_DEATH, 1.0f, 1.0f);       
+            }
         }
         
         if (!team.hasEgg()) {

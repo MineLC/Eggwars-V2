@@ -35,6 +35,7 @@ public final class PotionEvent {
 
     public static record Data(
         PotionEffect[] fatigueEvent,
-        PotionEffect[] willpower
+        PotionEffect[] willpower,
+        PotionEffect[] rush
     ) {}
 }

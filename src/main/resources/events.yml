@@ -19,7 +19,7 @@ deathmatch:
 treason:
   name: "&c&lTRAICIÓN"
   info: "&8(&a%time%&8) &c&lTRAICIÓN &7- &fPuedes matar a tus compañeros durante 1 minuto"
-  duration: 60
+  duration: 120
 
 fatigue:
   name: "&e&lCANSANCIO"
@@ -34,3 +34,30 @@ willpower:
   effects:
     - "DAMAGE_RESISTANCE:1:600"
     - "INCREASE_DAMAGE:1:600"
+
+fullheath:
+  name: "&c&lMATANZA"
+  info: "&8(&a%time%&8) &c&lMATANZA &7- &fCuando matas recuperas toda tu vida"
+  duration: 120
+
+critical:
+  name: "&4&lCRÍTICOS"
+  info: "&8(&a%time%&8) &4&lCRÍTICOS &7- &fCada golpe hace un &625%&f más de daño"
+  duration: 60
+
+onedamage: 
+  name: "&5&l1 DE DAÑO"
+  info: "&8(&a%time%&8) &5&l1 DE DAÑO &7- &fCada golpe quita 1 de daño"
+  duration: 60
+
+rush:
+  name: "&e&lRUSH"
+  info: "&8(&a%time%&8) &e&lRUSH &7- &fTodos tienen velocidad y salto 1 por &61 minuto"
+  effects:
+    - "SPEED:1:600"
+    - "JUMP:1:600"
+
+discount: 
+  name: "&a&lDESCUENTOS"
+  info: "&8(&a%time%&8) &a&lDESCUENTOS &7- &fTodos los items en la tienda tienen un &650% off"
+  duration: 20

@@ -7,11 +7,14 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import lc.eggwars.game.GameInProgress;
+import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.shop.Shop;
 import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.metadata.ItemMetaData;
 import lc.eggwars.game.shop.metadata.LeatherArmorColorMetadata;
 import lc.eggwars.messages.Messages;
+import lc.eggwars.others.events.GameEventType;
 import lc.eggwars.utils.InventoryUtils;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.ItemStack;
@@ -48,7 +51,12 @@ public final class GameShopInventory {
         final Player player = (Player)event.getWhoClicked();
         final PlayerInventory inventory = ((CraftPlayer)player).getHandle().inventory;
 
-        final int amount = InventoryUtils.getAmount(item.needItem(), inventory);
+        int amount = InventoryUtils.getAmount(item.needItem(), inventory);
+        final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
+        if (game != null && game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.DISCOUNT) {
+            amount /= 2;
+        }
+
         if (amount < item.needAmount()) {
             Messages.send(player, "gameshop.need-items");
             return true;

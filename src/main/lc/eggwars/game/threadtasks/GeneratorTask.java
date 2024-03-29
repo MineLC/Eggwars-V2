@@ -35,6 +35,9 @@ public final class GeneratorTask {
 
         for (final ClickableSignGenerator signGenerator : generators) {
             final TemporaryGenerator generator = signGenerator.getGenerator();
+            if (generator == null) {
+                continue;
+            }
             if (generator.getBase().levels()[generator.getLevel()].itemsToGenerate() == 0) {
                 continue;
             }

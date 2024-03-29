@@ -1,7 +1,6 @@
 package lc.eggwars.others.events;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -57,7 +56,9 @@ public final class StartEvents {
         final StartKits util = new StartKits(plugin);
         return new PotionEvent.Data(
             util.createPotionEffects(config, "fatigue.effects"),
-            util.createPotionEffects(config, "willpower.effects"));
+            util.createPotionEffects(config, "willpower.effects"),
+            util.createPotionEffects(config, "rush.effects")
+        );
     }
 
     private int[] getSecondsToMakeEvent() {

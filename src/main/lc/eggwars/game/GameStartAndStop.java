@@ -79,15 +79,13 @@ final class GameStartAndStop {
         if (game.getCountdown() != null) {
             Bukkit.getScheduler().cancelTask(game.getCountdown().getId());
         }
-        CompletableFuture.runAsync(() -> {
-            final World world = game.getWorld();
-            new GeneratorManager().unload(game);
+        final World world = game.getWorld();
+        new GeneratorManager().unload(game);
 
-            game.getMapData().setGame(null);
+        game.getMapData().setGame(null);
 
-            MapStorage.getStorage().unload(world);
-            System.gc();
-        });
+        MapStorage.getStorage().unload(world);
+        System.gc();
     }
 
     private void setTeams(final GameInProgress game) {

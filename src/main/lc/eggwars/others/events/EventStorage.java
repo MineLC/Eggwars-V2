@@ -1,6 +1,6 @@
 package lc.eggwars.others.events;
 
-import java.util.Random;
+import java.util.SplittableRandom;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
@@ -12,7 +12,7 @@ import lc.eggwars.others.events.special.PotionEvent;
 public final class EventStorage {
     private static EventStorage storage;
 
-    private static final Random RANDOM = new Random();
+    private static final SplittableRandom RANDOM = new SplittableRandom();
 
     private final EggwarsPlugin plugin;
     private final DeathMatchEvent.Data deathMatchData;
@@ -79,8 +79,23 @@ public final class EventStorage {
                 Messages.send(game.getPlayers(), "willpower.start-message");
                 new PotionEvent(potionEvents.willpower(), game).execute(plugin);
                 return;
-            default:
+            case RUSH:
+                Messages.send(game.getPlayers(), "rush.start-message");
+                new PotionEvent(potionEvents.rush(), game).execute(plugin);
                 return;
+
+            case FULLHEALTH:
+                Messages.send(game.getPlayers(), "fullheath.start-message");
+                break;
+            case CRITICAL:
+                Messages.send(game.getPlayers(), "critical.start-message");
+                break;
+            case ONEDAMAGE:
+                Messages.send(game.getPlayers(), "onedamage.start-message");
+                break;
+            case DISCOUNT:
+                Messages.send(game.getPlayers(), "discount.start-message");
+                break;
         }
 
         countdown.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, countdown, 20, 0).getTaskId());

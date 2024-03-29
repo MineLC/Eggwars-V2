@@ -123,12 +123,12 @@ death-match:
 treason:
   start-message:
     - ""
-    - " &c&lTRAICIÓN &7(1 minuto)"
+    - " &c&lTRAICIÓN &7(2 minutos)"
     - " "
-    - " &7Puedes matar a tus compañeros"
-    - " &7y obtener sus cosas"
-    - " &7¿Cometerás un crimen de guerra?"
-    - " &7Después de todo, esto es... &5&lEGG WARS"
+    - " &fPuedes matar a tus compañeros"
+    - " &fy obtener sus cosas"
+    - " &f¿Cometerás un crimen de guerra?"
+    - " &fDespués de todo, esto es... &5&lEGG WARS"
     - " "
 
 fatigue:
@@ -136,8 +136,8 @@ fatigue:
     - ""
     - " &e&lCANSANCIO &7(30 segundos)"
     - " "
-    - " &7Estoy cansado jefe :'v"
-    - " &7Tienes fatiga minera y hambre 1"
+    - " &fEstoy cansado jefe :'v"
+    - " &fTienes fatiga minera y hambre 1"
     - " "
 
 willpower:
@@ -145,6 +145,46 @@ willpower:
     - ""
     - " &b&lHASTA EL ÚLTIMO HOMBRE &7(30 segundos)"
     - " "
-    - " &7Todos obtienen resistencia y fuerza 1."
+    - " &fTodos obtienen resistencia y fuerza 1."
     - " &a¡Salvemos a nuestros compañeros!"
+    - " "
+
+fullheath:
+  start-message:
+    - ""
+    - " &c&lMATAR TE LLENA DE DETERMINACIÓN &7(2 minutos)"
+    - " "
+    - " &fAl matar a un enemigo, te curarás por completo"
+    - " "
+
+critical:
+  start-message:
+    - ""
+    - " &6&lCRÍTICOS &7(1 minuto)"
+    - " "
+    - " &fCada golpe hace un 25% más de daño"
+    - " "
+
+onedamage:
+  start-message:
+    - ""
+    - " &5&l1 DE DAÑO &7(1 minuto)"
+    - " "
+    - " &fCada golpe hace 1 de daño"
+    - " "
+
+rush:
+  start-message:
+    - ""
+    - " &e&lRUSH &7(1 minuto)"
+    - " "
+    - " &fTodos obtienen salto y velocidad 1 por &61 minuto"
+    - " "
+
+discount:
+  start-message:
+    - ""
+    - " &a&l $ DESCUENTOS $ &7(20 segundos)"
+    - " "
+    - " &fTodos los items tienen un &e50% de descuento"
     - " "

@@ -34,6 +34,7 @@ public final class PlayerDamageByPlayerListener implements EventListener {
             || (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.TREASON)) {
             return;
         }
+
         final GameTeam playerTeam = game.getTeamPerPlayer().get(event.getDamager());
 
         if (playerTeam == null) {
@@ -44,6 +45,15 @@ public final class PlayerDamageByPlayerListener implements EventListener {
         if (playersInTeam.contains(event.getEntity())) {
             event.setCancelled(true);
             event.setDamage(0);
+            return;
+        }
+
+        if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.CRITICAL) {
+            event.setDamage(event.getDamage() + (event.getDamage() / 100) * 25);
+            return;
+        }
+        if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.ONEDAMAGE) {
+            event.setDamage(1);
         }
     }
 }

@@ -13,8 +13,7 @@ import lc.eggwars.game.shop.Shop;
 import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.messages.Messages;
-
-import net.minecraft.server.v1_8_R3.EntityTypes;
+import lc.lcspigot.entities.CreatureTypes;
 
 public final class StartShopkeepers {
 
@@ -30,7 +29,7 @@ public final class StartShopkeepers {
         for (final String mob : mobs) {
             int id = 0;
             try {
-                id = EntityTypes.getEntityByName(mob);
+                id = CreatureTypes.getEntityType(mob);
             } catch (Exception e) {
                 Logger.info("The entity type: " + mob + " don't exist");
                 continue;

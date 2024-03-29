@@ -33,12 +33,16 @@ public final class EventStorage {
         this.secondsToEvent = secondsToEvent;
     }
 
-    public GameEvent[] createEvents() {
+    public GameEvent[] createEvents(final GameInProgress game) {
         final GameEvent[] events = new GameEvent[secondsToEvent.length + 1];
         events[secondsToEvent.length] = deathMatchEvent;
 
         for (int i = 0; i < secondsToEvent.length; i++) {
             final GameEvent baseEvent = baseEvents[RANDOM.nextInt(baseEvents.length)];
+            if (game.getMapData().getMaxPersonsPerTeam() <= 1 && baseEvent.eventType() == GameEventType.TREASON) {
+                i--;
+                continue;
+            }
             final int randomDiference = (secondsToEvent[i] * RANDOM.nextInt(startTimeTolerance)) / 100;
 
             final int startTime = RANDOM.nextBoolean()

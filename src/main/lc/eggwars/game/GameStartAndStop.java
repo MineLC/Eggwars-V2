@@ -32,7 +32,7 @@ final class GameStartAndStop {
             game.setWorld(world);
 
             MapStorage.getStorage().loadClickableBlocks(world);
-            game.setEvents(EventStorage.getStorage().createEvents());
+            game.setEvents(EventStorage.getStorage().createEvents(game));
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 world.getWorldBorder().setCenter(world.getSpawnLocation());

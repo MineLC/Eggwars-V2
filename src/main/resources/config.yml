@@ -3,10 +3,10 @@ mongodb:
   connection-string: mongodb://127.0.0.1:27017/Eggwars
 
 redis:
-  ip: "redis-13596.c308.sa-east-1-1.ec2.cloud.redislabs.com"
-  port: 13596
+  ip: "localhost"
+  port: 6876
   user: "choco"
-  password: "redisDevbrown890%x1r1"
+  password: "test"
 
 sign-lines:
   - "%name% &8(%level%)"

@@ -21,7 +21,8 @@ import lc.eggwars.commands.InfoCommand;
 import lc.eggwars.commands.game.JoinCommand;
 import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
-import lc.eggwars.database.MongoDBHandler;
+import lc.eggwars.database.mongodb.MongoDBHandler;
+import lc.eggwars.database.redis.RedisHandler;
 import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.game.generators.StartGenerators;
@@ -52,7 +53,8 @@ import lc.lcspigot.listeners.ListenerRegister;
 
 public class EggwarsPlugin extends JavaPlugin {
 
-    private static final MongoDBHandler DATABASE = new MongoDBHandler();
+    private static final MongoDBHandler MONGODB = new MongoDBHandler();
+    private static final RedisHandler REDIS = new RedisHandler();
 
     @Override
     public void onEnable() {
@@ -66,9 +68,15 @@ public class EggwarsPlugin extends JavaPlugin {
 
         CompletableFuture.runAsync(() -> {
             try {   
-                DATABASE.init(this);   
+                MONGODB.init(this);
+                REDIS.init(this.getConfig());
+
+                new StartMaps(this, slimePlugin).load();
+                new StartSpawn(this).loadSpawn();
+                new StartPreGameData().loadMap(this);
+                GameManagerThread.startThread();   
             } catch (Exception e) {
-                getServer().getScheduler().runTask(this, () -> Logger.info(e));
+                getServer().getScheduler().runTask(this, () -> Logger.error(e));
                 setEnabled(false);
             }
         });
@@ -90,24 +98,14 @@ public class EggwarsPlugin extends JavaPlugin {
         final ShopsData data = new StartShops().load(this);
         new StartShopkeepers().load(this, data.shops());
 
-        getServer().getScheduler().runTaskLater(this, () -> {
-            try {
-                new StartMaps(this, slimePlugin).load();
-                new StartSpawn(this).loadSpawn();
-                new StartPreGameData().loadMap(this);
-                GameManagerThread.startThread();   
-            } catch (Exception e) {
-                Logger.error(e);
-                setEnabled(false);
-            }
-        }, 20);
-
         registerBasicListeners(data);
     }
 
     @Override
     public void onDisable() {
-        DATABASE.shutdown();
+        MONGODB.shutdown();
+        REDIS.shutdown();
+
         GameManagerThread.stopThread();
         getServer().getScheduler().cancelTasks(this);
     }

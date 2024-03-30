@@ -40,7 +40,7 @@ public final class EventStorage {
         for (int i = 0; i < secondsToEvent.length; i++) {
             final GameEvent baseEvent = baseEvents[RANDOM.nextInt(baseEvents.length)];
             if (game.getMapData().getMaxPersonsPerTeam() <= 1 && baseEvent.eventType() == GameEventType.TREASON) {
-                i--;
+                --i;
                 continue;
             }
             final int randomDiference = (secondsToEvent[i] * RANDOM.nextInt(startTimeTolerance)) / 100;

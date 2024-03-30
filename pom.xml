@@ -70,6 +70,11 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/LCCommons-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
+            <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.1.2</version>
+        </dependency>
    </dependencies>
 
     <build>

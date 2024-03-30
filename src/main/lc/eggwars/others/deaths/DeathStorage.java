@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameInProgress;
+import lc.eggwars.game.PlayerInGame;
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.GameTeam;
@@ -34,20 +35,24 @@ public final class DeathStorage {
         this.respawnWaitTime = waitingTime;
     }
 
-    public void onDeath(final GameInProgress game, final Collection<Player> playersToSendMessage, final Player player, final CountdownCallback onCompleteCinematic, final boolean finalKill) {
+    public void onDeath(final PlayerInGame game, final Collection<Player> playersToSendMessage, final Player player, final CountdownCallback onCompleteCinematic, final boolean finalKill) {
         if (finalKill) {
-            final String message = createMessage(game, player, true);
+            final String message = createMessage(game.getGame(), player, true);
             if (message != null) {
                 Messages.sendNoGet(playersToSendMessage, message);
             }
             onCompleteCinematic.execute();
+            game.setDeathCinematic(false);
             return;
         }
-
+        game.setDeathCinematic(true);
         final DeathCinematic cinematic = new DeathCinematic(onCompleteCinematic, respawnTitle, respawnSubtitle, respawnWaitTime, player);
-        final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> cinematic.run(), 0, 20).getTaskId();
+        final int id = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            cinematic.run();
+            game.setDeathCinematic(false);
+        }, 0, 20).getTaskId();
         cinematic.setId(id);
-        final String message = createMessage(game, player, false);
+        final String message = createMessage(game.getGame(), player, false);
 
         if (message != null) {
             Messages.sendNoGet(playersToSendMessage, message);

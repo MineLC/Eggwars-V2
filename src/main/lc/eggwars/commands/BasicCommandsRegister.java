@@ -2,7 +2,7 @@ package lc.eggwars.commands;
 
 import org.bukkit.entity.Player;
 
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.messages.Messages;
 import lc.lcspigot.commands.CommandStorage;
 

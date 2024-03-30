@@ -22,6 +22,7 @@ public final class MapData {
     private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
+    private final String name;
 
     private GameInProgress gameInProgress;
 
@@ -34,7 +35,8 @@ public final class MapData {
         EntityLocation[] shopSpawns,
         int maxPersonsPerTeam,
         int borderSize,
-        int id
+        int id,
+        String name
     ) {
         this.clickableBlocks = clickableBlocks;
         this.spawns = spawns;
@@ -46,6 +48,7 @@ public final class MapData {
         this.borderSize = borderSize;
         this.maxPlayers = maxPersonsPerTeam * spawns.keySet().size();
         this.id = id;
+        this.name = name;
     }
 
     public void setGame(GameInProgress game) {
@@ -100,5 +103,10 @@ public final class MapData {
     @Override
     public final boolean equals(Object object) {
         return (object instanceof MapData otherMapData) ? otherMapData.id == this.id : false;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

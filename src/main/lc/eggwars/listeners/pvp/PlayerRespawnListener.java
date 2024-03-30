@@ -13,6 +13,7 @@ import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameDeath;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
+import lc.eggwars.game.PlayerInGame;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.others.deaths.DeathStorage;
 import lc.eggwars.others.events.GameEventType;
@@ -35,11 +36,12 @@ public final class PlayerRespawnListener implements EventListener {
     )
     public void handle(Event defaultEvent) {
         final PlayerRespawnEvent event = (PlayerRespawnEvent)defaultEvent;
-        final GameInProgress game = GameStorage.getStorage().getGame(event.getPlayer().getUniqueId());
+        final PlayerInGame playerInGame = GameStorage.getStorage().getPlayerInGame(event.getPlayer().getUniqueId());
 
-        if (game == null) {
+        if (playerInGame == null) {
             return;
         }
+        final GameInProgress game = playerInGame.getGame();
         final Player player = event.getPlayer();
         final GameTeam team = game.getTeamPerPlayer().get(player);
         if (team == null) {
@@ -60,14 +62,14 @@ public final class PlayerRespawnListener implements EventListener {
         }
         
         if (!team.hasEgg()) {
-            new GameDeath(plugin).death(game, team, player, false, true);
+            new GameDeath(plugin).death(playerInGame, team, player, false, true);
             return;
         }
 
         final BlockLocation spawn = game.getMapData().getSpawns().get(team.getBase());
         final Location spawnLocation = new Location(player.getWorld(), spawn.x(), spawn.y(), spawn.z());
        
-        DeathStorage.getStorage().onDeath(game, game.getPlayers(), player, () -> {
+        DeathStorage.getStorage().onDeath(playerInGame, game.getPlayers(), player, () -> {
             LevelStorage.getStorage().onDeath(player, false);
             player.teleport(spawnLocation);
             player.setGameMode(GameMode.SURVIVAL);

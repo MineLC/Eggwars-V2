@@ -8,7 +8,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import gnu.trove.iterator.TIntIterator;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeeperEntity;

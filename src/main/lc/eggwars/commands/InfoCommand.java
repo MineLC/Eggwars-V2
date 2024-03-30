@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData.Skin;

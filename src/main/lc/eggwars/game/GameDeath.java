@@ -22,7 +22,8 @@ public final class GameDeath {
         this.plugin = plugin;
     }
 
-    public void death(final GameInProgress game, final GameTeam gameTeam, final Player player, final boolean leaveFromGame, final boolean finalKill) {
+    public void death(final PlayerInGame playerInGame, final GameTeam gameTeam, final Player player, final boolean leaveFromGame, final boolean finalKill) {
+        final GameInProgress game = playerInGame.getGame();
         if (leaveFromGame) {
             game.getPlayers().remove(player);
             game.getTeamPerPlayer().remove(player);
@@ -38,7 +39,7 @@ public final class GameDeath {
         }
 
         LevelStorage.getStorage().onDeath(player, finalKill);
-        DeathStorage.getStorage().onDeath(game, game.getPlayers(), player, () -> {}, finalKill);
+        DeathStorage.getStorage().onDeath(playerInGame, game.getPlayers(), player, () -> {}, finalKill);
 
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
 

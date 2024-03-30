@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.lcspigot.commands.Command;
 
 public final class GiveCoin implements Command {

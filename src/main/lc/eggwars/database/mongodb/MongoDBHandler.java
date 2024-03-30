@@ -1,4 +1,4 @@
-package lc.eggwars.database;
+package lc.eggwars.database.mongodb;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -27,8 +27,11 @@ public final class MongoDBHandler {
     public void init(EggwarsPlugin plugin) throws Exception {
         disableLogging();
         final FileConfiguration config = plugin.getConfig();
-
-        this.client = connect(config.getString("mongodb.connection-string"));
+        final String connectionString = config.getString("mongodb.connection-string");
+        if (connectionString == null) {
+            throw new Exception("The connection string for mongodb is null");
+        }
+        this.client = connect(connectionString);
         updateDatabaseManager("eggwars", config.getString("mongodb.database"));
     }
 
@@ -64,7 +67,7 @@ public final class MongoDBHandler {
             database.createCollection(collectionName);
             documents.insertOne(new Document());
         }
-        DatabaseManager.update(new DatabaseManager(documents));
+        MongoDBManager.update(new MongoDBManager(documents));
         return documents;
     }
 

@@ -7,7 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;

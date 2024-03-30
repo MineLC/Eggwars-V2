@@ -1,4 +1,4 @@
-package lc.eggwars.database;
+package lc.eggwars.database.mongodb;
 
 import java.util.HashMap;
 import java.util.Map;

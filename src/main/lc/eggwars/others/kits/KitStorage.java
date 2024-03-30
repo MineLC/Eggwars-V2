@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
 import io.netty.util.collection.IntObjectHashMap;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.inventory.types.KitInventory;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
 

@@ -5,9 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import lc.eggwars.database.DatabaseManager;
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.MongoDBManager;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
 
@@ -31,6 +31,6 @@ public final class PlayerQuitListener implements EventListener {
         }
 
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
-        DatabaseManager.getManager().saveData(player.getUniqueId(), data);
+        MongoDBManager.getManager().saveData(player.getUniqueId(), data);
     }
 }

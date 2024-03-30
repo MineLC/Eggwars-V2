@@ -1,4 +1,4 @@
-package lc.eggwars.database;
+package lc.eggwars.database.mongodb;
 
 import gnu.trove.set.hash.TIntHashSet;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;

@@ -2,8 +2,8 @@ package lc.eggwars.others.levels;
 
 import org.bukkit.entity.Player;
 
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import net.md_5.bungee.api.ChatColor;
 
 public class LevelStorage {

@@ -11,10 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
-
-import lc.eggwars.database.DatabaseManager;
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.MongoDBManager;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.others.spawn.SpawnStorage;
@@ -38,7 +37,7 @@ public final class PlayerJoinListener implements EventListener {
         }
 
         CompletableFuture.runAsync(() -> {
-            final PlayerData data = DatabaseManager.getManager().getData(player.getUniqueId());
+            final PlayerData data = MongoDBManager.getManager().getData(player.getUniqueId());
             PlayerDataStorage.getStorage().add(player.getUniqueId(), data);
             SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);            
         });       

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import lc.eggwars.game.countdown.CountdownCallback;
 import net.md_5.bungee.api.chat.TextComponent;
 
-final class DeathCinematic implements Runnable {
+final class DeathCinematic {
 
     private final CountdownCallback complete;
     private final String respawnTitle, respawnSubtitle;
@@ -24,7 +24,6 @@ final class DeathCinematic implements Runnable {
         this.player = player;
     }
 
-    @Override
     public void run() {
         if (seconds == 0) {
             complete.execute();

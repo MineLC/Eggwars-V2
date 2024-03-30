@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.managers.ShopKeeperManager;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;

@@ -1,4 +1,4 @@
-package lc.eggwars.database;
+package lc.eggwars.database.mongodb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,13 @@ import com.mongodb.client.model.Updates;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.set.hash.TIntHashSet;
 
-public final class DatabaseManager {
+public final class MongoDBManager {
 
-    private static DatabaseManager queryManager;
+    private static MongoDBManager queryManager;
 
     private final MongoCollection<Document> profiles;
 
-    public DatabaseManager(MongoCollection<Document> profiles) {
+    public MongoDBManager(MongoCollection<Document> profiles) {
         this.profiles = profiles;
     }
 
@@ -110,11 +110,11 @@ public final class DatabaseManager {
         return list;
     }
 
-    static void update(DatabaseManager manager) {
+    static void update(MongoDBManager manager) {
         queryManager = manager;
     }
     
-    public static DatabaseManager getManager() {
+    public static MongoDBManager getManager() {
         return queryManager;
     }
 }

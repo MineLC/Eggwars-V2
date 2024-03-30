@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 
 import io.github.ichocomilk.lightsidebar.LightSidebarLib;
 import io.github.ichocomilk.lightsidebar.Sidebar;
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
 
 public final class SpawnSidebar implements EggwarsSidebar {

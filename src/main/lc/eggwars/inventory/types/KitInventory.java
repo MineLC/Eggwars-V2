@@ -4,9 +4,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import io.netty.util.collection.IntObjectHashMap;
-import lc.eggwars.database.PlayerData;
-import lc.eggwars.database.PlayerDataStorage;
-
+import lc.eggwars.database.mongodb.PlayerData;
+import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.messages.Messages;
 import lc.eggwars.others.kits.Kit;
 

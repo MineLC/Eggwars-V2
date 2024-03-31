@@ -22,7 +22,6 @@ import lc.eggwars.commands.game.JoinCommand;
 import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.database.mongodb.MongoDBHandler;
-import lc.eggwars.database.redis.RedisHandler;
 import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.StartGameData;
 import lc.eggwars.game.generators.StartGenerators;
@@ -54,7 +53,6 @@ import lc.lcspigot.listeners.ListenerRegister;
 public class EggwarsPlugin extends JavaPlugin {
 
     private static final MongoDBHandler MONGODB = new MongoDBHandler();
-    private static final RedisHandler REDIS = new RedisHandler();
 
     @Override
     public void onEnable() {
@@ -69,7 +67,6 @@ public class EggwarsPlugin extends JavaPlugin {
         CompletableFuture.runAsync(() -> {
             try {   
                 MONGODB.init(this);
-                REDIS.init(this.getConfig());
 
                 new StartMaps(this, slimePlugin).load();
                 new StartSpawn(this).loadSpawn();
@@ -80,7 +77,6 @@ public class EggwarsPlugin extends JavaPlugin {
                 setEnabled(false);
             }
         });
-
         loadCommands();
 
         new StartMessages().load(this);
@@ -104,7 +100,6 @@ public class EggwarsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         MONGODB.shutdown();
-        REDIS.shutdown();
 
         GameManagerThread.stopThread();
         getServer().getScheduler().cancelTasks(this);

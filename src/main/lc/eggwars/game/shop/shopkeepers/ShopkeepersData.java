@@ -12,6 +12,6 @@ public final record ShopkeepersData(
 
     public static final int VILLAGER_SKIN = 120; // See EntitiesTypes
 
-    public final record Skin(String name, int id, String message, int addHeight, int cost) {
+    public final record Skin(String name, int id, String message, int addHeight, int cost, String permission) {
     }
 }

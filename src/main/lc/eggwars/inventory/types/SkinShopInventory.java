@@ -47,6 +47,10 @@ public final class SkinShopInventory {
                 Messages.send(player, "shopkeepers.no-money");
                 return;
             }
+            if (skinClicked.permission() != null && !player.hasPermission(skinClicked.permission())) {
+                Messages.send(player, "shopkeepers.no-perms");
+                return;
+            }
             data.coins -= skinClicked.cost();
             data.skinSelected = skinClicked.id();
             data.skins.add(skinClicked.id());

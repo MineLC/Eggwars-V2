@@ -25,7 +25,6 @@ import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.database.redis.RedisManager;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.clickable.ClickableDragonEgg;
@@ -79,8 +78,6 @@ public final class StartMaps {
         final Gson gson = new Gson();
         int index = 0;
 
-        final Map<String, String> mapsRedisQuery = new HashMap<>();
-
         for (final File mapFile : mapFiles) {
             if (!mapFile.getName().endsWith(".json")) {
                 continue;
@@ -101,14 +98,12 @@ public final class StartMaps {
                 Bukkit.unloadWorld(world, false);
 
                 map.setGame(new GameInProgress(map));
-                mapsRedisQuery.put(data.world(), RedisManager.getManager().serializateGame(map.getGameInProgress()));
 
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.error("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 Logger.error(e);
             }
         }
-        RedisManager.getManager().resetGames(mapsRedisQuery);
     }
 
     private MapData loadMapData(final JsonMapData data, final int id) {

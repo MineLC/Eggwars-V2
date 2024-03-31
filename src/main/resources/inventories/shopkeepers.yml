@@ -2,6 +2,7 @@ Creeper:
   click-send: "&aLa batalla ya ha empezado..."
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 0
@@ -19,6 +20,7 @@ Skeleton:
   click-send: "&fVengo con aimbot integrado papu"
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 1
@@ -36,6 +38,7 @@ Spider:
   click-send: "&bItsy Bitsy araña otra vez subió. Ella es caprichosa y desobediente."
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 2
@@ -53,6 +56,7 @@ Zombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 3
@@ -70,6 +74,7 @@ Rabbit:
   click-send: "&fHola nena, *procede a comerse 50 hectareas de cesped*"
   addHeight: 0
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 4
@@ -87,6 +92,7 @@ Villager:
   click-send: "&e&lLegends never die..."
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 5
@@ -104,6 +110,7 @@ Silverfish:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 6
@@ -122,6 +129,7 @@ Bat:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 7
@@ -139,6 +147,7 @@ Witch:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 8
@@ -156,6 +165,7 @@ Pig:
   click-send: "&dNo estados unidos... no me hagas tocino de vuelta"
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 9
@@ -173,6 +183,7 @@ Sheep:
   click-send: "&fLa ropa de lana está bien cara"
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 10
@@ -190,6 +201,7 @@ Cow:
   click-send: "&6Directito para el McDonals"
   addHeight: -1
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 11
@@ -207,6 +219,7 @@ Chicken:
   click-send: "&f¡No KFC!, no lo hagas"
   addHeight: 0
   cost: 500
+  permission: "vip"
 
   # Inventory Settings
   slot: 12
@@ -224,6 +237,7 @@ Squid:
   click-send: "&3Que me ves oe &7*le tira tinta en la cara*"
   addHeight: 0
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 13
@@ -241,6 +255,7 @@ Endermite:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 14
@@ -258,6 +273,7 @@ Slime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 15
@@ -275,6 +291,7 @@ PigZombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 16
@@ -292,6 +309,7 @@ Wolf:
   click-send: "&fSiempre fiel, amo"
   addHeight: 0
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 16
@@ -309,6 +327,7 @@ Ozelot:
   click-send: "&fMiau... miau"
   addHeight: 0
   cost: 750
+  permission: "svip"
 
   # Inventory Settings
   slot: 17
@@ -326,7 +345,7 @@ MushroomCow:
   click-send: "&cTu tranqui, con estas setas si vas a volar"
   addHeight: -1
   cost: 1500
-
+  permission: "elite"
   # Inventory Settings
   slot: 18
   name: "&c&lVaca de setas"
@@ -343,7 +362,7 @@ SnowMan:
   click-send: "&fNi el yeti puede contra mi"
   addHeight: -1
   cost: 1500
-
+  permission: "elite"
   # Inventory Settings
   slot: 19
   name: "&f&lHombre de nieve"
@@ -360,6 +379,7 @@ Blaze:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 20
@@ -377,6 +397,7 @@ Enderman:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 21
@@ -394,6 +415,7 @@ CaveSpider:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 22
@@ -411,6 +433,7 @@ LavaSlime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 23
@@ -428,6 +451,7 @@ VillagerGolem:
   click-send: "&7&lEstoy mamadísimo"
   addHeight: -1
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 24
@@ -445,6 +469,7 @@ EntityHorse:
   click-send: "&e¡Corre como el viento tiro al blanco!"
   addHeight: -1
   cost: 1500
+  permission: "elite"
 
   # Inventory Settings
   slot: 25
@@ -462,6 +487,7 @@ WitherBoss:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   cost: 2000
   addHeight: 0
+  permission: "ruby"
 
   # Inventory Settings
   slot: 26
@@ -477,33 +503,15 @@ WitherBoss:
     - ""
     - "&7Rareza: &e&lLEGENDARIO"
 
-EnderDragon:
-  click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
-  addHeight: 1
-  cost: 2000
-
-  # Inventory Settings
-  slot: 27
-  name: "&5&lDragón del end"
-  item: "381" # ID:DATA
-  lore:
-    - "&8(&7Clic para usarlo&8)"
-    - "&8(&7Presiona &cQ &7para verlo&8)"
-    - ""
-    - "&7(Se recomienda bajar el sonido)"
-    - "&7(Solo para pros, desventaja en pvp)"
-    - ""
-    - "&7Coste: &62000 LCOINS"
-    - ""
-    - "&7Rareza: &e&lLEGENDARIO"
 
 Guardian:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 2000
+  permission: "ruby"
 
   # Inventory Settings
-  slot: 28
+  slot: 27
   name: "&a&lGuardían"
   item: "168:0" # ID:DATA
   lore:
@@ -518,9 +526,10 @@ Giant:
   click-send: "&aGigante tengo la..."
   addHeight: -1
   cost: 2000
+  permission: "ruby"
 
   # Inventory Settings
-  slot: 29
+  slot: 28
   name: "&a&lGIGANTE"
   item: "397:2" # ID:DATA
   lore:

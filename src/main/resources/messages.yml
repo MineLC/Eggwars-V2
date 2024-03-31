@@ -45,6 +45,7 @@ shopkeepers:
   preview: "&aMira a tu alrededor"
   skin-change: "&aHas cambiado la skin de tu tienda"
   no-money: "&cNo tienes suficientes lcoins para comprar esta skin"
+  no-perms: "&cNo tienes el rango para comprar este kit"
 
 level:
   up: "&a¡Has subido de nivel! &7- &6%old% &7-> &e%new%"

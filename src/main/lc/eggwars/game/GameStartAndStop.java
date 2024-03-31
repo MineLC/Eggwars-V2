@@ -9,7 +9,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.database.redis.RedisManager;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.game.managers.GeneratorManager;
 import lc.eggwars.game.managers.ShopKeeperManager;
@@ -49,7 +48,6 @@ final class GameStartAndStop {
             game.startTime();
             game.setState(GameState.IN_GAME);
             game.setCountdown(null);
-            RedisManager.getManager().updateGame(game);
         });
     }
 
@@ -82,8 +80,6 @@ final class GameStartAndStop {
         }
         final World world = game.getWorld();
         new GeneratorManager().unload(game);
-
-        RedisManager.getManager().resetGame(game.getMapData());
 
         MapStorage.getStorage().unload(world);
         System.gc();

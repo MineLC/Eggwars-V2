@@ -1,5 +1,7 @@
 package lc.eggwars.listeners;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -29,8 +31,9 @@ public final class PlayerQuitListener implements EventListener {
         if (game != null) {
             GameStorage.getStorage().leave(game, player, true);
         }
-
-        final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
-        MongoDBManager.getManager().saveData(player.getUniqueId(), data);
+        CompletableFuture.runAsync(() -> {
+            final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
+            MongoDBManager.getManager().saveData(player.getUniqueId(), data);
+        });
     }
 }

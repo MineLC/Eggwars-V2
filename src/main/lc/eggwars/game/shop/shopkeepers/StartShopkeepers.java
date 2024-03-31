@@ -46,7 +46,9 @@ public final class StartShopkeepers {
                 id,
                 message,
                 config.getInt(mobPath + "addHeight"),
-                config.getInt(mobPath + "cost"));
+                config.getInt(mobPath + "cost"),
+                config.getString(mobPath + "permission")
+            );
             inventory.setItem(item.slot(), item.item());
             inventoryItems.put(item.slot(), skin);
             skinsPerID.put(id, skin);

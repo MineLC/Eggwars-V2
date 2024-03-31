@@ -8,7 +8,6 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.database.redis.RedisManager;
 import lc.eggwars.game.countdown.endgame.EndgameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.countdown.pregame.PreGameTemporaryData;
@@ -33,7 +32,6 @@ public final class GameStorage {
         game.getPlayers().add(player);
 
         if (game.getState() != GameState.NONE) {
-            RedisManager.getManager().updateGame(game);
             return;
         }
 
@@ -55,7 +53,6 @@ public final class GameStorage {
 
         game.setCountdown(waitToStartCountdown);
         game.setState(GameState.PREGAME);
-        RedisManager.getManager().updateGame(game);
     }
 
     public void stop(final GameInProgress game) {
@@ -73,7 +70,6 @@ public final class GameStorage {
             game.getPlayers().remove(player);
             if (game.getPlayers().isEmpty()) {
                 stop(game);
-                RedisManager.getManager().updateGame(game);
                 return;
             }
             game.getTeamPerPlayer().remove(player);
@@ -85,7 +81,6 @@ public final class GameStorage {
             if (game.getPlayers().isEmpty()) {
                 stop(game);
             }
-            RedisManager.getManager().updateGame(game);
             return;
         }
         if (player.getGameMode() != GameMode.SPECTATOR || playerInGame.getInDeathCinematic()) {

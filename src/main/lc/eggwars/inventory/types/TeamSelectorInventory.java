@@ -26,7 +26,7 @@ public final class TeamSelectorInventory {
             }
             removeFromOldTeam(playerTeam, player, game);
         }
-        if (game.getTeams().size() == 1) {
+        if (game.getTeams().size() == 1 && (team.equals(game.getTeams().iterator().next().getBase()))) {
             Messages.send(player, "team.balance");
             return;
         }

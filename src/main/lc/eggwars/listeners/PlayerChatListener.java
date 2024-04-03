@@ -18,7 +18,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class PlayerChatListener implements EventListener {
@@ -39,22 +38,19 @@ public class PlayerChatListener implements EventListener {
         if(!p.hasPermission("minelc.vip")) {
             message = StringUtils.remove(message , '&');
         }
-
+        if (SpawnStorage.getStorage().isInSpawn(p)) {
+            final String global_format = pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + p.getName() + " &8» &f" + message;
+            Messages.sendNoGet(SpawnStorage.getStorage().getPlayers(),  global_format);
+            return;
+        }
         final GameInProgress game = GameStorage.getStorage().getGame(p.getUniqueId());
 
         if (game == null) {
             return;
         }
-
-        if(game.getState() == GameState.PREGAME){
-            final String global_format = pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + p.getName() + " &8» &f" + message;
-
-            final Collection<Player> players = (game.getState() == GameState.PREGAME)
-                ? game.getPlayers()
-                : SpawnStorage.getStorage().location().getWorld().getPlayers();
-
-                Messages.sendNoGet(players,  global_format);
-
+        if (game.getState() == GameState.PREGAME) {
+            final String global_format = pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + TeamStorage.getStorage().tryAddTeamPrefix(game.getTeamPerPlayer().get(p), p) + " &8» &f" + message;
+            Messages.sendNoGet(game.getPlayers(),  global_format);
             return;
         }
 

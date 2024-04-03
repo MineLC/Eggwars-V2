@@ -61,16 +61,16 @@ public final class GameStorage {
 
     public void leave(final GameInProgress game, final Player player, final boolean leaveFromGame) {
         final PlayerInGame playerInGame = playersInGame.remove(player.getUniqueId());
-        final GameTeam team = game.getTeamPerPlayer().get(player);
-        if (team != null) {
-            team.remove(player);
-            team.removeOnePlayerWithLive();
-        }
+    
         if (game.getCountdown() instanceof EndgameCountdown) {
             game.getPlayers().remove(player);
             if (game.getPlayers().isEmpty()) {
                 stop(game);
                 return;
+            }
+            final GameTeam team = game.getTeamPerPlayer().get(player);
+            if (team != null) {
+                team.remove(player);
             }
             game.getTeamPerPlayer().remove(player);
             return;
@@ -78,15 +78,17 @@ public final class GameStorage {
         if (game.getCountdown() instanceof PreGameCountdown pregame) {
             game.getPlayers().remove(player);
             pregame.getTemporaryData().leave(player, game);
+            game.getTeamPerPlayer().remove(player);
             if (game.getPlayers().isEmpty()) {
-                stop(game);
+                game.getMapData().setGame(null);
+                plugin.getServer().getScheduler().cancelTask(game.getCountdown().getId());
             }
             return;
         }
         if (player.getGameMode() != GameMode.SPECTATOR || playerInGame.getInDeathCinematic()) {
             new GameDeath(plugin).death(
                 playerInGame,
-                team,
+                game.getTeamPerPlayer().get(player),
                 player,
                 leaveFromGame,
                 true);

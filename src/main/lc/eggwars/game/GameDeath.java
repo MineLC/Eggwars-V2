@@ -25,6 +25,7 @@ public final class GameDeath {
     public void death(final PlayerInGame playerInGame, final GameTeam gameTeam, final Player player, final boolean leaveFromGame, final boolean finalKill) {
         final GameInProgress game = playerInGame.getGame();
         if (leaveFromGame) {
+            gameTeam.remove(player);
             game.getPlayers().remove(player);
             game.getTeamPerPlayer().remove(player);
             if (gameTeam.getPlayers().isEmpty()) {

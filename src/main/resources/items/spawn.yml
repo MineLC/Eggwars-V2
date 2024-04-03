@@ -1,6 +1,11 @@
 shop-item:
-  slot: 0
+  slot: 1
   item: "388"
   name: "&aTienda de eggwars"
   lore:
     - "&7(Clic para entrar)"
+
+game-join:
+  slot: 0
+  item: "351:12"
+  name: "&bSelecciona un mapa"

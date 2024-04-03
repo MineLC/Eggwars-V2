@@ -1,0 +1,29 @@
+title: "Seleciona el mapa a jugar"
+
+suffix:
+  team: "&a&lTEAM"
+  solo: "&b&lSOLO"
+
+states:
+  endgame:
+    suffix: " &c&lFINALIZANDO"
+    item: "REDSTONE_BLOCK"
+
+  in_game:
+    suffix: " &a&lEN JUEGO"
+    item: "EMERALD_BLOCK"
+
+  pregame:
+    suffix: " &e&lPREGAME"
+    item: "GOLD_BLOCK"
+
+  none:
+    suffix: " &7&lSIN EMPEZAR"
+    item: "COAL_BLOCK"
+
+games:
+  time: " &fTiempo de juego: &a%time%"
+  lore:
+    - ""
+    - " &fModo: %mode%"
+    - " &fJugadores: &6%players%"

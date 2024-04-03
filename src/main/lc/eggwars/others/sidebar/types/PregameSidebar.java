@@ -12,15 +12,18 @@ import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.others.sidebar.EggwarsSidebar;
+import net.md_5.bungee.api.ChatColor;
 
 public final class PregameSidebar implements EggwarsSidebar {
 
     private final String[] lines;
-    private final String title;
+    private final String title, team, solo;
 
-    public PregameSidebar(String[] lines, String title) {
+    public PregameSidebar(String[] lines, String title, String team, String solo) {
         this.lines = lines;
         this.title = title;
+        this.team = team;
+        this.solo = solo;
     }
 
     @Override
@@ -32,17 +35,17 @@ public final class PregameSidebar implements EggwarsSidebar {
 
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
 
-        final String amountPlayers = String.valueOf(game.getPlayers().size());
         final String lcoins = String.valueOf(data.coins);
-        final String maxPlayers = String.valueOf(game.getMapData().getMaxPlayers());
-        
+        final String players = game.getPlayers().size() + "/" + ChatColor.GOLD + game.getMapData().getMaxPlayers();
+        final String mode = (game.getMapData().getMaxPersonsPerTeam() >= 1) ? team : solo;
         final String[] parsedLines = new String[lines.length];
 
         for (int i = 0; i < lines.length; i++) {
             parsedLines[i] = lines[i].isEmpty() ? "" : lines[i]
                 .replace("%coin%", lcoins)
-                .replace("%players%", amountPlayers)
-                .replace("%max%", maxPlayers);
+                .replace("%players%", players)
+                .replace("%mode%", mode)
+                .replace("%map%", game.getMapData().toString());
         }
         final Sidebar sidebar = new LightSidebarLib().createSidebar();
         final Object[] lines = sidebar.createLines(parsedLines);

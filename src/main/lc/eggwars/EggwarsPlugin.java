@@ -18,7 +18,6 @@ import com.grinderwolf.swm.plugin.SWMPlugin;
 
 import lc.eggwars.commands.BasicCommandsRegister;
 import lc.eggwars.commands.InfoCommand;
-import lc.eggwars.commands.game.JoinCommand;
 import lc.eggwars.commands.game.LeaveCommand;
 import lc.eggwars.commands.map.MapCreatorCommand;
 import lc.eggwars.database.mongodb.MongoDBHandler;
@@ -42,6 +41,8 @@ import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.events.StartEvents;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.levels.StartLevels;
+import lc.eggwars.others.selectgame.MapInventoryBuilder;
+import lc.eggwars.others.selectgame.StartMapInventories;
 import lc.eggwars.others.sidebar.StartSidebar;
 import lc.eggwars.others.spawn.StartSpawn;
 import lc.eggwars.teams.StartTeams;
@@ -68,7 +69,6 @@ public class EggwarsPlugin extends JavaPlugin {
             try {   
                 MONGODB.init(this);
 
-                new StartMaps(this, slimePlugin).load();
                 new StartSpawn(this).loadSpawn();
                 new StartPreGameData().loadMap(this);
                 GameManagerThread.startThread();   
@@ -88,13 +88,15 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartSpawn(this).loadItems();
         new StartLevels(this).load();
         new StartPreGameData().loadItems(this);
-        new StartSidebar().load(this);
+        new StartSidebar(this).load();
         new StartEvents(this).load();
+        new StartMaps(this, slimePlugin).load();
 
         final ShopsData data = new StartShops().load(this);
-        new StartShopkeepers().load(this, data.shops());
+        final MapInventoryBuilder mapInventoryBuilder = new StartMapInventories().load(this);
 
-        registerBasicListeners(data);
+        new StartShopkeepers().load(this, data.shops());
+        registerBasicListeners(data, mapInventoryBuilder);
     }
 
     @Override
@@ -105,7 +107,7 @@ public class EggwarsPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTasks(this);
     }
 
-    private void registerBasicListeners(final ShopsData shopsData) {
+    private void registerBasicListeners(final ShopsData shopsData, final MapInventoryBuilder mapInventoryBuilder) {
         final ListenerRegister listeners = new ListenerRegister(this);
 
         listeners.register(new PlayerDeathListener(this), true);
@@ -113,11 +115,11 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new EntityDamageListener(), true);
         listeners.register(new PlayerDamageByPlayerListener(), true);
         listeners.register(new PlayerInventoryClickListener(this, shopsData), true);
-        listeners.register(new PlayerInteractListener(), true);
+        listeners.register(new PlayerInteractListener(mapInventoryBuilder), true);
 
         listeners.register(new ShopkeeperListener(), false);
         listeners.register(new PlayerBreakListener(), true);
-        listeners.register(new PlayerJoinListener(), true);  
+        listeners.register(new PlayerJoinListener(getConfig().getStringList("tab.header"), getConfig().getStringList("tab.footer")), true);  
         listeners.register(new PlayerQuitListener(), true);  
         listeners.register(new PlayerDropitemListener(), true);  
         listeners.register(new PlayerChatListener(), true);
@@ -149,7 +151,6 @@ public class EggwarsPlugin extends JavaPlugin {
 
     private void loadCommands() {
         CommandStorage.register(new MapCreatorCommand(this, new MapCreatorData()), "map");
-        CommandStorage.register(new JoinCommand(), "join");
         CommandStorage.register(new LeaveCommand(), "leave");
         CommandStorage.register(new InfoCommand(), "info");
 

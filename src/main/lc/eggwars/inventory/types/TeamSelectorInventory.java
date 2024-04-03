@@ -17,26 +17,40 @@ public final class TeamSelectorInventory {
             return;
         }
         final Player player = (Player)event.getWhoClicked();
-
-        if (!canJoin(game, data, team)) {
+        final GameTeam playerTeam = game.getTeamPerPlayer().get(player);
+    
+        if (playerTeam != null) {
+            if (playerTeam.getBase().equals(team)) {
+                Messages.send(player, "team.already");
+                return;
+            }
+            removeFromOldTeam(playerTeam, player, game);
+        }
+        if (game.getTeams().size() == 1) {
+            Messages.send(player, "team.balance");
+            return;
+        }
+        if (teamIsFull(game, data, team)) {
             Messages.send(player, "team.full");
             return;
         }
-        if (!data.joinToTeam(player, game, team)) {
-            Messages.send(player, "team.already");
-            return;
-        }
+        data.joinToTeam(playerTeam, player, game, team);
         player.sendMessage(Messages.get("team.join").replace("%team%", team.getKey()));
     }
 
-    private boolean canJoin(final GameInProgress game, final PreGameTemporaryData data, final BaseTeam team) {
+    private boolean teamIsFull(final GameInProgress game, final PreGameTemporaryData data, final BaseTeam team) {
         final GameTeam gameTeam = game.getTeamPerBase().get(team);
         if (gameTeam == null) {
-            return true;
-        }
-        if (game.getTeams().size() == 1) {
             return false;
         }
-        return gameTeam.getPlayers().size() < game.getMapData().getMaxPersonsPerTeam();
+        return gameTeam.getPlayers().size() >= game.getMapData().getMaxPersonsPerTeam();
+    }
+    private void removeFromOldTeam(final GameTeam playerTeam, final Player player, final GameInProgress game) {
+        playerTeam.remove(player);
+        game.getTeamPerPlayer().remove(player);
+        if (playerTeam.getPlayers().isEmpty()) {
+            game.getTeams().remove(playerTeam);
+        }
+        player.getInventory().setChestplate(null);
     }
 }

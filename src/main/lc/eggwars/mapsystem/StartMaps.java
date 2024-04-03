@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
@@ -56,13 +54,13 @@ public final class StartMaps {
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
-            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
+            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0]));
             return;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
-            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>()));
+            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0]));
             return;
         }
         final Map<String, MapData> mapsPerName = new HashMap<>();
@@ -70,7 +68,7 @@ public final class StartMaps {
         if (mapFiles.length > 0) {
             loadMapData(maps, mapFiles, mapsPerName);
         }
-        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName));
+        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName, maps));
         GameManagerThread.setMaps(maps);
     }
 
@@ -84,21 +82,15 @@ public final class StartMaps {
             }
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-                final World world = Bukkit.getWorld(data.world());
-                if (world == null) {
-                    continue;
-                }
+
                 final int newIndex = index;
                 final MapData map = loadMapData(data, newIndex);
 
                 maps[newIndex] = map;
                 mapsPerName.put(data.world(), map);
                 index++;
-
-                Bukkit.unloadWorld(world, false);
-
+    
                 map.setGame(new GameInProgress(map));
-
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.error("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 Logger.error(e);

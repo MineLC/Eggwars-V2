@@ -54,13 +54,6 @@ final class GameStartAndStop {
     private void startForPlayers(final GameInProgress game) {
         setTeams(game);
 
-        final Set<Player> players = game.getPlayers();
-        final ShopKeeperManager shopKeeperManager = new ShopKeeperManager();
-        for (final Player player : players) {
-            KitStorage.getStorage().setKit(player, true);
-            shopKeeperManager.send(player, game);
-        }
-
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
     }
     
@@ -80,6 +73,7 @@ final class GameStartAndStop {
         }
         final World world = game.getWorld();
         new GeneratorManager().unload(game);
+        game.getMapData().setGame(null);
 
         MapStorage.getStorage().unload(world);
         System.gc();
@@ -125,12 +119,13 @@ final class GameStartAndStop {
         final BlockLocation spawn = game.getMapData().getSpawns().get(team.getBase());
         player.teleport(new Location(game.getWorld(), spawn.x(), spawn.y(), spawn.z()));
         player.setGameMode(GameMode.SURVIVAL);
+        KitStorage.getStorage().setKit(player, true);
+        new ShopKeeperManager().send(player, game);
 
         if (!alreadyInTheTeam) {
+            team.add(player);
             game.getTeamPerPlayer().put(player, team);
         }
         GameStorage.getStorage().getPlayerInGame(player.getUniqueId()).setTeam(team);
-
-        team.add(player);
     }
 }

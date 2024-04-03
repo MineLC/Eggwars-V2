@@ -2,7 +2,6 @@ package lc.eggwars.others.spawn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -13,8 +12,6 @@ import lc.eggwars.inventory.internal.InventoryCreator;
 import lc.eggwars.inventory.internal.InventoryCreator.Item;
 import lc.eggwars.inventory.types.SpawnShopInventory;
 import lc.eggwars.utils.EntityLocation;
-
-import java.util.Map;
 
 public class StartSpawn {
     private final EggwarsPlugin plugin;
@@ -28,12 +25,10 @@ public class StartSpawn {
         final InventoryCreator creator = new InventoryCreator(config);
 
         final Item shopItem = creator.create("shop-item");
+        final Item gameItem = creator.create("game-join");
         final SpawnShopInventory spawnShopInventory = getSpawnShopInventory();
 
-        final Map<Material, Inventory> items = Map.of(
-            shopItem.item().getType(), spawnShopInventory.getInventory()
-        );
-        SpawnStorage.update(new SpawnStorage(null, shopItem, items, spawnShopInventory));
+        SpawnStorage.update(new SpawnStorage(null, shopItem, gameItem, spawnShopInventory));
     }
 
     public void loadSpawn() {
@@ -55,8 +50,7 @@ public class StartSpawn {
         final Location location = new Location(bukkitWorld, entityLocation.x(), entityLocation.y(), entityLocation.z(), entityLocation.yaw(), entityLocation.pitch());
         bukkitWorld.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         bukkitWorld.getWorldBorder().setSize(config.getInt("spawn.border"));
-        final SpawnStorage oldStorage = SpawnStorage.getStorage();
-        SpawnStorage.update(new SpawnStorage(location, oldStorage.shopItem(), oldStorage.items(), oldStorage.shopInventory()));
+        SpawnStorage.update(location);
     }
 
     private SpawnShopInventory getSpawnShopInventory() {

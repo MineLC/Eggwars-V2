@@ -10,6 +10,16 @@ sign-lines:
 
 disable-default-world: "world"
 
+tab:
+  header:
+    - ""
+    - "&b&lMine&6&lLC"
+    - ""
+  footer:
+    - ""
+    - "&fGracias por elegirnos &c❤"
+    - "&7Para ayuda: /help"
+
 spawn:
   world: "spawn"
   cords: "10,74,1,23,23"

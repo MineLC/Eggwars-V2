@@ -39,14 +39,16 @@ public final class MapStorage {
     private final Map<World, IntObjectHashMap<ClickableBlock>> clickableBlocks = new HashMap<>();
 
     private final Map<String, MapData> mapsPerName;
+    private final MapData[] maps;
     
     private final SWMPlugin slimePlugin;
     private final SlimeLoader loader;
 
-    MapStorage(SWMPlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName) {
+    MapStorage(SWMPlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName, MapData[] maps) {
         this.slimePlugin = slimePlugin;
         this.loader = loader;
         this.mapsPerName = mapsPerName;
+        this.maps = maps;
     }
 
     // Execute this method async
@@ -102,8 +104,12 @@ public final class MapStorage {
         return mapsPerName.get(worldName);
     }
 
-    public Map<String, MapData> getMaps() {
+    public Map<String, MapData> getMapsMap() {
         return mapsPerName;
+    }
+
+    public MapData[] getMaps() {
+        return maps;
     }
 
     public SlimeLoader getFileLoader() {

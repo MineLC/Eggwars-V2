@@ -5,6 +5,7 @@ pregame:
   full: "&cEste mapa ya está lleno"
 
 team:
+  balance: "&cNecesitan haber un mínimo de 2 equipos"
   join: "&aAhora estás en el team %team%"
   full: "&cEste equipo ya está lleno"
   already: "&cYa estás en este equipo"

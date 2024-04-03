@@ -1,3 +1,6 @@
+team: "&a&lTEAM"
+solo: "&b&lSOLO"
+
 spawn:
   title: "&5&lEggWars"
   lines:
@@ -15,10 +18,11 @@ pregame:
   title: "&5&lEggWars"
   lines:
     - ""
-    - "&fLCoins: &6%coin%"
+    - "&fMapa: &a%map%"
+    - "&fModo: %mode%"
     - ""
-    - "&fJugadores: &a%players%/&a%max%"
-    - "&fInicia en: &6%timer%"
+    - "&fJugadores: &a%players%"
+    - "&fLCoins: &6%coin%"
     - ""
     - "&bplay.mine.lc"
 

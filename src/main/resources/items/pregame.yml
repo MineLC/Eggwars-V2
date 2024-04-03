@@ -1,7 +1,7 @@
 add-shop-spawn-item: true
 
 select-team:
-  slot: 1
+  slot: 0
   item: "122"
   name: "&dSeleciona un equipo"
   lore:

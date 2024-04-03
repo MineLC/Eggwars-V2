@@ -1,8 +1,10 @@
 name: "bunny"
 
+# Items: https://www.digminecraft.com/lists/item_id_list_pc_1_8.php
+# 
 inventory-item:
   slot: 5
-  item: "414"
+  item: "414" # Item:ID
   name: "&a&lConejo"
   lore:
     - " "
@@ -15,10 +17,12 @@ inventory-item:
     - " &7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
-    
+
 cost: 500
 effects:
   - "JUMP:1:100000" # EFFECT:LEVEL:DURATIOn
+
+# Efectos: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
 
 armor:
   #heltmet: ""
@@ -26,5 +30,6 @@ armor:
   #leggings: ""
   boots: "301"
 
+# Encantamientos: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
 items:
   - "414:1:DAMAGE_ALL:2" # ID:AMOUNT:ENCHANTMENT:LEVEL

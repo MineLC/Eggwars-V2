@@ -70,7 +70,7 @@ final class SaveSubCommand implements Command {
             final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
 
-            player.teleport(SpawnStorage.getStorage().location());
+            SpawnStorage.getStorage().sendToSpawn(player);
             Bukkit.unloadWorld(player.getWorld(), true);
         } catch (IOException e) {
             sendWithColor(player, "&cError on create the map");

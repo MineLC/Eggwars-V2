@@ -12,8 +12,13 @@ import lc.eggwars.others.sidebar.types.SpawnSidebar;
 
 public final class StartSidebar {
 
-    public void load(final EggwarsPlugin plugin) {
-        final FileConfiguration config = plugin.loadConfig("sidebars");
+    private final FileConfiguration config;
+
+    public StartSidebar(EggwarsPlugin plugin) {
+        this.config = plugin.loadConfig("sidebars");
+    }
+
+    public void load() {
         final EggwarsSidebar[] sidebars = new EggwarsSidebar[3];
 
         sidebars[SidebarType.SPAWN.ordinal()] = createSidebar(config, "spawn", SidebarType.SPAWN);
@@ -48,7 +53,7 @@ public final class StartSidebar {
     private EggwarsSidebar getSidebar(final SidebarType type, final String[] lines, final String title) {
         switch (type) {
             case SPAWN: return new SpawnSidebar(lines, title);
-            case PREGAME: return new PregameSidebar(lines, title);
+            case PREGAME: return new PregameSidebar(lines, title, Messages.color(config.getString("team")), Messages.color(config.getString("solo")));
             case IN_GAME: return new GameSidebar(title);
             default: return null;
         }

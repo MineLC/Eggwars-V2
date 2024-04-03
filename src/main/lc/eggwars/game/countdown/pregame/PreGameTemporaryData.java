@@ -20,20 +20,9 @@ public final class PreGameTemporaryData {
         this.teamInventorySlots = teamInventorySlots;
     }
 
-    public boolean joinToTeam(final Player player, final GameInProgress game, final BaseTeam team) {
-        final GameTeam playerTeam = game.getTeamPerPlayer().get(player);
+    public void joinToTeam(final GameTeam playerTeam, final Player player, final GameInProgress game, final BaseTeam team) {
         GameTeam teamToJoin = game.getTeamPerBase().get(team);
 
-        if (playerTeam != null) {
-            if (playerTeam.getBase().equals(team)) {
-                return false;
-            }
-            playerTeam.remove(player);
-            game.getTeamPerPlayer().remove(player);
-            if (playerTeam.getPlayers().isEmpty()) {
-                game.getTeams().remove(playerTeam);
-            }
-        }
         if (teamToJoin == null) {
             teamToJoin = new GameTeam(team);
             game.getTeams().add(teamToJoin);
@@ -47,7 +36,6 @@ public final class PreGameTemporaryData {
         new LeatherArmorColorMetadata().setColor(chestplate, player, team.getLeatherColor());
 
         player.getInventory().setChestplate(chestplate);
-        return true;
     }
 
     public void leave(final Player player, final GameInProgress game) {

@@ -22,12 +22,13 @@ public final class GameTeam {
 
     public void add(final Player player) {
         players.add(player);
-        playersWithLive++;
+        ++playersWithLive;
         baseTeam.getTeam().addPlayer(player);
     }
 
     public void remove(final Player player) {
         players.remove(player);
+        --playersWithLive;
         baseTeam.getTeam().removePlayer(player);
     }
 
@@ -36,7 +37,7 @@ public final class GameTeam {
     }
 
     public void removeOnePlayerWithLive() {
-        playersWithLive--;
+        --playersWithLive;
     }
 
     public void destroyEgg() {

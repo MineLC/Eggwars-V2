@@ -10,7 +10,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import lc.eggwars.game.GameState;
@@ -19,6 +18,7 @@ import lc.eggwars.game.PlayerInGame;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.mapsystem.MapStorage;
+import lc.eggwars.others.selectgame.MapInventoryBuilder;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.others.specialitems.JumpPadItem;
 import lc.eggwars.others.specialitems.PlatformItem;
@@ -29,6 +29,12 @@ import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
 public final class PlayerInteractListener implements EventListener {
+
+    private final MapInventoryBuilder mapInventoryBuilder;
+
+    public PlayerInteractListener(MapInventoryBuilder mapInventoryBuilder) {
+        this.mapInventoryBuilder = mapInventoryBuilder;
+    }
 
     @ListenerData(
         event = PlayerInteractEvent.class,
@@ -47,12 +53,8 @@ public final class PlayerInteractListener implements EventListener {
         event.setCancelled(false);
         if (SpawnStorage.getStorage().isInSpawn(event.getPlayer())) {
             event.setCancelled(true);
-            if (event.getItem() == null) {
-                return;
-            }
-            final Inventory inventory = SpawnStorage.getStorage().items().get(event.getItem().getType());
-            if (inventory != null) {
-                event.getPlayer().openInventory(inventory);
+            if (event.getItem() != null) {
+                handleWithSpawnItems(event.getPlayer(), event.getItem().getType());
             }
             return;
         }
@@ -98,12 +100,19 @@ public final class PlayerInteractListener implements EventListener {
             }
         }
 
-        final Inventory inventory = SpawnStorage.getStorage().items().get(type);
-        if (inventory != null) {
-            event.setCancelled(true);
-            event.getPlayer().openInventory(inventory);
-        }
+        handleWithSpawnItems(event.getPlayer(), type);
         return true;
+    }
+
+    private void handleWithSpawnItems(final Player player, final Material type) {
+        if (type == SpawnStorage.getStorage().getShopItemMaterial()) {
+            player.openInventory(SpawnStorage.getStorage().getShopInventory().getInventory());
+            return;
+        }
+        if (type == SpawnStorage.getStorage().getGameItemMaterial()) {
+            player.openInventory(mapInventoryBuilder.build());
+            return;
+        }
     }
 
     private boolean handleSpecialItems(final PlayerInteractEvent event, final PlayerInGame game, final Player player, final ItemStack item, final Material material) {

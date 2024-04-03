@@ -37,7 +37,7 @@ public final class PregameSidebar implements EggwarsSidebar {
 
         final String lcoins = String.valueOf(data.coins);
         final String players = game.getPlayers().size() + "/" + ChatColor.GOLD + game.getMapData().getMaxPlayers();
-        final String mode = (game.getMapData().getMaxPersonsPerTeam() >= 1) ? team : solo;
+        final String mode = (game.getMapData().getMaxPersonsPerTeam() > 1) ? team : solo;
         final String[] parsedLines = new String[lines.length];
 
         for (int i = 0; i < lines.length; i++) {

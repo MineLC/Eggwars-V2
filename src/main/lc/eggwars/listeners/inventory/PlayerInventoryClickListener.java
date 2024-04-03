@@ -57,8 +57,8 @@ public class PlayerInventoryClickListener implements EventListener {
         }
         if (event.getInventory().getHolder() instanceof MapSelectorInventoryHolder mapSelector) {
             final MapData map = mapSelector.getGame(event.getSlot());
+            event.setCancelled(true);
             if (map != null) {
-                event.setCancelled(true);
                 tryJoinToGame((Player)event.getWhoClicked(), map);
             }
             return;

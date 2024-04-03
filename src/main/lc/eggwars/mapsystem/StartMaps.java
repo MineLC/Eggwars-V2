@@ -23,7 +23,6 @@ import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
-import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameManagerThread;
 import lc.eggwars.game.clickable.ClickableDragonEgg;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
@@ -82,15 +81,11 @@ public final class StartMaps {
             }
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
-
-                final int newIndex = index;
-                final MapData map = loadMapData(data, newIndex);
-
-                maps[newIndex] = map;
+                final MapData map = loadMapData(data, index);
+    
+                maps[index] = map;
                 mapsPerName.put(data.world(), map);
                 index++;
-    
-                map.setGame(new GameInProgress(map));
             } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                 Logger.error("Error on load the map: " + mapFile.getName() + ". Check the json in: " + mapFile.getAbsolutePath());
                 Logger.error(e);

@@ -51,23 +51,6 @@ public final class MapStorage {
         this.maps = maps;
     }
 
-    // Execute this method async
-    public CompletableFuture<Void> loadMap(final String worldName) {
-        final MapData map = mapsPerName.get(worldName);
-        if (map == null) {
-            return null;
-        }
-
-        return CompletableFuture.runAsync(() -> {
-            try {
-                slimePlugin.generateWorld(slimePlugin.loadWorld(loader, worldName, false, PROPERTIES));
-            } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException| IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    // Execute this method async
     public CompletableFuture<Void> load(final String worldName) {
         return CompletableFuture.runAsync(() -> {
             try {
@@ -78,7 +61,6 @@ public final class MapStorage {
             }
         });
     }
-
 
     public void loadClickableBlocks(final World world) {
         final MapData map = mapsPerName.get(world.getName());

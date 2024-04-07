@@ -5,25 +5,45 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.Inventory;
 
 import lc.eggwars.EggwarsPlugin;
 import lc.eggwars.game.GameState;
+import lc.eggwars.inventory.internal.InventoryCreator;
+import lc.eggwars.inventory.internal.InventoryCreator.Item;
+import lc.eggwars.inventory.types.SelectMapInventory;
 import lc.eggwars.messages.Messages;
 
 public final class StartMapInventories {
 
-    public MapInventoryBuilder load(final EggwarsPlugin plugin) {
+    public SelectMapInventory load(final EggwarsPlugin plugin) {
         final FileConfiguration config = plugin.loadConfig("inventories/gameselector");
         final String teamSuffix = Messages.color(config.getString("suffix.team"));
         final String soloSuffix = Messages.color(config.getString("suffix.solo"));
-
-        return new MapInventoryBuilder(
+        final MapInventoryBuilder builder = new MapInventoryBuilder(
             getStateItems(config),
             soloSuffix,
             teamSuffix,
             getLore(config),
             Messages.color(config.getString("title")),
-            Messages.color(config.getString("games.time")));
+            Messages.color(config.getString("games.time")),
+            Messages.color(config.getString("games.max-persons"))
+        );
+
+        final InventoryCreator creator = new InventoryCreator(config);
+        final Inventory selectInventory = creator.create("selectMap", "select-mode-inventory");
+        final Item soloMode = creator.create("select-mode-inventory.solo");
+        final Item teamMode = creator.create("select-mode-inventory.team");
+
+        selectInventory.setItem(soloMode.slot(), soloMode.item());
+        selectInventory.setItem(teamMode.slot(), teamMode.item());
+
+        return new SelectMapInventory(
+            builder,
+            selectInventory,
+            soloMode.slot(),
+            teamMode.slot()
+        );
     }
 
     private StateItem[] getStateItems(final FileConfiguration config) {

@@ -15,28 +15,27 @@ import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.utils.IntegerUtils;
 
-import net.md_5.bungee.api.ChatColor;
-
 public final class MapInventoryBuilder {
 
     private final List<String> gameLore;
     private final StateItem[] states;
-    private final String soloMode, teamMode, inventoryName, timeLineLore;
+    private final String soloMode, teamMode, inventoryName, timeLineLore, maxPlayersPerTeamLore;
 
-    MapInventoryBuilder(StateItem[] states, String soloMode, String teamMode, List<String> gameLore, String inventoryName, String timeLineLore) {
+    MapInventoryBuilder(StateItem[] states, String soloMode, String teamMode, List<String> gameLore, String inventoryName, String timeLineLore, String maxPlayersPerTeamLore) {
         this.states = states;
         this.soloMode = soloMode;
         this.teamMode = teamMode;
         this.gameLore = gameLore;
         this.inventoryName = inventoryName;
         this.timeLineLore = timeLineLore;
+        this.maxPlayersPerTeamLore = maxPlayersPerTeamLore;
     }
 
-    public Inventory build() {
-        final MapData[] maps = MapStorage.getStorage().getMaps();
+    public Inventory build(final boolean soloMode) {
+        final MapData[] maps = (soloMode) ? MapStorage.getStorage().getSoloMaps() : MapStorage.getStorage().getTeamMaps();
         final int rows = IntegerUtils.aproximate(maps.length, 9);
         final Inventory inventory = Bukkit.createInventory(
-            new MapSelectorInventoryHolder(),
+            new MapSelectorInventoryHolder(maps),
             rows * 9,
             inventoryName);
 
@@ -56,7 +55,7 @@ public final class MapInventoryBuilder {
         final ItemStack item = new ItemStack(state.material(), (game == null) ? 0 : game.getPlayers().size());
         final ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.GREEN + map.toString() + state.suffix());
+        meta.setDisplayName(map.getName() + state.suffix());
         if (game == null) {
             meta.setLore(parseLore(0, 0, map.getMaxPlayers(), map.getMaxPersonsPerTeam(), gameState));
         } else {
@@ -85,6 +84,9 @@ public final class MapInventoryBuilder {
 
         if (state == GameState.IN_GAME || state == GameState.END_GAME) {
             newLore.add(timeLineLore.replace("%time%", GameCountdown.parseTime((System.currentTimeMillis() - startedTime) / 1000)));
+        }
+        if (maxTeamPlayer > 1) {
+            newLore.add(maxPlayersPerTeamLore.replace("%max%", String.valueOf(maxTeamPlayer)));
         }
         return newLore;
     }

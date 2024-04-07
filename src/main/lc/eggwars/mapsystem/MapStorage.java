@@ -39,16 +39,17 @@ public final class MapStorage {
     private final Map<World, IntObjectHashMap<ClickableBlock>> clickableBlocks = new HashMap<>();
 
     private final Map<String, MapData> mapsPerName;
-    private final MapData[] maps;
+    private final MapData[] soloMaps, teamMaps;
     
     private final SWMPlugin slimePlugin;
     private final SlimeLoader loader;
 
-    MapStorage(SWMPlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName, MapData[] maps) {
+    MapStorage(SWMPlugin slimePlugin, SlimeLoader loader, Map<String, MapData> mapsPerName, MapData[] soloMaps, MapData[] teamMaps) {
         this.slimePlugin = slimePlugin;
         this.loader = loader;
         this.mapsPerName = mapsPerName;
-        this.maps = maps;
+        this.soloMaps = soloMaps;
+        this.teamMaps = teamMaps;
     }
 
     public CompletableFuture<Void> load(final String worldName) {
@@ -90,10 +91,14 @@ public final class MapStorage {
         return mapsPerName;
     }
 
-    public MapData[] getMaps() {
-        return maps;
+    public MapData[] getSoloMaps() {
+        return soloMaps;
     }
 
+    public MapData[] getTeamMaps() {
+        return teamMaps;
+    }
+    
     public SlimeLoader getFileLoader() {
         return loader;
     }

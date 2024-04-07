@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -28,7 +30,7 @@ import lc.eggwars.game.clickable.ClickableDragonEgg;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.game.generators.BaseGenerator;
 import lc.eggwars.game.generators.GeneratorStorage;
-
+import lc.eggwars.messages.Messages;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.TeamStorage;
 import lc.eggwars.utils.BlockLocation;
@@ -53,13 +55,13 @@ public final class StartMaps {
 
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
-            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0]));
+            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0], new MapData[0]));
             return;
         }
 
         final File[] mapFiles = mapFolder.listFiles();
         if (mapFiles == null) {
-            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0]));
+            MapStorage.update(new MapStorage(slimePlugin, loader, new HashMap<>(), new MapData[0], new MapData[0]));
             return;
         }
         final Map<String, MapData> mapsPerName = new HashMap<>();
@@ -67,7 +69,18 @@ public final class StartMaps {
         if (mapFiles.length > 0) {
             loadMapData(maps, mapFiles, mapsPerName);
         }
-        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName, maps));
+    
+        final List<MapData> soloMaps = new ArrayList<>();
+        final List<MapData> teamMaps = new ArrayList<>();
+        for (final MapData map : maps) {
+            if (map.getMaxPersonsPerTeam() > 1) {
+                teamMaps.add(map);
+                continue;
+            }
+            soloMaps.add(map);
+        }
+    
+        MapStorage.update(new MapStorage(slimePlugin, loader, mapsPerName, soloMaps.toArray(new MapData[0]), teamMaps.toArray(new MapData[0])));
         GameManagerThread.setMaps(maps);
     }
 
@@ -82,7 +95,7 @@ public final class StartMaps {
             try {
                 final JsonMapData data = gson.fromJson(new JsonReader(new BufferedReader(new FileReader(mapFile))), JsonMapData.class);
                 final MapData map = loadMapData(data, index);
-    
+
                 maps[index] = map;
                 mapsPerName.put(data.world(), map);
                 index++;
@@ -111,7 +124,8 @@ public final class StartMaps {
             data.maxPersonsPerTeam(),
             data.borderSize(),
             id,
-            data.world()
+            data.world(),
+            Messages.color(data.name())
         );
         return map;
     }
@@ -137,7 +151,7 @@ public final class StartMaps {
     }
 
     private EntityLocation[] getShopSpawns(final JsonMapData data) {
-        final String[] locations = data.shopSpawns();
+        final String[] locations = data.shopspawns();
         final EntityLocation[] parsedLocations = new EntityLocation[locations.length];
         int index = 0;
         for (final String location : locations) {

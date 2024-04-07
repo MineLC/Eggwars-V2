@@ -4,11 +4,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import lc.eggwars.mapsystem.MapData;
-import lc.eggwars.mapsystem.MapStorage;
 
 public class MapSelectorInventoryHolder implements InventoryHolder {
 
-    private static final MapData[] MAPS = MapStorage.getStorage().getMaps();
+    private final MapData[] maps;
+
+    MapSelectorInventoryHolder(MapData[] maps) {
+        this.maps = maps;
+    }
 
     @Override
     public Inventory getInventory() {
@@ -16,6 +19,6 @@ public class MapSelectorInventoryHolder implements InventoryHolder {
     }
 
     public MapData getGame(final int clickedSlot) {
-        return (clickedSlot >= MAPS.length) ? null : MAPS[clickedSlot];
+        return (clickedSlot >= maps.length) ? null : maps[clickedSlot];
     }
 }

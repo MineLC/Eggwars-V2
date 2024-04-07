@@ -21,8 +21,28 @@ states:
     suffix: " &7&lSIN EMPEZAR"
     item: "COAL_BLOCK"
 
+select-mode-inventory:
+  title: "&0Seleciona el modo de juego"
+  rows: 1
+
+  solo:
+    name: "&b&lSOLO"
+    item: "381"
+    lore:
+      - "&7Encuentra partidas"
+      - "&7En donde el team"
+      - "&7Está &c&lPROHIBIDO"
+  team:
+    name: "&a&lTEAM"
+    item: "122"
+    lore:
+      - "&7Encuentra partidas"
+      - "&7En donde puedas jugar"
+      - "&7Con otras personas en tu equipo"
+
 games:
   time: " &fTiempo de juego: &a%time%"
+  max-persons: " &fJugadores por equipo: &a%max%"
   lore:
     - ""
     - " &fModo: %mode%"

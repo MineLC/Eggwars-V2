@@ -17,6 +17,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.PlayerInGame;
 import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
+import lc.eggwars.inventory.types.SelectMapInventory;
 import lc.eggwars.mapsystem.MapStorage;
 import lc.eggwars.others.selectgame.MapInventoryBuilder;
 import lc.eggwars.others.spawn.SpawnStorage;
@@ -30,10 +31,10 @@ import lc.lcspigot.listeners.ListenerData;
 
 public final class PlayerInteractListener implements EventListener {
 
-    private final MapInventoryBuilder mapInventoryBuilder;
+    private final SelectMapInventory selectMapInventory;
 
-    public PlayerInteractListener(MapInventoryBuilder mapInventoryBuilder) {
-        this.mapInventoryBuilder = mapInventoryBuilder;
+    public PlayerInteractListener(SelectMapInventory selectMapInventory) {
+        this.selectMapInventory = selectMapInventory;
     }
 
     @ListenerData(
@@ -110,7 +111,7 @@ public final class PlayerInteractListener implements EventListener {
             return;
         }
         if (type == SpawnStorage.getStorage().getGameItemMaterial()) {
-            player.openInventory(mapInventoryBuilder.build());
+            player.openInventory(selectMapInventory.getInventory());
             return;
         }
     }

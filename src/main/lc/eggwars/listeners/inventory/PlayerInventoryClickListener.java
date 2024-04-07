@@ -18,6 +18,7 @@ import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.inventory.types.GameShopInventory;
+import lc.eggwars.inventory.types.SelectMapInventory;
 import lc.eggwars.inventory.types.SkinShopInventory;
 import lc.eggwars.inventory.types.TeamSelectorInventory;
 import lc.eggwars.mapsystem.MapData;
@@ -35,14 +36,18 @@ public class PlayerInventoryClickListener implements EventListener {
 
     private final SkinShopInventory shopSkinInventory;
     private final GameShopInventory gameShopInventory;
+    private final SelectMapInventory selectMapInventory;
 
     private final int kitInventoryID = InventoryUtils.getId(KitStorage.getStorage().inventory().getInventory()),
                       spawnShopInventoryID = InventoryUtils.getId(SpawnStorage.getStorage().getShopInventory().getInventory()),
-                      shopkeeperInventoryId = InventoryUtils.getId(ShopKeepersStorage.getStorage().data().skinShopInventory());
+                      shopkeeperInventoryId = InventoryUtils.getId(ShopKeepersStorage.getStorage().data().skinShopInventory()),
+                      selectMapInventoryID;
 
-    public PlayerInventoryClickListener(EggwarsPlugin plugin, ShopsData shopsData) {
+    public PlayerInventoryClickListener(EggwarsPlugin plugin, ShopsData shopsData, SelectMapInventory selectMapInventory) {
         this.shopSkinInventory = new SkinShopInventory(plugin);
         this.gameShopInventory = new GameShopInventory(shopsData);
+        this.selectMapInventory = selectMapInventory;
+        this.selectMapInventoryID = InventoryUtils.getId(selectMapInventory.getInventory());
     }
 
     @ListenerData(
@@ -106,6 +111,10 @@ public class PlayerInventoryClickListener implements EventListener {
         }
         if (inventory == spawnShopInventoryID) {
             SpawnStorage.getStorage().getShopInventory().handle(event);
+            return;
+        }
+        if (inventory == selectMapInventoryID) {
+            selectMapInventory.handle(event);
             return;
         }
     }

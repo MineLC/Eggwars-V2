@@ -24,16 +24,16 @@ public final class TeamSelectorInventory {
                 Messages.send(player, "team.already");
                 return;
             }
-            removeFromOldTeam(playerTeam, player, game);
-        }
-        if (game.getTeams().size() == 1 && (team.equals(game.getTeams().iterator().next().getBase()))) {
-            Messages.send(player, "team.balance");
-            return;
         }
         if (teamIsFull(game, data, team)) {
             Messages.send(player, "team.full");
             return;
         }
+        if (game.getTeams().size() == 1 && (team.equals(game.getTeams().iterator().next().getBase()))) {
+            Messages.send(player, "team.balance");
+            return;
+        }
+        removeFromOldTeam(playerTeam, player, game);
         data.joinToTeam(playerTeam, player, game, team);
         player.sendMessage(Messages.get("team.join").replace("%team%", team.getKey()));
     }

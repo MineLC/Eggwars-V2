@@ -28,6 +28,7 @@ import lc.eggwars.game.pregame.StartPreGameData;
 import lc.eggwars.game.shop.ShopsData;
 import lc.eggwars.game.shop.StartShops;
 import lc.eggwars.game.shop.shopkeepers.StartShopkeepers;
+import lc.eggwars.inventory.types.SelectMapInventory;
 import lc.eggwars.listeners.gameshop.ShopkeeperListener;
 import lc.eggwars.listeners.inventory.PlayerInventoryClickListener;
 import lc.eggwars.listeners.pvp.PlayerDeathListener;
@@ -41,7 +42,6 @@ import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.events.StartEvents;
 import lc.eggwars.others.kits.StartKits;
 import lc.eggwars.others.levels.StartLevels;
-import lc.eggwars.others.selectgame.MapInventoryBuilder;
 import lc.eggwars.others.selectgame.StartMapInventories;
 import lc.eggwars.others.sidebar.StartSidebar;
 import lc.eggwars.others.spawn.StartSpawn;
@@ -93,10 +93,10 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartMaps(this, slimePlugin).load();
 
         final ShopsData data = new StartShops().load(this);
-        final MapInventoryBuilder mapInventoryBuilder = new StartMapInventories().load(this);
+        final SelectMapInventory selectMapInventory = new StartMapInventories().load(this);
 
         new StartShopkeepers().load(this, data.shops());
-        registerBasicListeners(data, mapInventoryBuilder);
+        registerBasicListeners(data, selectMapInventory);
     }
 
     @Override
@@ -107,15 +107,15 @@ public class EggwarsPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTasks(this);
     }
 
-    private void registerBasicListeners(final ShopsData shopsData, final MapInventoryBuilder mapInventoryBuilder) {
+    private void registerBasicListeners(final ShopsData shopsData, final SelectMapInventory selectMapInventory) {
         final ListenerRegister listeners = new ListenerRegister(this);
 
         listeners.register(new PlayerDeathListener(this), true);
         listeners.register(new PlayerRespawnListener(this), true);
         listeners.register(new EntityDamageListener(), true);
         listeners.register(new PlayerDamageByPlayerListener(), true);
-        listeners.register(new PlayerInventoryClickListener(this, shopsData), true);
-        listeners.register(new PlayerInteractListener(mapInventoryBuilder), true);
+        listeners.register(new PlayerInventoryClickListener(this, shopsData, selectMapInventory), true);
+        listeners.register(new PlayerInteractListener(selectMapInventory), true);
 
         listeners.register(new ShopkeeperListener(), false);
         listeners.register(new PlayerBreakListener(), true);

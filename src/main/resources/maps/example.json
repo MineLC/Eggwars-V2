@@ -1,5 +1,6 @@
 {
   "world": "mina",
+  "name": "&e&lMINAS",
   "maxPersonsPerTeam": 1,
   "borderSize": 200,
   "spawns": {

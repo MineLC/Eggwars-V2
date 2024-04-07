@@ -22,7 +22,7 @@ public final class MapData {
     private final int maxPersonsPerTeam;
     private final int borderSize;
     private final int id;
-    private final String name;
+    private final String world, name;
 
     private GameInProgress gameInProgress;
 
@@ -36,6 +36,7 @@ public final class MapData {
         int maxPersonsPerTeam,
         int borderSize,
         int id,
+        String world,
         String name
     ) {
         this.clickableBlocks = clickableBlocks;
@@ -48,6 +49,7 @@ public final class MapData {
         this.borderSize = borderSize;
         this.maxPlayers = maxPersonsPerTeam * spawns.keySet().size();
         this.id = id;
+        this.world = world;
         this.name = name;
     }
 
@@ -95,6 +97,10 @@ public final class MapData {
         return maxPlayers;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public final int hashCode() {
         return id;
@@ -107,6 +113,6 @@ public final class MapData {
 
     @Override
     public String toString() {
-        return name;
+        return world;
     }
 }

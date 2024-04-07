@@ -23,6 +23,7 @@ import lc.eggwars.game.clickable.ClickableSignGenerator;
 import lc.eggwars.mapsystem.CreatorData;
 import lc.eggwars.mapsystem.JsonMapData;
 import lc.eggwars.mapsystem.MapCreatorData;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.utils.BlockLocation;
@@ -67,7 +68,7 @@ final class SaveSubCommand implements Command {
             data.remove(player.getUniqueId());
             sendWithColor(player, "&aMap saved in: " + mapFile.getPath());
 
-            final JsonMapData object = saveMapInfo(creatorData, player.getWorld());
+            final JsonMapData object = saveMapInfo(creatorData, player.getWorld(), args[1]);
             Files.write(new Gson().toJson(object), mapFile, Charset.forName("UTF-8"));
 
             SpawnStorage.getStorage().sendToSpawn(player);
@@ -79,9 +80,10 @@ final class SaveSubCommand implements Command {
         }
     }
 
-    private JsonMapData saveMapInfo(final CreatorData data, final World world) {
+    private JsonMapData saveMapInfo(final CreatorData data, final World world, final String name) {
         return new JsonMapData(
             world.getName(),
+            Messages.color(name),
             data.getMaxPersonsPerTeam(),
             (int)world.getWorldBorder().getSize(),
             saveSpawns(data),

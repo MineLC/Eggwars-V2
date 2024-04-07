@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.messages.Messages;
@@ -19,15 +20,17 @@ public class PreGameCountdown extends GameCountdown {
     private int waitingCountdown = 0;
 
     private final Set<Player> players;
+    private final GameInProgress game;
     private final Data data;
     private final CountdownCallback complete;
     private PreGameTemporaryData temporary;
 
-    public PreGameCountdown(Data data, Set<Player> players, CountdownCallback completeCountdown, PreGameTemporaryData temporary) {
+    public PreGameCountdown(Data data, GameInProgress game, CountdownCallback completeCountdown, PreGameTemporaryData temporary) {
         this.data = data;
         this.waitingCountdown = data.waitingTime;
         this.countdown = data.waitingTime;
-        this.players = players;
+        this.players = game.getPlayers();
+        this.game = game;
         this.complete = completeCountdown;
         this.temporary = temporary;
     }
@@ -49,6 +52,9 @@ public class PreGameCountdown extends GameCountdown {
                 waitingCountdown = data.waitingTime;
             }
             return;
+        }
+        if (players.size() == game.getMapData().getMaxPlayers()) {
+            countdown = data.messageTime;
         }
 
         players.forEach((player) -> player.setLevel(countdown));

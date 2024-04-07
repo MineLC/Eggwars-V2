@@ -43,7 +43,7 @@ public final class GameStorage {
         final PreGameTemporaryData temporaryData = new PreGameTemporaryData(selector.inventory(), selector.teamsPerSlot());
         final PreGameCountdown waitToStartCountdown = new PreGameCountdown(
             pregameData,
-            game.getPlayers(),
+            game,
             () -> new GameStartAndStop().start(plugin, game, world),
             temporaryData
         );

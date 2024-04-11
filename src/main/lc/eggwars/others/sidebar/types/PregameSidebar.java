@@ -45,7 +45,7 @@ public final class PregameSidebar implements EggwarsSidebar {
                 .replace("%coin%", lcoins)
                 .replace("%players%", players)
                 .replace("%mode%", mode)
-                .replace("%map%", game.getMapData().toString());
+                .replace("%map%", game.getMapData().getName());
         }
         final Sidebar sidebar = new LightSidebarLib().createSidebar();
         final Object[] lines = sidebar.createLines(parsedLines);

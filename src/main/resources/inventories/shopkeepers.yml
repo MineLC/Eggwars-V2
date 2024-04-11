@@ -2,7 +2,7 @@ Creeper:
   click-send: "&aLa batalla ya ha empezado..."
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 0
@@ -15,12 +15,13 @@ Creeper:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Skeleton:
   click-send: "&fVengo con aimbot integrado papu"
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 1
@@ -33,12 +34,13 @@ Skeleton:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Spider:
   click-send: "&bItsy Bitsy araña otra vez subió. Ella es caprichosa y desobediente."
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 2
@@ -51,12 +53,13 @@ Spider:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Zombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 3
@@ -69,12 +72,13 @@ Zombie:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Rabbit:
   click-send: "&fHola nena, *procede a comerse 50 hectareas de cesped*"
   addHeight: 0
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 4
@@ -87,12 +91,13 @@ Rabbit:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Villager:
   click-send: "&e&lLegends never die..."
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 5
@@ -105,12 +110,13 @@ Villager:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Silverfish:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 6
@@ -123,13 +129,14 @@ Silverfish:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 
 Bat:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 7
@@ -142,12 +149,13 @@ Bat:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Witch:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 8
@@ -160,12 +168,13 @@ Witch:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Pig:
   click-send: "&dNo estados unidos... no me hagas tocino de vuelta"
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 9
@@ -178,12 +187,13 @@ Pig:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Sheep:
   click-send: "&fLa ropa de lana está bien cara"
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 10
@@ -196,12 +206,13 @@ Sheep:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Cow:
   click-send: "&6Directito para el McDonals"
   addHeight: -1
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 11
@@ -214,12 +225,13 @@ Cow:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Chicken:
   click-send: "&f¡No KFC!, no lo hagas"
   addHeight: 0
   cost: 500
-  permission: "vip"
+  permission: "minelc.vip"
 
   # Inventory Settings
   slot: 12
@@ -232,12 +244,13 @@ Chicken:
     - "&7Coste: &6500 LCOINS"
     - ""
     - "&7Rareza: &fNORMAL"
+    - "&7Rango: &a&lVIP"
 
 Squid:
   click-send: "&3Que me ves oe &7*le tira tinta en la cara*"
   addHeight: 0
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 13
@@ -250,12 +263,13 @@ Squid:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 Endermite:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 14
@@ -268,12 +282,13 @@ Endermite:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 Slime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 15
@@ -286,12 +301,13 @@ Slime:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 PigZombie:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 16
@@ -304,12 +320,13 @@ PigZombie:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 Wolf:
   click-send: "&fSiempre fiel, amo"
   addHeight: 0
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 16
@@ -322,12 +339,13 @@ Wolf:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 Ozelot:
   click-send: "&fMiau... miau"
   addHeight: 0
   cost: 750
-  permission: "svip"
+  permission: "minelc.svip"
 
   # Inventory Settings
   slot: 17
@@ -340,12 +358,13 @@ Ozelot:
     - "&7Coste: &6750 LCOINS"
     - ""
     - "&7Rareza: &3&lRARO"
+    - "&7Rango: &a&lSVIP"
 
 MushroomCow:
   click-send: "&cTu tranqui, con estas setas si vas a volar"
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
   # Inventory Settings
   slot: 18
   name: "&c&lVaca de setas"
@@ -357,12 +376,13 @@ MushroomCow:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 SnowMan:
   click-send: "&fNi el yeti puede contra mi"
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
   # Inventory Settings
   slot: 19
   name: "&f&lHombre de nieve"
@@ -374,12 +394,13 @@ SnowMan:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 Blaze:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 20
@@ -392,12 +413,13 @@ Blaze:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 Enderman:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 21
@@ -410,12 +432,13 @@ Enderman:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 CaveSpider:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 22
@@ -428,12 +451,13 @@ CaveSpider:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 LavaSlime:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 23
@@ -446,12 +470,13 @@ LavaSlime:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 VillagerGolem:
   click-send: "&7&lEstoy mamadísimo"
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 24
@@ -464,12 +489,13 @@ VillagerGolem:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 EntityHorse:
   click-send: "&e¡Corre como el viento tiro al blanco!"
   addHeight: -1
   cost: 1500
-  permission: "elite"
+  permission: "minelc.elite"
 
   # Inventory Settings
   slot: 25
@@ -482,12 +508,13 @@ EntityHorse:
     - "&7Coste: &61500 LCOINS"
     - ""
     - "&7Rareza: &5&lÉPICO"
+    - "&7Rango: &e&lÉLITE"
 
 WitherBoss:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   cost: 2000
   addHeight: 0
-  permission: "ruby"
+  permission: "minelc.ruby"
 
   # Inventory Settings
   slot: 26
@@ -502,13 +529,14 @@ WitherBoss:
     - "&7Coste: &62000 LCOINS"
     - ""
     - "&7Rareza: &e&lLEGENDARIO"
+    - "&7Rango: &c&lRUBY"
 
 
 Guardian:
   click-send: "&aThere's a zombie on your lawn. We don't want zombies on the lawn..."
   addHeight: 0
   cost: 2000
-  permission: "ruby"
+  permission: "minelc.ruby"
 
   # Inventory Settings
   slot: 27
@@ -521,12 +549,13 @@ Guardian:
     - "&7Coste: &62000 LCOINS"
     - ""
     - "&7Rareza: &e&lLEGENDARIO"
+    - "&7Rango: &c&lRUBY"
 
 Giant:
   click-send: "&aGigante tengo la..."
   addHeight: -1
   cost: 2000
-  permission: "ruby"
+  permission: "minelc.ruby"
 
   # Inventory Settings
   slot: 28
@@ -541,3 +570,4 @@ Giant:
     - "&7Coste: &62000 LCOINS"
     - ""
     - "&7Rareza: &e&lLEGENDARIO"
+    - "&7Rango: &c&lRUBY"

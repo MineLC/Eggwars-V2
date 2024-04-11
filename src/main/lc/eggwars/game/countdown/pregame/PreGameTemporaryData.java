@@ -20,7 +20,7 @@ public final class PreGameTemporaryData {
         this.teamInventorySlots = teamInventorySlots;
     }
 
-    public void joinToTeam(final GameTeam playerTeam, final Player player, final GameInProgress game, final BaseTeam team) {
+    public void joinToTeam(final Player player, final GameInProgress game, final BaseTeam team) {
         GameTeam teamToJoin = game.getTeamPerBase().get(team);
 
         if (teamToJoin == null) {

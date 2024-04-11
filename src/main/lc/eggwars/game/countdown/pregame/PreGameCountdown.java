@@ -24,6 +24,7 @@ public class PreGameCountdown extends GameCountdown {
     private final Data data;
     private final CountdownCallback complete;
     private PreGameTemporaryData temporary;
+    private boolean alreadyFastStart = false;
 
     public PreGameCountdown(Data data, GameInProgress game, CountdownCallback completeCountdown, PreGameTemporaryData temporary) {
         this.data = data;
@@ -53,8 +54,9 @@ public class PreGameCountdown extends GameCountdown {
             }
             return;
         }
-        if (players.size() == game.getMapData().getMaxPlayers()) {
+        if (!alreadyFastStart && players.size() == game.getMapData().getMaxPlayers()) {
             countdown = data.messageTime;
+            alreadyFastStart = true;
         }
 
         players.forEach((player) -> player.setLevel(countdown));

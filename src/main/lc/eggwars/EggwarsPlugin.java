@@ -71,6 +71,7 @@ public class EggwarsPlugin extends JavaPlugin {
 
                 new StartSpawn(this).loadSpawn();
                 new StartPreGameData().loadMap(this);
+                new StartMaps(this, slimePlugin).load();
                 GameManagerThread.startThread();   
             } catch (Exception e) {
                 getServer().getScheduler().runTask(this, () -> Logger.error(e));
@@ -90,7 +91,6 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartPreGameData().loadItems(this);
         new StartSidebar(this).load();
         new StartEvents(this).load();
-        new StartMaps(this, slimePlugin).load();
 
         final ShopsData data = new StartShops().load(this);
         final SelectMapInventory selectMapInventory = new StartMapInventories().load(this);

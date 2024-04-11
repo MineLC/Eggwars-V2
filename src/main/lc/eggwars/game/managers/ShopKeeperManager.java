@@ -31,9 +31,10 @@ public final class ShopKeeperManager {
     public void send(final Player player, final GameInProgress game) {
         final TIntIterator shopsID = game.getMapData().getShopsID().iterator();
         final int shopID = PlayerDataStorage.getStorage().get(player.getUniqueId()).skinSelected;
+        final EntityLocation[] locations = game.getMapData().getShopSpawns();
 
-        for (final EntityLocation location : game.getMapData().getShopSpawns()) {
-            spawn(player, player.getWorld(), shopID, shopsID.next(), location);
+        for (final EntityLocation location : locations) {
+            spawn(player, game.getWorld(), shopID, shopsID.next(), location);
         }
     }
 

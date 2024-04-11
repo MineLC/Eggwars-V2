@@ -33,8 +33,10 @@ public final class TeamSelectorInventory {
             Messages.send(player, "team.balance");
             return;
         }
-        removeFromOldTeam(playerTeam, player, game);
-        data.joinToTeam(playerTeam, player, game, team);
+        if (playerTeam != null) {
+            removeFromOldTeam(playerTeam, player, game);
+        }
+        data.joinToTeam(player, game, team);
         player.sendMessage(Messages.get("team.join").replace("%team%", team.getKey()));
     }
 

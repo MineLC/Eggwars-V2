@@ -18,14 +18,10 @@ public final class StartMapInventories {
 
     public SelectMapInventory load(final EggwarsPlugin plugin) {
         final FileConfiguration config = plugin.loadConfig("inventories/gameselector");
-        final String teamSuffix = Messages.color(config.getString("suffix.team"));
-        final String soloSuffix = Messages.color(config.getString("suffix.solo"));
+
         final MapInventoryBuilder builder = new MapInventoryBuilder(
             getStateItems(config),
-            soloSuffix,
-            teamSuffix,
             getLore(config),
-            Messages.color(config.getString("title")),
             Messages.color(config.getString("games.time")),
             Messages.color(config.getString("games.max-persons"))
         );

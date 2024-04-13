@@ -19,14 +19,11 @@ public final class MapInventoryBuilder {
 
     private final List<String> gameLore;
     private final StateItem[] states;
-    private final String soloMode, teamMode, inventoryName, timeLineLore, maxPlayersPerTeamLore;
+    private final String timeLineLore, maxPlayersPerTeamLore;
 
-    MapInventoryBuilder(StateItem[] states, String soloMode, String teamMode, List<String> gameLore, String inventoryName, String timeLineLore, String maxPlayersPerTeamLore) {
+    MapInventoryBuilder(StateItem[] states, List<String> gameLore, String timeLineLore, String maxPlayersPerTeamLore) {
         this.states = states;
-        this.soloMode = soloMode;
-        this.teamMode = teamMode;
         this.gameLore = gameLore;
-        this.inventoryName = inventoryName;
         this.timeLineLore = timeLineLore;
         this.maxPlayersPerTeamLore = maxPlayersPerTeamLore;
     }
@@ -37,7 +34,7 @@ public final class MapInventoryBuilder {
         final Inventory inventory = Bukkit.createInventory(
             new MapSelectorInventoryHolder(maps),
             rows * 9,
-            inventoryName);
+            (soloMode) ? "SOLO" : "TEAM");
 
         int slot = 0;
 
@@ -69,17 +66,13 @@ public final class MapInventoryBuilder {
     private List<String> parseLore(final int amountPlayers, final long startedTime, final int maxPlayers, final int maxTeamPlayer, final GameState state) {
         final List<String> newLore = new ArrayList<>(gameLore.size());
         final String playersFormat = amountPlayers + "/" + maxPlayers;
-        final String mode = (maxTeamPlayer >= 2) ? teamMode : soloMode;
 
         for (final String line : gameLore) {
             if (line.isEmpty()) {
                 newLore.add("");
                 continue;
             }
-            newLore.add(line
-                .replace("%players%", playersFormat)
-                .replace("%mode%", mode)
-            );
+            newLore.add(line.replace("%players%", playersFormat));
         }
 
         if (state == GameState.IN_GAME || state == GameState.END_GAME) {

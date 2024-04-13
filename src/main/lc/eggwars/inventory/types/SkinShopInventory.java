@@ -64,7 +64,7 @@ public final class SkinShopInventory {
             event.getWhoClicked().getWorld(),
             skinClicked.id(),
             Integer.MAX_VALUE - 1,
-            new EntityLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getYaw(), loc.getPitch()));
+            new EntityLocation(loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ(), loc.getYaw(), loc.getPitch()));
 
         player.closeInventory();
         plugin.getServer().getScheduler().runTaskLater(

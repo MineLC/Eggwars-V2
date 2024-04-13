@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +89,19 @@ public final class StartMaps {
     private void loadMapData(final MapData[] maps, final File[] mapFiles, final Map<String, MapData> mapsPerName) {
         final Gson gson = new Gson();
         int index = 0;
-
-        for (final File mapFile : mapFiles) {
+        final List<File> ordenedFiles = new ArrayList<>();
+        for (final File file : mapFiles) {
+            ordenedFiles.add(file);
+        }
+        Collections.sort(ordenedFiles, new Comparator<File>() {
+            @Override
+            public int compare(File object1, File object2) {
+                final int value1 = object1.getName().charAt(0) - '0';
+                final int value2 = object2.getName().charAt(0) - '0';
+                return (value1 == value2) ? 0 : (value1 > value2) ? 1 : -1;
+            }
+        });
+        for (final File mapFile : ordenedFiles) {
             if (!mapFile.getName().endsWith(".json")) {
                 continue;
             }

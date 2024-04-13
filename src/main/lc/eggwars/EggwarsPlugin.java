@@ -118,9 +118,9 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerInteractListener(selectMapInventory), true);
 
         listeners.register(new ShopkeeperListener(), false);
-        listeners.register(new PlayerBreakListener(), true);
         listeners.register(new PlayerJoinListener(getConfig().getStringList("tab.header"), getConfig().getStringList("tab.footer")), true);  
         listeners.register(new PlayerQuitListener(), true);  
+        listeners.register(new PlayerBreakListener(), true);  
         listeners.register(new PlayerDropitemListener(), true);  
         listeners.register(new PlayerChatListener(), true);
         listeners.register(new PlayerSaturationEvent(), true);

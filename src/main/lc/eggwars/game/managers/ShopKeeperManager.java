@@ -48,6 +48,7 @@ public final class ShopKeeperManager {
         entity.locY = location.y() + ShopKeepersStorage.getStorage().skins().get(typeID).addHeight();
         entity.locZ = location.z() + 0.5D;
         entity.yaw = location.yaw();
+        entity.aK = location.yaw();
         entity.pitch = location.pitch();
     
         final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(entity, typeID);

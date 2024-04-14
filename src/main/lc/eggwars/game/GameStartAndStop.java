@@ -27,6 +27,10 @@ final class GameStartAndStop {
 
     void start(final EggwarsPlugin plugin, final GameInProgress game, final String worldName) {
         MapStorage.getStorage().load(worldName).thenAccept((none) -> {
+            if (game.getPlayers().isEmpty()) {
+                plugin.getServer().getScheduler().runTask(plugin, () -> Bukkit.unloadWorld(worldName, false));
+                return;
+            }
             final World world = Bukkit.getWorld(worldName);
             game.setWorld(world);
 

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.tinylog.Logger;
 
 import com.google.gson.Gson;
@@ -23,7 +24,6 @@ import com.google.gson.stream.JsonReader;
 import com.grinderwolf.swm.api.loaders.SlimeLoader;
 import com.grinderwolf.swm.plugin.SWMPlugin;
 
-import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 
 import lc.eggwars.EggwarsPlugin;
@@ -122,17 +122,12 @@ public final class StartMaps {
     private MapData loadMapData(final JsonMapData data, final int id) {
         final IntObjectHashMap<ClickableBlock> worldClickableBlocks = new IntObjectHashMap<>();
         final EntityLocation[] shopSpawns = getShopSpawns(data);
-        final TIntHashSet shopsID = new TIntHashSet(shopSpawns.length);
-        for (int i = 0; i < shopSpawns.length; i++) {
-            shopsID.add(-i);
-        }
 
         final MapData map = new MapData(
             worldClickableBlocks,
             getSpawns(data),
             getTeamEggs(data, worldClickableBlocks),
             getGenerators(data, worldClickableBlocks),
-            shopsID,
             shopSpawns,
             data.maxPersonsPerTeam(),
             data.borderSize(),
@@ -200,6 +195,7 @@ public final class StartMaps {
             size += generator.getValue().length;
         }
         final int pickupDistance = plugin.getConfig().getInt("generators.pickup-distance-blocks");
+        final int viewDistance = plugin.getConfig().getInt("generators.view-distance-blocks");
         final ClickableSignGenerator[] generatorsData = new ClickableSignGenerator[size];
         int index = 0;
 
@@ -212,14 +208,16 @@ public final class StartMaps {
             final String[] cordsAndLevels = generator.getValue();
 
             for (final String generatorString : cordsAndLevels) {
-                final String[] split = generatorString.split(":");
+                final String[] split = StringUtils.split(generatorString, ':');
                 final int defaultLevel = IntegerUtils.parsePositive(split[0]);
                 final BlockLocation location = BlockLocation.create(split[1]);
                 
-                final BlockLocation min = new BlockLocation(location.x() - pickupDistance, location.y() - pickupDistance, location.z() - pickupDistance);
-                final BlockLocation max = new BlockLocation(location.x() + pickupDistance, location.y() + pickupDistance, location.z() + pickupDistance);
+                final BlockLocation pickMin = new BlockLocation(location.x() - pickupDistance, location.y() - 1, location.z() - pickupDistance);
+                final BlockLocation pickMax = new BlockLocation(location.x() + pickupDistance, location.y() + 1, location.z() + pickupDistance);
+                final BlockLocation viewMin = new BlockLocation(location.x() - viewDistance, location.y() - viewDistance, location.z() - viewDistance);
+                final BlockLocation viewMax = new BlockLocation(location.x() + viewDistance, location.y() + viewDistance, location.z() + viewDistance);
 
-                final ClickableSignGenerator generatorData = new ClickableSignGenerator(location, min, max, defaultLevel, baseGenerator);
+                final ClickableSignGenerator generatorData = new ClickableSignGenerator(location, pickMin, pickMax, viewMin, viewMax, defaultLevel, baseGenerator);
 
                 generatorsData[index++] = generatorData;
                 clickableBlocks.put(location.hashCode(), generatorData);

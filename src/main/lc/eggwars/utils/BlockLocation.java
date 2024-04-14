@@ -1,5 +1,6 @@
 package lc.eggwars.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -42,7 +43,7 @@ public final class BlockLocation {
     }
 
     public static BlockLocation create(String text) {
-        final String[] split = text.split(",");
+        final String[] split = StringUtils.split(text, ',');
 
         return new BlockLocation(
             Integer.parseInt(split[0]),

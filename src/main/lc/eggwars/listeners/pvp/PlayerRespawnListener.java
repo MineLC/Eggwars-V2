@@ -52,7 +52,7 @@ public final class PlayerRespawnListener implements EventListener {
         player.setGameMode(GameMode.SPECTATOR);
 
         if (player.getKiller() != null) {
-            if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.FULLHEALTH) {
+            if (game.getActiveEvent() != null && game.getActiveEvent().eventType() == GameEventType.FULLHEALTH) {
                 player.getKiller().setHealth(20.0D);
                 player.getKiller().setFoodLevel(20);
                 player.getKiller().playSound(player.getLocation(), Sound.EAT, 1.0f, 1.0f);       

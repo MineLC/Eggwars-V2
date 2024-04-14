@@ -2,7 +2,6 @@ package lc.eggwars.mapsystem;
 
 import java.util.Map;
 
-import gnu.trove.set.hash.TIntHashSet;
 import io.netty.util.collection.IntObjectHashMap;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.clickable.ClickableSignGenerator;
@@ -16,7 +15,6 @@ public final class MapData {
     private final Map<BaseTeam, BlockLocation> spawns;
     private final Map<BaseTeam, BlockLocation> eggs;
     private final ClickableSignGenerator[] generators;
-    private final TIntHashSet shopKeepersID;
     private final EntityLocation[] shopSpawns;
     private final int maxPlayers;
     private final int maxPersonsPerTeam;
@@ -31,7 +29,6 @@ public final class MapData {
         Map<BaseTeam, BlockLocation> spawns,
         Map<BaseTeam, BlockLocation> eggs,
         ClickableSignGenerator[] generators,
-        TIntHashSet shopKeepersID,
         EntityLocation[] shopSpawns,
         int maxPersonsPerTeam,
         int borderSize,
@@ -44,7 +41,6 @@ public final class MapData {
         this.eggs = eggs;
         this.generators = generators;
         this.shopSpawns = shopSpawns;
-        this.shopKeepersID = shopKeepersID;
         this.maxPersonsPerTeam = maxPersonsPerTeam;
         this.borderSize = borderSize;
         this.maxPlayers = maxPersonsPerTeam * spawns.keySet().size();
@@ -79,10 +75,6 @@ public final class MapData {
 
     public EntityLocation[] getShopSpawns() {
         return shopSpawns;
-    }
-
-    public TIntHashSet getShopsID() {
-        return shopKeepersID;
     }
 
     public int getMaxPersonsPerTeam() {

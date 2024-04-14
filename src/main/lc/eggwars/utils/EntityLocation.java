@@ -1,5 +1,6 @@
 package lc.eggwars.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 public final class EntityLocation {
@@ -52,7 +53,7 @@ public final class EntityLocation {
     }
 
     public static EntityLocation create(String text) {
-        final String[] split = text.split(",");
+        final String[] split = StringUtils.split(text, ',');
 
         return new EntityLocation(
             Integer.parseInt(split[0]),

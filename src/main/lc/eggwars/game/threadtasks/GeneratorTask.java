@@ -1,8 +1,9 @@
 package lc.eggwars.game.threadtasks;
 
-import java.util.List;
+import java.util.Set;
 
-import org.bukkit.GameMode;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameState;
@@ -12,7 +13,6 @@ import lc.eggwars.mapsystem.MapData;
 import lc.eggwars.utils.BlockLocation;
 import lc.eggwars.utils.InventoryUtils;
 
-import net.minecraft.server.v1_8_R3.Chunk;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
@@ -43,16 +43,16 @@ public final class GeneratorTask {
             }
 
             generator.addOneSecond();
-
+            final Set<Player> players = game.getPlayers();
             if (generator.getWaitToSpawn() != generator.getWaitedTime()) {
-                if (generator.getAmount() == 0 || generator.getEntitiesInNearbyChunks() == 0) {
+                if (generator.getAmount() == 0) {
                     continue;
                 }
                 if (generator.canRefreshItem()) {
-                    tryPickupItemAndRegenerate(generator);
+                    tryPickupItemAndRegenerate(generator, players);
                     continue;
                 }
-                tryPickupItem(generator);
+                tryPickupItem(generator, players);
                 continue;
             }
         
@@ -63,66 +63,53 @@ public final class GeneratorTask {
             }
         
             generator.resetWaitedTime();
-        
-            if (generator.getEntitiesInNearbyChunks() != 0) {
-                tryPickupItemAndRegenerate(generator);
-            }
+            tryPickupItemAndRegenerate(generator, players);
         }
     }
 
-    private void tryPickupItem(final TemporaryGenerator generator) {
+    private void tryPickupItem(final TemporaryGenerator generator, final Set<Player> players) {
         final ClickableSignGenerator data = generator.getData();
-        final Chunk[] chunks = generator.getChunks();
 
-        for (final Chunk nearbyChunk : chunks) {
-            final List<Entity> entities = generator.getEntities(nearbyChunk);
+        for (final Player bukkitPlayer : players) {
+            final EntityPlayer player = ((CraftPlayer)bukkitPlayer).getHandle();
+            final int playerX = (int)player.locX;
+            final int playerY = (int)player.locY;
+            final int playerZ = (int)player.locZ;
 
-            for (final Entity entity : entities) {
-                if (!(entity instanceof EntityPlayer entityPlayer)
-                    || entityPlayer.getBukkitEntity().getGameMode() == GameMode.SPECTATOR) {
-                    continue;
-                }
-                final int playerX = (int)entityPlayer.locX;
-                final int playerY = (int)entityPlayer.locY;
-                final int playerZ = (int)entityPlayer.locZ;
-                if (isNearby(data.getMinLocation(), data.getMaxLocation(), playerX, playerY, playerZ)) {
-                    pickupItem(generator, entityPlayer);
-                    destroyItem(generator.getEntityItem().getId(), generator);
-                    break;
-                }
+            if (isEnter(data.getMinView(), data.getMaxPickup(), playerX, playerY, playerZ)) {
+                pickupItem(generator, player);
+                destroyItem(generator, player);
+                break;
             }
             continue;
         }
     }
 
-    private void tryPickupItemAndRegenerate(final TemporaryGenerator generator) {
+    private void tryPickupItemAndRegenerate(final TemporaryGenerator generator, final Set<Player> players) {
         final Entity item = generator.getEntityItem();
         item.setCustomName(String.valueOf(generator.getAmount()));
         item.d(generator.hashCode());
-
+        
         final PacketPlayOutSpawnEntity packetEntity = new PacketPlayOutSpawnEntity(item, 2, item.getId());
         final PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(item.getId(), item.getDataWatcher(), true);
+    
         final ClickableSignGenerator data = generator.getData();
-        final Chunk[] chunks = generator.getChunks();
 
-        for (final Chunk nearbyChunk : chunks) {
-            final List<Entity> entities = generator.getEntities(nearbyChunk);
+        for (final Player bukkitPlayer : players) {
+            final EntityPlayer player = ((CraftPlayer)bukkitPlayer).getHandle();
+            final int playerX = (int)player.locX;
+            final int playerY = (int)player.locY;
+            final int playerZ = (int)player.locZ;
 
-            for (final Entity entity : entities) {
-                if (!(entity instanceof EntityPlayer entityPlayer)
-                    || entityPlayer.getBukkitEntity().getGameMode() == GameMode.SPECTATOR) {
-                    continue;
-                }
-                final int playerX = (int)entityPlayer.locX;
-                final int playerY = (int)entityPlayer.locY;
-                final int playerZ = (int)entityPlayer.locZ;
-                if (isNearby(data.getMinLocation(), data.getMaxLocation(), playerX, playerY, playerZ)) {
-                    pickupItem(generator, entityPlayer);
-                    destroyItem(item.getId(), generator);
+            if (isEnter(data.getMinView(), data.getMaxView(), playerX, playerY, playerZ)) {
+                if (isEnter(data.getMinPickup(), data.getMaxPickup(), playerX, playerY, playerZ)) {
+                    pickupItem(generator, player);
+                    destroyItem(generator, player);
                     break;
                 }
-                entityPlayer.playerConnection.networkManager.handle(packetEntity);
-                entityPlayer.playerConnection.networkManager.handle(meta);
+                player.playerConnection.networkManager.handle(packetEntity);
+                player.playerConnection.networkManager.handle(meta);
+                break;
             }
             continue;
         }
@@ -135,22 +122,12 @@ public final class GeneratorTask {
         player.playerConnection.networkManager.handle(itemPickupSound);
     }
 
-    private void destroyItem(final int itemId, final TemporaryGenerator generator) {
-        final PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(itemId);
-        final Chunk[] chunks = generator.getChunks();
-        for (final Chunk nearbyChunk : chunks) {
-            final List<Entity> entities = generator.getEntities(nearbyChunk);
-
-            for (final Entity entity : entities) {
-                if (!(entity instanceof EntityPlayer entityPlayer)) {
-                    continue;
-                }
-                entityPlayer.playerConnection.networkManager.handle(destroy);
-            }
-        }
+    private void destroyItem(final TemporaryGenerator generator, final EntityPlayer player) {
+        final PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(generator.hashCode());
+        player.playerConnection.networkManager.handle(destroy);
     }
    
-    private static final boolean isNearby(final BlockLocation min, final BlockLocation max, final int x, final int y, final int z) {
+    private static final boolean isEnter(final BlockLocation min, final BlockLocation max, final int x, final int y, final int z) {
         return
             x >= min.x() &&
             x <= max.x() &&

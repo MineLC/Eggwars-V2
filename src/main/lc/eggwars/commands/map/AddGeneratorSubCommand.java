@@ -54,7 +54,7 @@ final class AddGeneratorSubCommand implements MapSubCommand {
             return;
         }
 
-        final ClickableSignGenerator generator = new ClickableSignGenerator(location, location, location, level, baseGenerator);
+        final ClickableSignGenerator generator = new ClickableSignGenerator(location, null, null, null, null, level, baseGenerator);
         data.addGenerator(generator);
         GeneratorStorage.getStorage().setLines(targetBlock, baseGenerator, level);
 

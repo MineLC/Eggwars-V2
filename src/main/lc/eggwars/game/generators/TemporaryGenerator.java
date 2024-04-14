@@ -23,10 +23,10 @@ public final class TemporaryGenerator {
 
     private int waitedTime = 0;
     private int itemsAmount = 0;
-    private Chunk[] generatorChunks;
 
     private BaseGenerator.Level currentLevel;
     private int level;
+    public boolean needDeletePacket = false;
 
     public TemporaryGenerator(
         int level,
@@ -64,10 +64,6 @@ public final class TemporaryGenerator {
 
     public void addOneSecond() {
         ++waitedTime;
-    }
-
-    public void update(Chunk[] chunks) {
-        this.generatorChunks = chunks;
     }
 
     public int getHeight() {
@@ -120,22 +116,6 @@ public final class TemporaryGenerator {
 
     public ClickableSignGenerator getData() {
         return data;
-    }
-
-    public int getEntitiesInNearbyChunks() {
-        return getEntities(generatorChunks[0]).size() +
-            getEntities(generatorChunks[1]).size() +
-            getEntities(generatorChunks[2]).size() +
-            getEntities(generatorChunks[3]).size() +
-            getEntities(generatorChunks[4]).size() +
-            getEntities(generatorChunks[5]).size() +
-            getEntities(generatorChunks[6]).size() +
-            getEntities(generatorChunks[7]).size() +
-            getEntities(generatorChunks[8]).size();
-    }
-
-    public Chunk[] getChunks() {
-        return generatorChunks;
     }
 
     @Override

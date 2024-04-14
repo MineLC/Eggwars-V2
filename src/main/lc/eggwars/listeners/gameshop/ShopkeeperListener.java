@@ -9,7 +9,6 @@ import lc.eggwars.game.GameState;
 import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeepersData;
-
 import lc.lcspigot.events.PreInteractEntityEvent;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
@@ -38,8 +37,8 @@ public final class ShopkeeperListener implements EventListener {
         if (game == null || game.getState() != GameState.IN_GAME) {
             return;
         }
-
-        if (game.getMapData().getShopsID().contains(event.getEntityID())) {
+        final int shops = game.getMapData().getShopSpawns().length;
+        if (event.getEntityID() >= (Integer.MAX_VALUE - shops)){
             final ShopkeepersData.Skin skin = ShopKeepersStorage.getStorage().skins().get(event.getEntityID());
             if (skin != null) {
                 player.sendMessage(skin.message());

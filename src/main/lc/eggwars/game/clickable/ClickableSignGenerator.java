@@ -19,16 +19,26 @@ import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 public final class ClickableSignGenerator implements ClickableBlock {
 
-    private final BlockLocation loc, min, max;
+    private final BlockLocation loc, pickMin, pickMax, viewMin, viewMax;
     private final int defaultLevel;
     private final BaseGenerator base;
 
     private TemporaryGenerator temporaryGenerator;
 
-    public ClickableSignGenerator(BlockLocation loc, BlockLocation min, BlockLocation max, int defaultLevel, BaseGenerator base) {
+    public ClickableSignGenerator(
+        BlockLocation loc,
+        BlockLocation pickMin,
+        BlockLocation pickMax,
+        BlockLocation viewMin,
+        BlockLocation viewMax,
+        int defaultLevel,
+        BaseGenerator base
+    ) {
         this.loc = loc;
-        this.min = min;
-        this.max = max;
+        this.pickMin = pickMin;
+        this.pickMax = pickMax;
+        this.viewMin = viewMin;
+        this.viewMax = viewMax;
         this.defaultLevel = defaultLevel;
         this.base = base;
     }
@@ -69,9 +79,10 @@ public final class ClickableSignGenerator implements ClickableBlock {
 
     public void setGenerator(final World world, final int id) {
         final GeneratorEntityItem item = new GeneratorEntityItem();
-        item.locX = loc.x();
-        item.locY = loc.y();
-        item.locZ = loc.z();
+        item.locX = loc.x() + 0.5D;
+        item.locY = loc.y() + 0.5D;
+        item.locZ = loc.z() + 0.5D;
+        item.d(id);
 
         item.setCustomNameVisible(true);
         item.setItemStack(base.drop());
@@ -100,11 +111,16 @@ public final class ClickableSignGenerator implements ClickableBlock {
         return false;
     }
 
-    public BlockLocation getMinLocation() {
-        return min;
+    public BlockLocation getMinPickup() {
+        return pickMin;
     }
-
-    public BlockLocation getMaxLocation() {
-        return max;
+    public BlockLocation getMinView() {
+        return viewMin;
+    }
+    public BlockLocation getMaxPickup() {
+        return pickMax;
+    }
+    public BlockLocation getMaxView() {
+        return viewMax;
     }
 }

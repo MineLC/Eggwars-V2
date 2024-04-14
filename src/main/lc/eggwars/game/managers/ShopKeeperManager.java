@@ -7,14 +7,11 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import gnu.trove.iterator.TIntIterator;
 import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.shop.shopkeepers.ShopKeepersStorage;
 import lc.eggwars.game.shop.shopkeepers.ShopkeeperEntity;
 import lc.eggwars.utils.EntityLocation;
-
-
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
@@ -29,12 +26,11 @@ public final class ShopKeeperManager {
     }
 
     public void send(final Player player, final GameInProgress game) {
-        final TIntIterator shopsID = game.getMapData().getShopsID().iterator();
         final int shopID = PlayerDataStorage.getStorage().get(player.getUniqueId()).skinSelected;
         final EntityLocation[] locations = game.getMapData().getShopSpawns();
-
+        int shopKeeperID = Integer.MAX_VALUE;
         for (final EntityLocation location : locations) {
-            spawn(player, game.getWorld(), shopID, shopsID.next(), location);
+            spawn(player, game.getWorld(), shopID, --shopKeeperID, location);
         }
     }
 
@@ -52,14 +48,14 @@ public final class ShopKeeperManager {
         entity.pitch = location.pitch();
     
         final PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(entity, typeID);
-        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true);
+        final PacketPlayOutEntityMetadata data = new PacketPlayOutEntityMetadata(entityID, entity.getDataWatcher(), true);
     
         ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(spawn);
         ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(data);
-        return entity.getId();
+        return entityID;
     }
 
     public void deleteEntity(final int id, final Player player) {
-        ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(new PacketPlayOutEntityDestroy(id));
+        ((CraftPlayer)player).getHandle().playerConnection.networkManager.handle(new PacketPlayOutEntityDestroy(id - player.getEntityId()));
     }
 }

@@ -29,7 +29,8 @@ public final class GameInProgress {
     private GameCountdown countdown;
 
     private GameEvent[] events;
-    private int currentEvent = 0;
+    private int currentEventIndex = 0;
+    private GameEvent activeEvent;
 
     private long startTime;
 
@@ -89,16 +90,20 @@ public final class GameInProgress {
         return events;
     }
 
-    public GameEvent getCurrentEvent() {
-        return (currentEvent >= events.length) ? null : events[currentEvent];
+    public GameEvent getActiveEvent() {
+        return activeEvent;
     }
 
-    public int getCurrentEventIndex() {
-        return currentEvent;
+    public void setActiveEvent(final GameEvent event) {
+        this.activeEvent = event;
+    }
+
+    public GameEvent getNextEvent() {
+        return (currentEventIndex >= events.length) ? null : events[currentEventIndex];
     }
 
     public void nextEvent() {
-        currentEvent++;
+        currentEventIndex++;
     }
 
     public void setEvents(final GameEvent[] events) {

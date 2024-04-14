@@ -19,7 +19,6 @@ import lc.eggwars.game.countdown.pregame.PreGameCountdown;
 import lc.eggwars.game.pregame.PregameStorage;
 import lc.eggwars.inventory.types.SelectMapInventory;
 import lc.eggwars.mapsystem.MapStorage;
-import lc.eggwars.others.selectgame.MapInventoryBuilder;
 import lc.eggwars.others.spawn.SpawnStorage;
 import lc.eggwars.others.specialitems.JumpPadItem;
 import lc.eggwars.others.specialitems.PlatformItem;

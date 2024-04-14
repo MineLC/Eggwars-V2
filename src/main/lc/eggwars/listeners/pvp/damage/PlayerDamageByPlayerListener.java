@@ -31,7 +31,7 @@ public final class PlayerDamageByPlayerListener implements EventListener {
 
         final GameInProgress game = GameStorage.getStorage().getGame(event.getDamager().getUniqueId());
         if (game == null || game.getState() != GameState.IN_GAME
-            || (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.TREASON)) {
+            || (game.getActiveEvent() != null && game.getActiveEvent().eventType() == GameEventType.TREASON)) {
             return;
         }
 
@@ -48,11 +48,11 @@ public final class PlayerDamageByPlayerListener implements EventListener {
             return;
         }
 
-        if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.CRITICAL) {
+        if (game.getActiveEvent() != null && game.getActiveEvent().eventType() == GameEventType.CRITICAL) {
             event.setDamage(event.getDamage() + (event.getDamage() / 100) * 25);
             return;
         }
-        if (game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.ONEDAMAGE) {
+        if (game.getActiveEvent() != null && game.getActiveEvent().eventType() == GameEventType.ONEDAMAGE) {
             event.setDamage(1);
         }
     }

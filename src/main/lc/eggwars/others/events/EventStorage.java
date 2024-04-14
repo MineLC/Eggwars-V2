@@ -55,13 +55,13 @@ public final class EventStorage {
         return events;
     }
 
-    public void loadEvent(final GameInProgress game, final GameEventType type) {
+    public void loadEvent(final GameInProgress game, final GameEvent event) {
         if (game.getState() != GameState.IN_GAME) {
             return;
         }
         final EventCountdown countdown = new EventCountdown(game);
 
-        switch (type) {
+        switch (event.eventType()) {
             case DEATHMATCH:
                 countdown.setTask(new DeathMatchEvent(game, deathMatchData, plugin));
                 Messages.send(game.getPlayers(), "death-match.start-message");
@@ -69,7 +69,7 @@ public final class EventStorage {
                 break;
             case TREASON:
                 Messages.send(game.getPlayers(), "treason.start-message");
-                countdown.setDuration(game.getCurrentEvent().duration());
+                countdown.setDuration(event.duration());
                 break;
             case FATIGUE:
                 Messages.send(game.getPlayers(), "fatigue.start-message");
@@ -83,23 +83,27 @@ public final class EventStorage {
                 Messages.send(game.getPlayers(), "rush.start-message");
                 new PotionEvent(potionEvents.rush(), game).execute(plugin);
                 return;
-
             case FULLHEALTH:
                 Messages.send(game.getPlayers(), "fullheath.start-message");
+                countdown.setDuration(event.duration());
                 break;
             case CRITICAL:
                 Messages.send(game.getPlayers(), "critical.start-message");
+                countdown.setDuration(event.duration());
                 break;
             case ONEDAMAGE:
                 Messages.send(game.getPlayers(), "onedamage.start-message");
+                countdown.setDuration(event.duration());
                 break;
             case DISCOUNT:
                 Messages.send(game.getPlayers(), "discount.start-message");
+                countdown.setDuration(event.duration());
                 break;
         }
 
         countdown.setId(plugin.getServer().getScheduler().runTaskTimer(plugin, countdown, 20, 0).getTaskId());
         game.setCountdown(countdown);
+        game.setActiveEvent(event);
     }
 
     public static EventStorage getStorage() {

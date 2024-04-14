@@ -53,7 +53,7 @@ public final class GameShopInventory {
 
         int amount = InventoryUtils.getAmount(item.needItem(), inventory);
         final GameInProgress game = GameStorage.getStorage().getGame(player.getUniqueId());
-        if (game != null && game.getCurrentEvent() != null && game.getCurrentEvent().eventType() == GameEventType.DISCOUNT) {
+        if (game != null && game.getActiveEvent() != null && game.getActiveEvent().eventType() == GameEventType.DISCOUNT) {
             amount /= 2;
         }
 

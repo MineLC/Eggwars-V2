@@ -59,7 +59,6 @@ public final class InventoryUtils {
             }
             inventory.items[index++] = null;
         }
-        inventory.update();
     }
 
     public static int addItem(final ItemStack item, final int amount, final PlayerInventory inventory) {

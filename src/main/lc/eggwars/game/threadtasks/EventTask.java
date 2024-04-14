@@ -16,23 +16,23 @@ public final class EventTask {
 
     public void execute(final MapData map, final long time) {
         final GameInProgress game = map.getGameInProgress();
-        if (game.getState() != GameState.IN_GAME || game.getCurrentEventIndex() >= game.getEvents().length) {
+        if (game.getState() != GameState.IN_GAME || game.getNextEvent() == null) {
             return;
         }
 
         final long secondsTranscurred = (time - game.getStartedTime()) / 1000;
 
-        if (secondsTranscurred >= game.getCurrentEvent().secondToStart()) {
-            EventStorage.getStorage().loadEvent(game, game.getCurrentEvent().eventType());
+        if (secondsTranscurred >= game.getNextEvent().secondToStart()) {
+            EventStorage.getStorage().loadEvent(game, game.getNextEvent());
             game.nextEvent();
             return;
         }
 
-        final long secondsToStart = game.getCurrentEvent().secondToStart() - secondsTranscurred;
+        final long secondsToStart = game.getNextEvent().secondToStart() - secondsTranscurred;
 
         if (secondsToStart < 10) {
             final String message = Messages.get("events.spam-message")
-                .replace("%event%", game.getCurrentEvent().name())
+                .replace("%event%", game.getNextEvent().name())
                 .replace("%time%", String.valueOf(secondsToStart));
 
             final Set<Player> players = game.getPlayers();

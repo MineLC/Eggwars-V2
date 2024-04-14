@@ -38,5 +38,6 @@ shopkeepers:
 
 generators:
   pickup-distance-blocks: 2
+  view-distance-blocks: 5
 
 win-celebration-duration-in-seconds: 10

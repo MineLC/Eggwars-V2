@@ -5,6 +5,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import lc.eggwars.game.GameInProgress;
+import lc.eggwars.game.GameStorage;
 import lc.eggwars.game.countdown.CountdownCallback;
 import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.messages.Messages;
@@ -38,6 +39,11 @@ public class PreGameCountdown extends GameCountdown {
 
     @Override
     public void run() {
+        if (players.isEmpty()) {
+            GameStorage.getStorage().stop(game);
+            return;
+        }
+
         if (countdown % data.sidebarUpdateTime == 0) {
             final EggwarsSidebar sidebar = SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME);
             sidebar.send(players);   

@@ -76,7 +76,7 @@ public final class GeneratorTask {
             final int playerY = (int)player.locY;
             final int playerZ = (int)player.locZ;
 
-            if (isEnter(data.getMinView(), data.getMaxPickup(), playerX, playerY, playerZ)) {
+            if (isEnter(data.getMinPickup(), data.getMaxPickup(), playerX, playerY, playerZ)) {
                 pickupItem(generator, player);
                 destroyItem(generator, player);
                 break;

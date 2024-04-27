@@ -11,6 +11,7 @@ import lc.eggwars.game.countdown.GameCountdown;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.tab.TabStorage;
 import lc.eggwars.teams.GameTeam;
 
 public class EndgameCountdown extends GameCountdown  {
@@ -36,10 +37,14 @@ public class EndgameCountdown extends GameCountdown  {
                 if (team != null) {
                     team.remove(player);
                 }
+                TabStorage.getStorage().removePlayers(player, gamePlayers);
+
                 SpawnStorage.getStorage().sendToSpawn(player);
                 SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
                 GameStorage.getStorage().remove(player.getUniqueId());
                 player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));
+
+                TabStorage.getStorage().sendPlayerInfo(player, SpawnStorage.getStorage().getPlayers());
             }
             game.setCountdown(null);
             GameStorage.getStorage().stop(game);

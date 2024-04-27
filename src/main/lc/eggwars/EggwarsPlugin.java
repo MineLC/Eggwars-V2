@@ -37,6 +37,7 @@ import lc.eggwars.listeners.pvp.damage.EntityDamageListener;
 import lc.eggwars.listeners.pvp.damage.PlayerDamageByPlayerListener;
 import lc.eggwars.mapsystem.MapCreatorData;
 import lc.eggwars.mapsystem.StartMaps;
+import lc.eggwars.messages.Messages;
 import lc.eggwars.messages.StartMessages;
 import lc.eggwars.others.deaths.StartDeaths;
 import lc.eggwars.others.events.StartEvents;
@@ -45,6 +46,7 @@ import lc.eggwars.others.levels.StartLevels;
 import lc.eggwars.others.selectgame.StartMapInventories;
 import lc.eggwars.others.sidebar.StartSidebar;
 import lc.eggwars.others.spawn.StartSpawn;
+import lc.eggwars.others.tab.StartTab;
 import lc.eggwars.teams.StartTeams;
 
 import lc.lcspigot.commands.CommandStorage;
@@ -91,6 +93,7 @@ public class EggwarsPlugin extends JavaPlugin {
         new StartPreGameData().loadItems(this);
         new StartSidebar(this).load();
         new StartEvents(this).load();
+        new StartTab().load(this);
 
         final ShopsData data = new StartShops().load(this);
         final SelectMapInventory selectMapInventory = new StartMapInventories().load(this);
@@ -118,7 +121,8 @@ public class EggwarsPlugin extends JavaPlugin {
         listeners.register(new PlayerInteractListener(selectMapInventory), true);
 
         listeners.register(new ShopkeeperListener(), false);
-        listeners.register(new PlayerJoinListener(getConfig().getStringList("tab.header"), getConfig().getStringList("tab.footer")), true);  
+        listeners.register(new PlayerJoinTabInfoListener(), false);
+        listeners.register(new PlayerJoinListener(Messages.color(getConfig().getString("join"))), true);  
         listeners.register(new PlayerQuitListener(), true);  
         listeners.register(new PlayerBreakListener(), true);  
         listeners.register(new PlayerDropitemListener(), true);  

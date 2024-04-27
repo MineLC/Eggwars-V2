@@ -10,6 +10,8 @@ sign-lines:
 
 disable-default-world: "world"
 
+join: " &a se ha unido"
+
 tab:
   header:
     - ""

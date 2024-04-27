@@ -28,6 +28,7 @@ import lc.eggwars.others.selectgame.MapSelectorInventoryHolder;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.tab.TabStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 import lc.eggwars.utils.InventoryUtils;
@@ -136,6 +137,9 @@ public class PlayerInventoryClickListener implements EventListener {
             GameStorage.getStorage().join(map.toString(), game, player);
             SidebarStorage.getStorage().getSidebar(SidebarType.PREGAME).send(player);
 
+            TabStorage.getStorage().removePlayers(player, SpawnStorage.getStorage().getPlayers());
+            TabStorage.getStorage().sendPlayerInfo(player, game.getPlayers());
+
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(PregameStorage.getStorage().mapLocation());
     
@@ -148,6 +152,10 @@ public class PlayerInventoryClickListener implements EventListener {
         player.teleport(game.getWorld().getSpawnLocation());  
         GameStorage.getStorage().join(map.toString(), game, player);
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(player);
+
+        TabStorage.getStorage().removePlayers(player, SpawnStorage.getStorage().getPlayers());
+        TabStorage.getStorage().sendPlayerInfo(player, game.getPlayers());
+
         showPlayers(player, game.getPlayers());
     }
 

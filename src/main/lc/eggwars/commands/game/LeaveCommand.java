@@ -11,6 +11,7 @@ import lc.eggwars.game.GameStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
 import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.tab.TabStorage;
 
 public final class LeaveCommand implements Command {
 
@@ -24,6 +25,7 @@ public final class LeaveCommand implements Command {
         }
 
         GameStorage.getStorage().leave(game, player, true);
+        TabStorage.getStorage().removePlayers(player, game.getPlayers());
         SpawnStorage.getStorage().sendToSpawn(player);
         SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
 
@@ -32,6 +34,7 @@ public final class LeaveCommand implements Command {
             otherPlayer.hidePlayer(player);
             player.hidePlayer(otherPlayer);
         }
+        TabStorage.getStorage().sendPlayerInfo(player, SpawnStorage.getStorage().getPlayers());
         player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));
         send(player, "Has salido del juego");
     }

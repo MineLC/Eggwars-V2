@@ -26,20 +26,20 @@ public class LevelStorage {
             : null;
 
         victim.deaths++;
-        tryLevelUp(death, victim.deaths, victim, player);
+        tryGainRewards(death, victim.deaths, victim, player);
 
         if (killer != null) {
             killer.kills++;
-            tryLevelUp(kill, killer.kills, killer, player.getKiller());
+            tryGainRewards(kill, killer.kills, killer, player.getKiller());
         }
 
         if (finalKill) {
             victim.deaths++;
-            tryLevelUp(finalDeath, victim.finalKills, victim, player);
+            tryGainRewards(finalDeath, victim.finalKills, victim, player);
 
             if (killer != null) {
                 killer.finalKills++;
-                tryLevelUp(this.finalKill, killer.finalKills, killer, player.getKiller());
+                tryGainRewards(this.finalKill, killer.finalKills, killer, player.getKiller());
             }
         }
     }
@@ -47,33 +47,34 @@ public class LevelStorage {
     public void win(final Player player) {
         final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
         data.wins++;
-        tryLevelUp(wins, data.wins, data, player);
+        tryGainRewards(wins, data.wins, data, player);
     }
 
-    private void tryLevelUp(final LevelStat levelStat, int stats, final PlayerData data, final Player player) {
-        if (stats % levelStat.need() == 0) {
+    private void tryGainRewards(final LevelStat levelStat, int stats, final PlayerData data, final Player player) {
+        if (levelStat.lcoinsEvery() > 0 && stats % levelStat.lcoinsEvery() == 0) {
             data.coins += levelStat.addlcoins();
-            player.sendMessage(buildMessage(
-                levelStat,
-                data.level,
-                data.level += levelStat.increaseLevels()));
+            player.sendMessage(buildLcoinsMessage(levelStat));
+        }
+
+        if (levelStat.levelUpEvery() > 0 && stats % levelStat.levelUpEvery() == 0) {
+            player.sendMessage(buildLevelUpMessage(levelStat, data.level, data.level++));
         }
     }
 
-    private String buildMessage(final LevelStat stat, final int oldLevel, final int newLevel) {
+    public int getLevels(final PlayerData data) {
+        int levels = 0;
+        levels += (kill.levelUpEvery() > 0) ? data.kills % kill.levelUpEvery() : 0;
+        levels += (death.levelUpEvery() > 0) ? data.deaths % death.levelUpEvery() : 0;
+        levels += (wins.levelUpEvery() > 0) ? data.wins % wins.levelUpEvery() : 0;
+        levels += (finalKill.levelUpEvery() > 0) ? data.finalKills % finalKill.levelUpEvery() : 0;
+        levels += (finalDeath.levelUpEvery() > 0) ? data.finalDeaths % finalDeath.levelUpEvery() : 0;
+        return levels;
+    }
+
+    private String buildLcoinsMessage(final LevelStat stat) {
         final StringBuilder builder = new StringBuilder();
         builder.append('\n');
         builder.append(stat.prefix());
-
-        if (oldLevel != newLevel) {
-            builder.append(ChatColor.GREEN);
-            builder.append("    Lv ");
-            builder.append((oldLevel < newLevel) ? ChatColor.GREEN : ChatColor.RED);
-            builder.append(oldLevel);
-            builder.append(" -> ");
-            builder.append(newLevel);
-            builder.append('\n');
-        }
         if (stat.addlcoins() != 0) {
             builder.append(ChatColor.GOLD);
             builder.append("    LCoins ");
@@ -81,6 +82,20 @@ public class LevelStorage {
             builder.append(stat.addlcoins());
             builder.append('\n');
         }
+        return builder.toString();
+    }
+
+    private String buildLevelUpMessage(final LevelStat stat, final int oldLevel, final int newLevel) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append('\n');
+        builder.append(stat.prefix());
+        builder.append(ChatColor.GREEN);
+        builder.append("    Nivel ");
+        builder.append(oldLevel);
+        builder.append(" -> ");
+        builder.append(newLevel);
+        builder.append('\n');
+
         return builder.toString();
     }
 

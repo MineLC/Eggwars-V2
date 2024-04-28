@@ -35,6 +35,7 @@
             <groupId>com.github.MineLC</groupId>
             <artifactId>LCSpigot</artifactId>
             <version>0.1.0-Minimal</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.ichocomilk</groupId>
@@ -53,7 +54,7 @@
             <artifactId>slimeworldmanager-api</artifactId>
             <version>2.2.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/slimeworld-plugin-2.2.0-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/libs/slimeworldmanager-plugin-2.2.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>obed.me</groupId>

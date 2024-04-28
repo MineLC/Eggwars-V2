@@ -1,27 +1,30 @@
 kills:
   prefix: "&6&lAsesinatos&7: "
-  every: 10
-  level-up: 1
-  add-lcoins: 20
+  lcoins-every: 2
+  lcoins: 20
+ 
+  levelup-every: 10
 
 final-kills:
   prefix: "&b&lAsesinatos finales&7: "
-  every: 3
-  level-up: 1
-  add-lcoins: 10
+  lcoins-every: 1
+  lcoins: 10
+ 
+  levelup-every: 5
 
 final-deaths:
   prefix: "&c&lMuerte Final&7: "
-  every: 1
-  level-up: -1
+  lcoins-every: 1
+  lcoins: 2
 
 wins:
   prefix: "&a&lVictoria&7: "
-  every: 1
-  level-up: 2
-  add-lcoins: 10
+  lcoins-every: 1
+  lcoins: 10
+ 
+  levelup-every: 5
 
 deaths:
   prefix: "&c&lMuerte&7: "
-  every: 5
-  level-up: -2
+  lcoins-every: 3
+  lcoins: 1

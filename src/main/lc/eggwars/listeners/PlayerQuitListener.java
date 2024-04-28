@@ -12,7 +12,8 @@ import lc.eggwars.database.mongodb.PlayerData;
 import lc.eggwars.database.mongodb.PlayerDataStorage;
 import lc.eggwars.game.GameInProgress;
 import lc.eggwars.game.GameStorage;
-
+import lc.eggwars.others.spawn.SpawnStorage;
+import lc.eggwars.others.tab.TabStorage;
 import lc.lcspigot.listeners.EventListener;
 import lc.lcspigot.listeners.ListenerData;
 
@@ -30,7 +31,11 @@ public final class PlayerQuitListener implements EventListener {
         
         if (game != null) {
             GameStorage.getStorage().leave(game, player, true);
+            TabStorage.getStorage().removeOnePlayer(player, game.getPlayers());
+        } else if (SpawnStorage.getStorage().isInSpawn(player)) {
+            TabStorage.getStorage().removeOnePlayer(player, SpawnStorage.getStorage().getPlayers());
         }
+
         CompletableFuture.runAsync(() -> {
             final PlayerData data = PlayerDataStorage.getStorage().get(player.getUniqueId());
             MongoDBManager.getManager().saveData(player.getUniqueId(), data);

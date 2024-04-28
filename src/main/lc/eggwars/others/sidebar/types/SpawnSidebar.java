@@ -42,6 +42,7 @@ public final class SpawnSidebar implements EggwarsSidebar {
         }
         sidebar.setTitle(title);
         sidebar.setLines(sidebar.createLines(parsedLines));
+        sidebar.delete(player);
         sidebar.sendLines(player);
         sidebar.sendTitle(player);
     }

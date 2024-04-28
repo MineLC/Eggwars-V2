@@ -27,15 +27,17 @@ public final class LeaveCommand implements Command {
         GameStorage.getStorage().leave(game, player, true);
         TabStorage.getStorage().removePlayers(player, game.getPlayers());
         SpawnStorage.getStorage().sendToSpawn(player);
-        SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
 
         final Set<Player> players = game.getPlayers();
         for (final Player otherPlayer : players) {
             otherPlayer.hidePlayer(player);
             player.hidePlayer(otherPlayer);
         }
+        TabStorage.getStorage().removeOnePlayer(player, players);
         TabStorage.getStorage().sendPlayerInfo(player, SpawnStorage.getStorage().getPlayers());
         player.getActivePotionEffects().forEach((potion) -> player.removePotionEffect(potion.getType()));
         send(player, "Has salido del juego");
+
+        SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
     }
 }

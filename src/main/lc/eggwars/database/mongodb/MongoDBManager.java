@@ -14,6 +14,7 @@ import com.mongodb.client.model.Updates;
 
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.set.hash.TIntHashSet;
+import lc.eggwars.others.levels.LevelStorage;
 
 public final class MongoDBManager {
 
@@ -37,7 +38,6 @@ public final class MongoDBManager {
 
         final PlayerData data = new PlayerData();
 
-        data.coins = document.getInteger("coins", 0);
         data.kills = document.getInteger("kills", 0);
         data.finalKills = document.getInteger("finalKills", 0);
         data.deaths = document.getInteger("deaths", 0);
@@ -45,10 +45,10 @@ public final class MongoDBManager {
         data.wins = document.getInteger("wins", 0);
         data.skinSelected = document.getInteger("skin", data.skinSelected);
         data.destroyedEggs = document.getInteger("eggs", 0);
-        data.level = document.getInteger("level", 0);
         data.kitSelected = document.getInteger("kit", 0);
         data.kits = createHashSet(document.getList(data, Integer.class), null);
         data.skins = createHashSet(document.getList(data, Integer.class), data.skinSelected);
+        data.level = LevelStorage.getStorage().getLevels(data);
 
         return data;
     }
@@ -68,7 +68,6 @@ public final class MongoDBManager {
 
     private Bson createUpdateQuery(final PlayerData data, final List<Integer> kits, final List<Integer> skins) {
         return Updates.combine(
-            Updates.set("coins", data.coins),
             Updates.set("kills", data.kills),
             Updates.set("finalKills", data.finalKills),
             Updates.set("deaths", data.deaths),
@@ -77,7 +76,6 @@ public final class MongoDBManager {
             Updates.set("skin", data.skinSelected),
             Updates.set("kit", data.kitSelected),
             Updates.set("eggs", data.destroyedEggs),
-            Updates.set("level", data.level),
             Updates.set("kits", kits),
             Updates.set("skins", skins)
         );

@@ -1,7 +1,6 @@
 package lc.eggwars;
 
 import java.io.File;
-import java.util.concurrent.CompletableFuture;
 
 import lc.eggwars.listeners.*;
 import org.bukkit.Bukkit;
@@ -67,39 +66,41 @@ public class EggwarsPlugin extends JavaPlugin {
             return;
         }
 
-        CompletableFuture.runAsync(() -> {
-            try {   
-                MONGODB.init(this);
+        try {
+            MONGODB.init(this);
+            getServer().getScheduler().runTaskLater(this, () -> {
 
                 new StartSpawn(this).loadSpawn();
                 new StartPreGameData().loadMap(this);
                 new StartMaps(this, slimePlugin).load();
                 GameManagerThread.startThread();   
-            } catch (Exception e) {
-                getServer().getScheduler().runTask(this, () -> Logger.error(e));
-                setEnabled(false);
-            }
-        });
-        loadCommands();
+    
+            }, 40);
 
-        new StartMessages().load(this);
-        new StartGenerators().load(this);
-        new StartTeams(this).load();
-        new StartGameData().load(this);
-        new StartKits(this).load();
-        new StartDeaths(this).load(this);
-        new StartSpawn(this).loadItems();
-        new StartLevels(this).load();
-        new StartPreGameData().loadItems(this);
-        new StartSidebar(this).load();
-        new StartEvents(this).load();
-        new StartTab().load(this);
+            loadCommands();
 
-        final ShopsData data = new StartShops().load(this);
-        final SelectMapInventory selectMapInventory = new StartMapInventories().load(this);
+            new StartMessages().load(this);
+            new StartGenerators().load(this);
+            new StartTeams(this).load();
+            new StartGameData().load(this);
+            new StartKits(this).load();
+            new StartDeaths(this).load(this);
+            new StartSpawn(this).loadItems();
+            new StartLevels(this).load();
+            new StartPreGameData().loadItems(this);
+            new StartSidebar(this).load();
+            new StartEvents(this).load();
+            new StartTab().load(this);
+    
+            final ShopsData data = new StartShops().load(this);
+            final SelectMapInventory selectMapInventory = new StartMapInventories().load(this);
+    
+            new StartShopkeepers().load(this, data.shops());
+            registerBasicListeners(data, selectMapInventory);
+        } catch (Exception e) {
+            Logger.error(e);
+        }
 
-        new StartShopkeepers().load(this, data.shops());
-        registerBasicListeners(data, selectMapInventory);
     }
 
     @Override
@@ -113,15 +114,15 @@ public class EggwarsPlugin extends JavaPlugin {
     private void registerBasicListeners(final ShopsData shopsData, final SelectMapInventory selectMapInventory) {
         final ListenerRegister listeners = new ListenerRegister(this);
 
+        listeners.register(new ShopkeeperListener(), false);
+        listeners.register(new PlayerJoinTabInfoListener(), false);
+
         listeners.register(new PlayerDeathListener(this), true);
         listeners.register(new PlayerRespawnListener(this), true);
         listeners.register(new EntityDamageListener(), true);
         listeners.register(new PlayerDamageByPlayerListener(), true);
         listeners.register(new PlayerInventoryClickListener(this, shopsData, selectMapInventory), true);
         listeners.register(new PlayerInteractListener(selectMapInventory), true);
-
-        listeners.register(new ShopkeeperListener(), false);
-        listeners.register(new PlayerJoinTabInfoListener(), false);
         listeners.register(new PlayerJoinListener(Messages.color(getConfig().getString("join"))), true);  
         listeners.register(new PlayerQuitListener(), true);  
         listeners.register(new PlayerBreakListener(), true);  

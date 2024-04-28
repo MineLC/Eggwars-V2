@@ -19,6 +19,7 @@ import lc.eggwars.others.events.GameEvent;
 import lc.eggwars.others.kits.KitStorage;
 import lc.eggwars.others.sidebar.SidebarStorage;
 import lc.eggwars.others.sidebar.SidebarType;
+import lc.eggwars.others.tab.TabStorage;
 import lc.eggwars.teams.BaseTeam;
 import lc.eggwars.teams.GameTeam;
 import lc.eggwars.utils.BlockLocation;
@@ -57,8 +58,8 @@ final class GameStartAndStop {
 
     private void startForPlayers(final GameInProgress game) {
         setTeams(game);
-
         SidebarStorage.getStorage().getSidebar(SidebarType.IN_GAME).send(game.getPlayers());
+        TabStorage.getStorage().startGame(game.getPlayers(), game);
     }
     
     private void sendEventMessage(final GameInProgress game) {

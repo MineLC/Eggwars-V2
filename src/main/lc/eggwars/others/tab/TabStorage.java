@@ -1,12 +1,16 @@
 package lc.eggwars.others.tab;
 
 import java.util.Collection;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 
-import lc.eggwars.messages.Messages;
+import lc.eggwars.game.GameInProgress;
+import lc.eggwars.teams.GameTeam;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
@@ -38,12 +42,35 @@ public final class TabStorage {
         player.playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayers));
     }
 
+    public void startGame(final Collection<Player> players, final GameInProgress game) {
+        final Set<Entry<Player, GameTeam>> teams = game.getTeamPerPlayer().entrySet();
+       
+        for (final Entry<Player, GameTeam> entry : teams) {
+            final EntityPlayer entityPlayer = ((CraftPlayer)entry.getKey()).getHandle();
+            entityPlayer.listName = CraftChatMessage.fromString(entry.getValue().getBase().getTeam().getPrefix() + " " + entityPlayer.getName())[0];
+            final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, entityPlayer);
+
+            for (final Player player : players) {
+                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+            }
+        }
+    }
+
+    public void removeOnePlayer(final Player playerToRemove, final Collection<Player> players) {
+        final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer)playerToRemove).getHandle());
+        for (final Player otherPlayer : players) {
+            ((CraftPlayer)otherPlayer).getHandle().playerConnection.sendPacket(packet);
+        } 
+    }
+
     public void sendPlayerInfo(final Player bukkitPlayer, final Collection<Player> players) {
         final PlayerData pp = UserProvider.getInstance().getUserCache(bukkitPlayer.getName());
-        final String playerInfo = Messages.color(pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + bukkitPlayer.getName());
+        final String playerInfo = (pp.getRankInfo().getRank().getDefaultRank())
+            ? pp.isPremium() ? "&9&lPREMIUM " + bukkitPlayer.getName() : bukkitPlayer.getName()
+            : pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + bukkitPlayer.getName();
 
         final EntityPlayer player = ((CraftPlayer)bukkitPlayer).getHandle();
-        player.listName = CraftChatMessage.fromString(playerInfo)[0];
+        player.listName = CraftChatMessage.fromString(playerInfo.replace('&', ChatColor.COLOR_CHAR))[0];
 
         final PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, player);
         final EntityPlayer[] entityPlayers = new EntityPlayer[players.size() + 1];

@@ -59,7 +59,8 @@ public final class EventStorage {
         if (game.getState() != GameState.IN_GAME) {
             return;
         }
-        final EventCountdown countdown = new EventCountdown(game);
+        final EventCountdown countdown = new EventCountdown(game, event.name());
+        countdown.setDuration(event.duration());
 
         switch (event.eventType()) {
             case DEATHMATCH:
@@ -69,7 +70,6 @@ public final class EventStorage {
                 break;
             case TREASON:
                 Messages.send(game.getPlayers(), "treason.start-message");
-                countdown.setDuration(event.duration());
                 break;
             case FATIGUE:
                 Messages.send(game.getPlayers(), "fatigue.start-message");
@@ -85,19 +85,15 @@ public final class EventStorage {
                 return;
             case FULLHEALTH:
                 Messages.send(game.getPlayers(), "fullheath.start-message");
-                countdown.setDuration(event.duration());
                 break;
             case CRITICAL:
                 Messages.send(game.getPlayers(), "critical.start-message");
-                countdown.setDuration(event.duration());
                 break;
             case ONEDAMAGE:
                 Messages.send(game.getPlayers(), "onedamage.start-message");
-                countdown.setDuration(event.duration());
                 break;
             case DISCOUNT:
                 Messages.send(game.getPlayers(), "discount.start-message");
-                countdown.setDuration(event.duration());
                 break;
         }
 

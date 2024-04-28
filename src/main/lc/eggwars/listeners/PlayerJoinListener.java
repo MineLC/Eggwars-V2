@@ -50,12 +50,18 @@ public final class PlayerJoinListener implements EventListener {
         CompletableFuture.runAsync(() -> {
             final lc.eggwars.database.mongodb.PlayerData data = MongoDBManager.getManager().getData(player.getUniqueId());
             PlayerData playerData = UserProvider.getInstance().getUserByName(player.getName());
-            data.coins = playerData.getCoins();
+            data.coins = (playerData == null) ? 0 : playerData.getCoins();
             PlayerDataStorage.getStorage().add(player.getUniqueId(), data);
-            SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);            
+            SidebarStorage.getStorage().getSidebar(SidebarType.SPAWN).send(player);
+
+            player.setCustomName(playerData.getRankInfo().getRank().getPrefix() + " " + player.getName());
+            player.setCustomNameVisible(true);
 
             final PlayerData pp = UserProvider.getInstance().getUserCache(player.getName());
-            final String playerInfo = pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + player.getName();
+            String playerInfo = (pp.getRankInfo().getRank().getDefaultRank())
+                ? pp.isPremium() ? "&9&lPREMIUM " + player.getName() : player.getName()
+                : pp.getRankInfo().getRank().getPrefix() + " &7" + pp.getRankInfo().getUserColor() + player.getName();
+    
             Messages.sendNoGet(SpawnStorage.getStorage().getPlayers(), playerInfo + joinMessage);
             TabStorage.getStorage().sendPlayerInfo(player, players);
         });

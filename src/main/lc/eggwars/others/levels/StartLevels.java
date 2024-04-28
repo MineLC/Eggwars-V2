@@ -25,9 +25,9 @@ public final class StartLevels {
     private LevelStat createStat(final String path) {
         return new LevelStat(
             Messages.color(config.getString(path + ".prefix")),
-            config.getInt(path + ".add-lcoins"),
-            config.getInt(path + ".every"),
-            config.getInt(path + ".level-up")
+            config.getInt(path + ".lcoins"),
+            config.getInt(path + ".lcoins-every"),
+            config.getInt(path + ".levelup-every")
         );
     }
 }
